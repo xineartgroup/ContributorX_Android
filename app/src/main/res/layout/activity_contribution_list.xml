@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -46,19 +46,8 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     app:layout_constraintStart_toEndOf="@id/btnAddContribution"
-                    app:layout_constraintEnd_toStartOf="@id/cboStatus"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_percent="0.5" />
-
-                <Spinner
-                    android:id="@+id/cboStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:entries="@array/contributor_status"
-                    android:minHeight="48dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -78,4 +67,4 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>

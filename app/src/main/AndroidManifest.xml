@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Permissions for accessing external storage -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -17,20 +16,41 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ContributorX_Android"
         tools:targetApi="31">
-
-        <activity android:name="._Activity_Contribution_Detail" android:exported="false" android:theme="@style/Theme.ContributorX_Android" />
-        <activity android:name="._Activity_Contribution_List" android:exported="false" android:theme="@style/Theme.ContributorX_Android" />
-        <activity android:name="._Activity_Make_Payment" android:exported="false" android:theme="@style/Theme.ContributorX_Android" />
-        <activity android:name="._Activity_Contributor_Detail" android:exported="true" android:theme="@style/Theme.ContributorX_Android" />
-        <activity android:name="._Activity_Contributor_List" android:exported="true" android:theme="@style/Theme.ContributorX_Android" />
-        <activity android:name="._Activity_Login" android:exported="true" />
-        <activity android:name=".MainActivity" android:exported="true">
+        <activity
+            android:name="._Activity_Expense_List"
+            android:exported="false" />
+        <activity
+            android:name="._Activity_Contribution_Detail"
+            android:exported="false"
+            android:theme="@style/Theme.ContributorX_Android" />
+        <activity
+            android:name="._Activity_Contribution_List"
+            android:exported="false"
+            android:theme="@style/Theme.ContributorX_Android" />
+        <activity
+            android:name="._Activity_Make_Payment"
+            android:exported="false"
+            android:theme="@style/Theme.ContributorX_Android" />
+        <activity
+            android:name="._Activity_Contributor_Detail"
+            android:exported="true"
+            android:theme="@style/Theme.ContributorX_Android" />
+        <activity
+            android:name="._Activity_Contributor_List"
+            android:exported="true"
+            android:theme="@style/Theme.ContributorX_Android" />
+        <activity
+            android:name="._Activity_Login"
+            android:exported="true" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

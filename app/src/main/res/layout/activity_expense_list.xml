@@ -3,10 +3,10 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/contributor_coordinator"
+        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="._Activity_Contributor_List">
+        tools:context="._Activity_Expense_List">
 
         <!-- AppBarLayout with dynamic height -->
         <com.google.android.material.appbar.AppBarLayout
@@ -30,7 +30,7 @@
                 android:padding="8dp">
 
                 <Button
-                    android:id="@+id/btnAddContributor"
+                    android:id="@+id/btnAddExpense"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/new_item"
@@ -43,20 +43,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
-                    app:layout_constraintStart_toEndOf="@id/btnAddContributor"
-                    app:layout_constraintEnd_toStartOf="@id/cboStatus"
+                    app:layout_constraintStart_toEndOf="@id/btnAddExpense"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_percent="0.5" />
-
-                <Spinner
-                    android:id="@+id/cboStatus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:entries="@array/contributor_status"
-                    android:minHeight="48dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.appbar.AppBarLayout>

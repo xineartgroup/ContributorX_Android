@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import java.util.List;
 
@@ -25,6 +26,9 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contribution_list);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Button btnAddContribution = findViewById(R.id.btnAddContribution);
         ListView lstDetail = findViewById(R.id.lstDetail);
@@ -94,8 +98,8 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflator = getMenuInflater();
-        inflator.inflate(R.menu.mainmenu, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mainmenu, menu);
         return true;
     }
 
@@ -107,8 +111,7 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
             startActivity(startIntent);
             return true;
         }
-        else {
-            return super.onOptionsItemSelected(item);
-        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
