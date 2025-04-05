@@ -1,0 +1,73 @@
+<resources>
+    <string name="app_name">ContributorX</string>
+    <string name="user_home">Home</string>
+    <string name="user_name">User Name</string>
+    <string name="user_password">Password</string>
+    <string name="login_text">Login</string>
+    <string name="logout_text">Logout</string>
+    <string name="flat_name">Flat</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="full_name">Full Name</string>
+    <string name="amount_due">Amount Due</string>
+    <string name="contribution_name">Name</string>
+    <string name="contribution_amount">Amount</string>
+    <string name="contribution_total">Total</string>
+    <string name="contribution_paid">Total Paid</string>
+    <string name="contribution_outstanding">Total Due</string>
+    <string name="pay_amount">Pay amount</string>
+    <string name="pay_confirmation">Send for Confirmation</string>
+    <string name="confirmation_accepted">Confirmation Accepted</string>
+    <string name="confirmation_rejected">Confirmation Rejected</string>
+    <string name="payments">Payments</string>
+    <string name="date_start">Bill Start Date</string>
+    <string name="new_item">+</string>
+    <string name="list_contributors">Contributors</string>
+    <string name="list_contributions">Contributions</string>
+    <string name="list_groups">Groups</string>
+    <string name="list_expectations">Expectations</string>
+    <string name="list_expenses">Expenses</string>
+    <string name="item_community">Community</string>
+    <string name="item_save">Save</string>
+    <string name="item_cancel">Cancel</string>
+    <string name="item_status">Status</string>
+    <string name="item_delete">Delete</string>
+    <string name="menu_add">Add</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_delete">Delete</string>
+    <string-array name="contributor_status">
+        <item>All</item>
+        <item>Active</item>
+        <item>Disabled</item>
+    </string-array>
+    <string-array name="payment_method">
+        <item>Send for Approval</item>
+        <item>Use Payment Gateway</item>
+    </string-array>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="full_name_display">%s %s</string>
+    <string name="due_date">Due Date: %s</string>
+    <string name="amount">Amount: %.2f</string>
+    <string name="amount_display">NGN %.2f</string>
+    <string name="amount_paid">Amount Paid: %.2f</string>
+    <string name="payment_amount">Payment Amount: %.2f</string>
+    <string name="Make_payment">Make Payment</string>
+    <string name="item_contributor">Contributor</string>
+    <string name="item_contribution">Contribution</string>
+    <string name="lorem_ipsum">lorem ipsum</string>
+    <string name="report_text">Report</string>
+    <string name="indicate_payment_text">Indicate Payment</string>
+    <string name="due_date_text">Due Date</string>
+    <string name="amount_text">Amount</string>
+    <string name="payment_receipt_text">Payment Receipt</string>
+    <string name="no_file_selected_text">No file selected</string>
+    <string name="make_payment_text">Make Payment</string>
+    <string name="contribution_name_text">Contribution Name</string>
+    <string name="pay_text">Pay</string>
+    <string name="amount_value">0.00</string>
+    <string name="pictures_folder">/sdcard/Pictures/%s</string>
+</resources>

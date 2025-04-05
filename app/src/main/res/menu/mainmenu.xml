@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<item android:id="@+id/itmHome"
+    android:title="@string/user_home"/>
+<item android:id="@+id/itmCommunity"
+    android:title="@string/item_community"/>
+<item android:id="@+id/itmGroups"
+    android:title="@string/list_groups"/>
+<item android:id="@+id/itmContributors"
+    android:title="@string/list_contributors"/>
+<item android:id="@+id/itmContributions"
+    android:title="@string/list_contributions"/>
+<item android:id="@+id/itmExpenses"
+    android:title="@string/list_expenses"/>
+<item android:id="@+id/itmExpectations"
+    android:title="@string/list_expectations"/>
+<item android:id="@+id/itmReport"
+    android:title="@string/report_text">
+    <!--<menu>
+        <item android:id="@+id/itmReports"
+            android:title="@string/report_text"/>
+    </menu>-->
+</item>
+<item android:id="@+id/itmLogout"
+    android:title="@string/logout_text"/>
+
+</menu>
