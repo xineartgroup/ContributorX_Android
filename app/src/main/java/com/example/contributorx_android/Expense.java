@@ -16,10 +16,13 @@ public class Expense {
 
     }
 
-    public Expense(String name, String description, int communityId) {
+    public Expense(String name, String description, float amountPaid, int communityId, String paymentReceipt) {
         this.name = name;
         this.description = description;
+        this.dateCreated = Calendar.getInstance();
+        this.amountPaid = amountPaid;
         this.communityId = communityId;
+        this.paymentReceipt = paymentReceipt;
     }
 
     public Expense(String name) {

@@ -20,6 +20,10 @@
             android:name="._Activity_Expense_List"
             android:exported="false" />
         <activity
+            android:name="._Activity_Expense_Detail"
+            android:exported="false"
+            android:theme="@style/Theme.ContributorX_Android" />
+        <activity
             android:name="._Activity_Contribution_Detail"
             android:exported="false"
             android:theme="@style/Theme.ContributorX_Android" />

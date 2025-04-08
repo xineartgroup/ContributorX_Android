@@ -10,6 +10,9 @@
     <string name="last_name">Last Name</string>
     <string name="full_name">Full Name</string>
     <string name="amount_due">Amount Due</string>
+    <string name="expense_name">Name</string>
+    <string name="expense_description">Description</string>
+    <string name="expense_amount">Amount</string>
     <string name="contribution_name">Name</string>
     <string name="contribution_amount">Amount</string>
     <string name="contribution_total">Total</string>

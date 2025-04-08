@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public class _Activity_Contributor_Detail extends AppCompatActivity {
     int SELECT_PHOTO = 1;
-    int index = -1;
+    int id = -1;
     boolean status = true;
     Contributor contributor = null;
     DatePickerDialog.OnDateSetListener mDateSetListener;
@@ -68,9 +68,9 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
 
         if (intent.hasExtra("com.example.contributorx_android.ITEMINDEX")){
             //EXISTING ITEM
-            index = Objects.requireNonNull(intent.getExtras()).getInt("com.example.contributorx_android.ITEMINDEX");
+            id = Objects.requireNonNull(intent.getExtras()).getInt("com.example.contributorx_android.ITEMINDEX");
 
-            contributor = _DAO_Contributor.GetContributor(index);
+            contributor = _DAO_Contributor.GetContributor(id);
 
             if (contributor != null) {
                 //setImage(imgContributor, contributor.getPictureId());
@@ -122,7 +122,7 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
 
         btnDelete.setOnClickListener(view -> {
             if (contributor != null) {
-                _DAO_Contributor.DeleteContributor(index);
+                _DAO_Contributor.DeleteContributor(id);
             }
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
             startActivity(startIntent);

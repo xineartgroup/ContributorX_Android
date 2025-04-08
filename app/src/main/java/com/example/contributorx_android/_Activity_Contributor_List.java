@@ -2,6 +2,7 @@ package com.example.contributorx_android;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,11 +37,12 @@ public class _Activity_Contributor_List extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Resources res = getResources();
-        //flat_numbers = res.getStringArray(R.array.flat_number);
+        //flat_numbers = getResources().getStringArray(R.array.flat_number);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, 1);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, 1);
+            }
         }
 
         Button btnAddContributor = (Button) findViewById(R.id.btnAddContributor);
@@ -62,9 +64,12 @@ public class _Activity_Contributor_List extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if ("Administrator".equals(_Activity_Login.LoggedOnUser.getRole())) {
-                    Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_Detail.class);
-                    startIntent.putExtra("com.example.contributorx_android.ITEMINDEX", i);
-                    startActivity(startIntent);
+                    Contributor contributor = contributors.get(i);
+                    if (contributor != null) {
+                        Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_Detail.class);
+                        startIntent.putExtra("com.example.contributorx_android.ITEMINDEX", contributor.getId());
+                        startActivity(startIntent);
+                    }
                 }
             }
         });

@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/lblContributionName"
+        android:id="@+id/lblExpenseName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
@@ -13,29 +13,29 @@
         android:layout_marginEnd="14dp"
         android:text=""
         android:textSize="16sp"
-        tools:text="@string/contribution_name" />
+        tools:text="@string/expense_name" />
 
     <TextView
-        android:id="@+id/lblContributionDate"
+        android:id="@+id/lblExpenseDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lblContributionName"
+        android:layout_below="@+id/lblExpenseName"
         android:layout_marginStart="14dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="14dp"
         android:text=""
         android:textSize="12sp"
-        tools:text="@string/date_start" />
+        tools:text="@string/expense_description" />
 
     <TextView
-        android:id="@+id/lblContributionAmount"
+        android:id="@+id/lblExpenseAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="27dp"
         android:layout_marginEnd="18dp"
-        android:text="@string/contribution_amount"
+        android:text="@string/expense_amount"
         android:textSize="20sp"
         android:textStyle="bold"
         tools:ignore="RelativeOverlap" />

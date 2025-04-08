@@ -33,11 +33,6 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
         Button btnAddContribution = findViewById(R.id.btnAddContribution);
         ListView lstDetail = findViewById(R.id.lstDetail);
 
-        List<Contribution> contributions = _DAO_Contribution.GetAllContributions();
-
-        _Layout_Contribution_List iAdapter = new _Layout_Contribution_List(this, contributions);
-        lstDetail.setAdapter(iAdapter);
-
         if (_Activity_Login.LoggedOnUser == null){
             Toast.makeText(this, "Please log in first", Toast.LENGTH_LONG).show();
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
@@ -52,6 +47,11 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
         else{
             btnAddContribution.setVisibility(View.GONE);
         }
+
+        List<Contribution> contributions = _DAO_Contribution.GetAllContributions();
+
+        _Layout_Contribution_List iAdapter = new _Layout_Contribution_List(this, contributions);
+        lstDetail.setAdapter(iAdapter);
 
         btnAddContribution.setOnClickListener(_Activity_Contribution_List.this);
 

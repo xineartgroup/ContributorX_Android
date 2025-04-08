@@ -45,6 +45,10 @@ public class _Activity_Login extends AppCompatActivity {
         _DAO_Contribution.AddContribution(new Contribution("Gate repair", 1250, 1, date0, date1));
         _DAO_Contribution.AddContribution(new Contribution("Monthly Dues for September", 4500, 1, date0, date1));
 
+        _DAO_Expense.AddExpense(new Expense("Cleaning Expense For Jan 2025", "Cleaning Expense For Jan 2025", 4500, 1, ""));
+        _DAO_Expense.AddExpense(new Expense("LAWMA Expense For Jan 2025", "LAWMA Expense For Jan 2025", 1250, 1, ""));
+        _DAO_Expense.AddExpense(new Expense("Security Expense for Jan 2025", "Security Expense for Jan 2025", 4500, 1, ""));
+
         _DAO_Expectation.AddExpectation(new Expectation(1, 1, 0.00f, 0.00f, 0, ""));
         _DAO_Expectation.AddExpectation(new Expectation(1, 2, 0.00f, 0.00f, 0, ""));
         _DAO_Expectation.AddExpectation(new Expectation(1, 3, 0.00f, 0.00f, 0, ""));
@@ -98,23 +102,17 @@ public class _Activity_Login extends AppCompatActivity {
     }
 
     public static Intent MenuAction(int id, Context context) {
-        if (id == android.R.id.home) {
-            return new Intent(context, MainActivity.class);
-        } else if (id == R.id.itmHome) {
+        if (id == android.R.id.home || id == R.id.itmHome) {
             return new Intent(context, MainActivity.class);
         } else if (id == R.id.itmContributors) {
             return new Intent(context, _Activity_Contributor_List.class);
         } else if (id == R.id.itmContributions) {
             return new Intent(context, _Activity_Contribution_List.class);
-        } else if (id == R.id.itmEditContribution) {
-            return new Intent(context, _Activity_Contribution_Detail.class);
-        } else if (id == R.id.itmDeleteContribution) {
-            Toast.makeText(context, "Deleting...", Toast.LENGTH_LONG).show();
-            return null;
         } else if (id == R.id.itmReport) {
-            //return true;
+            Toast.makeText(context, "Reporting...", Toast.LENGTH_LONG).show();
+            return null;
         } else if (id == R.id.itmExpenses) {
-            //return true;
+            return new Intent(context, _Activity_Expense_List.class);
         } else if (id == R.id.itmLogout) {
             _Activity_Login.LoggedOnUser = null;
             return new Intent(context, _Activity_Login.class);
