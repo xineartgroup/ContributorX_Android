@@ -45,9 +45,9 @@ public class _Activity_Contributor_List extends AppCompatActivity {
             }
         }
 
-        Button btnAddContributor = (Button) findViewById(R.id.btnAddContributor);
-        Spinner cboStatus = (Spinner) findViewById(R.id.cboStatus);
-        ListView lstDetail = (ListView) findViewById(R.id.lstDetail);
+        Button btnAddContributor = findViewById(R.id.btnAddContributor);
+        Spinner cboStatus = findViewById(R.id.cboStatus);
+        ListView lstDetail = findViewById(R.id.lstDetail);
 
         if (_Activity_Login.LoggedOnUser == null){
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
@@ -60,26 +60,24 @@ public class _Activity_Contributor_List extends AppCompatActivity {
         iAdapter = new _Layout_Contributor_List(this, contributors);
         lstDetail.setAdapter(iAdapter);
 
-        lstDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if ("Administrator".equals(_Activity_Login.LoggedOnUser.getRole())) {
-                    Contributor contributor = contributors.get(i);
-                    if (contributor != null) {
-                        Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_Detail.class);
-                        startIntent.putExtra("com.example.contributorx_android.ITEMINDEX", contributor.getId());
-                        startActivity(startIntent);
-                    }
+        if (!"".equals(iAdapter.error)) {
+            Toast.makeText(this, iAdapter.error, Toast.LENGTH_SHORT).show();
+        }
+
+        lstDetail.setOnItemClickListener((adapterView, view, i, l) -> {
+            if ("Administrator".equals(_Activity_Login.LoggedOnUser.getRole())) {
+                Contributor contributor = contributors.get(i);
+                if (contributor != null) {
+                    Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_Detail.class);
+                    startIntent.putExtra("com.example.contributorx_android.ITEMINDEX", contributor.getId());
+                    startActivity(startIntent);
                 }
             }
         });
 
-        btnAddContributor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_Detail.class);
-                startActivity(startIntent);
-            }
+        btnAddContributor.setOnClickListener(view -> {
+            Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_Detail.class);
+            startActivity(startIntent);
         });
 
         cboStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

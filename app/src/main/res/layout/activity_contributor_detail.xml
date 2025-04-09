@@ -1,146 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context="._Activity_Contributor_Detail">
 
-    <ImageView
-        android:id="@+id/imgContributor"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="@string/flat_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
-
+    <!-- Top Buttons -->
     <Button
         android:id="@+id/btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
         android:text="@string/item_cancel"
-        app:layout_constraintEnd_toStartOf="@+id/btnSaveContributor"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnSaveContributor" />
 
     <Button
         android:id="@+id/btnSaveContributor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
         android:text="@string/item_save"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/txtFlatName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="@string/flat_name"
-        android:inputType="textPostalAddress"
-        android:textSize="24sp"
-        android:importantForAutofill="no"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+    <!-- Profile Image -->
+    <ImageView
+        android:id="@+id/imgContributor"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:contentDescription="@string/flat_name"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgContributor" />
+        android:layout_marginStart="16dp"
+        tools:srcCompat="@tools:sample/avatars" />
 
-    <EditText
-        android:id="@+id/txtFirstname"
-        android:layout_width="match_parent"
+    <!-- Vertical Guideline for aligned values -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtFlatName"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="@string/first_name"
-        android:inputType="textPersonName"
-        android:textSize="24sp"
-        android:importantForAutofill="no"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtFlatName" />
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
 
-    <EditText
-        android:id="@+id/txtLastName"
-        android:layout_width="match_parent"
+    <!-- Username -->
+    <TextView
+        android:id="@+id/lblUsernameLabel"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtFlatName"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_toEndOf="@+id/txtFirstname"
-        android:hint="@string/last_name"
-        android:inputType="textPersonName"
-        android:textSize="24sp"
-        android:importantForAutofill="no"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:text="@string/user_name"
+        app:layout_constraintTop_toBottomOf="@id/imgContributor"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtFirstname" />
+        app:layout_constraintEnd_toStartOf="@id/guideline1"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp" />
 
     <TextView
-        android:id="@+id/lblDateStart"
-        android:layout_width="match_parent"
+        android:id="@+id/lblUsername"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/date_start"
-        android:textSize="24sp"
-        app:layout_constraintTop_toBottomOf="@+id/txtLastName"
-        tools:layout_editor_absoluteX="176dp" />
+        android:text="@string/user_name"
+        app:layout_constraintTop_toTopOf="@id/lblUsernameLabel"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/btnStatus"
-        android:layout_width="wrap_content"
+    <!-- Full Name -->
+    <TextView
+        android:id="@+id/lblNameLabel"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/item_status"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.049"
+        android:text="@string/full_name"
+        app:layout_constraintTop_toBottomOf="@id/lblUsernameLabel"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lblDateStart" />
+        app:layout_constraintEnd_toStartOf="@id/guideline1"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
 
-    <Button
-        android:id="@+id/btnDelete"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/lblName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/item_delete"
-        app:layout_constraintStart_toEndOf="@+id/btnStatus"
-        app:layout_constraintTop_toBottomOf="@+id/lblDateStart" />
+        android:text="@string/full_name"
+        app:layout_constraintTop_toTopOf="@id/lblNameLabel"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/btnPayment"
-        android:layout_width="wrap_content"
+    <!-- Email -->
+    <TextView
+        android:id="@+id/lblEmailLabel"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:text="@string/email"
+        app:layout_constraintTop_toBottomOf="@id/lblNameLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline1"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
+
+    <TextView
+        android:id="@+id/lblEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/email"
+        app:layout_constraintTop_toTopOf="@id/lblEmailLabel"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Phone -->
+    <TextView
+        android:id="@+id/lblPhoneNumberLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/phone_number"
+        app:layout_constraintTop_toBottomOf="@id/lblEmailLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline1"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
+
+    <TextView
+        android:id="@+id/lblPhoneNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/phone_number"
+        app:layout_constraintTop_toTopOf="@id/lblPhoneNumberLabel"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Status -->
+    <TextView
+        android:id="@+id/lblStatusLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/item_status"
+        app:layout_constraintTop_toBottomOf="@id/lblPhoneNumberLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline1"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
+
+    <Spinner
+        android:id="@+id/cboStatus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:entries="@array/contributor_status"
+        app:layout_constraintTop_toTopOf="@id/lblStatusLabel"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/lblUserGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/list_groups"
+        app:layout_constraintTop_toBottomOf="@id/lblStatusLabel"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="24dp"
-        android:text="@string/payments"
-        app:layout_constraintStart_toEndOf="@+id/btnDelete"
-        app:layout_constraintTop_toBottomOf="@+id/lblDateStart" />
+        android:layout_marginStart="16dp"
+        android:textSize="18sp" />
+
+    <Spinner
+        android:id="@+id/cboGroups"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/lblStatusLabel"
+        app:layout_constraintStart_toStartOf="@id/guideline1"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
+        android:textSize="18sp" />
+
+    <ListView
+        android:id="@+id/lstUserGroups"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintTop_toBottomOf="@+id/cboGroups"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- ListView at the bottom -->
+    <TextView
+        android:id="@+id/lblUserExpectation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/list_expectations"
+        app:layout_constraintTop_toBottomOf="@id/lstUserGroups"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:textSize="18sp" />
 
     <ListView
         android:id="@+id/lstUserExpectation"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/btnPayment"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintTop_toBottomOf="@+id/lblUserExpectation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,36 +5,26 @@
              android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/txtAmount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="31dp"
-        android:layout_marginTop="27dp"
-        android:text="@string/amount_value"
-        android:textSize="24sp" />
-
-    <TextView
         android:id="@+id/lblName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="65dp"
-        android:text="@string/contribution_name_text" />
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/group_name"
+        android:textSize="14sp" />
 
     <Button
-        android:id="@+id/btnPay"
+        android:id="@+id/btnRemove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
         android:fontFamily="sans-serif"
-        android:text="@string/pay_text"
-        android:textSize="20sp"
+        android:text="@string/item_remove"
+        android:textSize="11sp"
         tools:ignore="RelativeOverlap" />
 </RelativeLayout>

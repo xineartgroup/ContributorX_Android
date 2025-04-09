@@ -13,8 +13,6 @@ import androidx.appcompat.widget.Toolbar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    ListView lstUserExpectation;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
 
-        lstUserExpectation = findViewById(R.id.lstUserExpectation);
+        ListView lstUserExpectation = findViewById(R.id.lstUserExpectation);
         List<Expectation> expectations = _DAO_Expectation.GetExpectationsForContributor(_Activity_Login.LoggedOnUser.getId());
 
         _Layout_Expectation_List expectationItemAdapter = new _Layout_Expectation_List(this, expectations);

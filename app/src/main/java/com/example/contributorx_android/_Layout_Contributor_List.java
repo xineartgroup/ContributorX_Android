@@ -14,8 +14,6 @@ import android.view.WindowMetrics;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.io.File;
 import java.util.List;
 
@@ -23,11 +21,13 @@ public class _Layout_Contributor_List extends BaseAdapter {
     List<Contributor> contributors;
     LayoutInflater mInflater;
     Context context;
+    public String error;
 
     public _Layout_Contributor_List(Context c, List<Contributor> t) {
         contributors = t;
         mInflater = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         context = c;
+        error = "";
     }
 
     @Override
@@ -140,10 +140,10 @@ public class _Layout_Contributor_List extends BaseAdapter {
                 if (scaledImg != null) {
                     img.setImageBitmap(scaledImg);
                 } else {
-                    Toast.makeText(context, "Failed to decode image", Toast.LENGTH_SHORT).show();
+                    error += "Failed to decode image. ";
                 }
             } else {
-                Toast.makeText(context, "File does not exist!", Toast.LENGTH_SHORT).show();
+                error += "File does not exist! ";
             }
         }
     }

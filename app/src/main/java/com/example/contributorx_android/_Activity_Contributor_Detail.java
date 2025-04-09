@@ -1,27 +1,25 @@
 package com.example.contributorx_android;
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.Display;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
 public class _Activity_Contributor_Detail extends AppCompatActivity {
     int SELECT_PHOTO = 1;
     int id = -1;
-    boolean status = true;
     Contributor contributor = null;
-    DatePickerDialog.OnDateSetListener mDateSetListener;
-    Calendar date = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,40 +29,21 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
         Intent intent = getIntent();
 
         ImageView imgContributor = findViewById(R.id.imgContributor);
-        EditText txtFlatNumber = findViewById(R.id.txtFlatName);
-        EditText txtFirstname = findViewById(R.id.txtFirstname);
-        EditText txtLastName = findViewById(R.id.txtLastName);
-        TextView lblDateStart = findViewById(R.id.lblDateStart);
+        TextView lblUsername = findViewById(R.id.lblUsername);
+        TextView lblName = findViewById(R.id.lblName);
+        TextView lblEmail = findViewById(R.id.lblEmail);
+        TextView lblPhoneNumber = findViewById(R.id.lblPhoneNumber);
         Button btnSaveContributor = findViewById(R.id.btnSaveContributor);
-        Button btnStatus = findViewById(R.id.btnStatus);
-        Button btnDelete = findViewById(R.id.btnDelete);
+        Spinner cboStatus = findViewById(R.id.cboStatus);
         Button btnCancel = findViewById(R.id.btnCancel);
-        Button btnPayment = findViewById(R.id.btnPayment);
+        ListView lstUserExpectation = findViewById(R.id.lstUserExpectation);
+        ListView lstUserGroups = findViewById(R.id.lstUserGroups);
 
         imgContributor.setOnClickListener(view -> {
             Intent intent1 = new Intent(Intent.ACTION_PICK);
             intent1.setType("Image/*");
             //startActivityForResult(intent1, SELECT_PHOTO);
         });
-
-        lblDateStart.setOnClickListener(view -> {
-            int year = date.get(Calendar.YEAR);
-            int month = date.get(Calendar.MONTH);
-            int day = date.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog dlg = new DatePickerDialog(_Activity_Contributor_Detail.this,
-                    android.R.style.Theme_DeviceDefault_Dialog,
-                    mDateSetListener,
-                    year, month, day);
-            //dlg.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            dlg.show();
-        });
-
-        mDateSetListener = (datePicker, year, month, day) -> {
-            date.set(year, month, day);
-            String strDate = GetDateString(date);
-            lblDateStart.setText(strDate);
-        };
 
         if (intent.hasExtra("com.example.contributorx_android.ITEMINDEX")){
             //EXISTING ITEM
@@ -73,59 +52,44 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
             contributor = _DAO_Contributor.GetContributor(id);
 
             if (contributor != null) {
-                //setImage(imgContributor, contributor.getPictureId());
-                txtFlatNumber.setText(contributor.getUserName());
-                txtFirstname.setText(contributor.getFirstname());
-                txtLastName.setText(contributor.getLastname());
-                btnStatus.setText(contributor.isActive() ? "Deactivate" : "Activate");
-                lblDateStart.setText(GetDateString(contributor.getStartDate()));
-                status = !contributor.isActive();
+                //setImage(imgContributor, contributor.getPicture());
+                lblUsername.setText(contributor.getUserName());
+                lblName.setText(String.format("%s %s", contributor.getFirstname(), contributor.getLastname()));
+                lblEmail.setText(contributor.getEmail());
+                lblPhoneNumber.setText(contributor.getPhoneNumber());
+                cboStatus.setSelection(contributor.isActive() ? 0 : 1);
+
+                List<Grouping> groupings = _DAO_Grouping.GetGroupingsForContributor(id);
+                _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(this, groupings);
+                lstUserGroups.setAdapter(userGroupItemAdapter);
+
+                List<Expectation> expectations = _DAO_Expectation.GetExpectationsForContributor(id);
+                _Layout_Expectation_List2 expectationItemAdapter = new _Layout_Expectation_List2(this, expectations);
+                lstUserExpectation.setAdapter(expectationItemAdapter);
             }
         }
 
-        btnPayment.setOnClickListener(view -> {
-            if (contributor != null) {
-                Intent startIntent = new Intent(getApplicationContext(), _Activity_Payment_Confirmation.class);
-                startIntent.putExtra("com.example.contributorx_android.ITEMINDEX", contributor.getId());
-                startActivity(startIntent);/**/
-            }
-        });
-
-        btnStatus.setOnClickListener(view -> {
-            if (contributor != null) {
-                contributor.setActive(status);
-                _DAO_Contributor.UpdateContributor(contributor);
+        cboStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //String selectedItem = parent.getItemAtPosition(position).toString();
+                if (contributor != null) {
+                    contributor.setActive(position == 0);
+                }
             }
 
-            Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
-            startActivity(startIntent);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // This method is called when the selection disappears from the spinner
+                // This can happen for example when the adapter becomes empty
+            }
         });
 
         btnSaveContributor.setOnClickListener(view -> {
-            if (contributor == null) {
-                contributor = new Contributor();
-
-                contributor.setFirstname(txtFirstname.getText().toString());
-                contributor.setLastname(txtLastName.getText().toString());
-                contributor.setUserName(txtFlatNumber.getText().toString());
-                contributor.setStartDate(date);
-
-                int contributorId = _DAO_Contributor.AddContributor(contributor);
-
-                contributor.setId(contributorId);
-            }
-            else {
+            if (contributor != null) {
                 _DAO_Contributor.UpdateContributor(contributor);
             }
 
-            Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
-            startActivity(startIntent);
-        });
-
-        btnDelete.setOnClickListener(view -> {
-            if (contributor != null) {
-                _DAO_Contributor.DeleteContributor(id);
-            }
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
             startActivity(startIntent);
         });
@@ -147,37 +111,9 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                 imgContributor.setImageBitmap(bmp);
             }
             catch (Exception ex) {
-                ex.printStackTrace();
+                Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
 
-    }
-
-    public void setImage(ImageView img, int pictureID) {
-        if (pictureID >= 0) {
-            Display screen = getWindowManager().getDefaultDisplay();
-            BitmapFactory.Options options = new BitmapFactory.Options();
-
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeResource(getResources(), pictureID, options);
-
-            int imgWidth = options.outWidth;
-            int screenWidth = screen.getWidth(); //img.getWidth(); //
-
-            if (imgWidth > screenWidth) {
-                options.inSampleSize = Math.round((float) imgWidth / (float) screenWidth);
-            }
-
-            options.inJustDecodeBounds = false;
-            Bitmap scaledImg = BitmapFactory.decodeResource(getResources(), pictureID, options);
-            img.setImageBitmap(scaledImg);
-        }
-    }
-
-    private String GetDateString(Calendar date) {
-        int year = date.get(Calendar.YEAR);
-        int month = date.get(Calendar.MONTH);
-        int day = date.get(Calendar.DAY_OF_MONTH);
-        return day + "/" + (month + 1) + "/" + year;
     }
 }

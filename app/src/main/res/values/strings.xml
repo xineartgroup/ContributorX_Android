@@ -9,6 +9,8 @@
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="full_name">Full Name</string>
+    <string name="email">E-mail</string>
+    <string name="phone_number">Phone Number</string>
     <string name="amount_due">Amount Due</string>
     <string name="expense_name">Name</string>
     <string name="expense_description">Description</string>
@@ -18,6 +20,7 @@
     <string name="contribution_total">Total</string>
     <string name="contribution_paid">Total Paid</string>
     <string name="contribution_outstanding">Total Due</string>
+    <string name="group_name">Name</string>
     <string name="pay_amount">Pay amount</string>
     <string name="pay_confirmation">Send for Confirmation</string>
     <string name="confirmation_accepted">Confirmation Accepted</string>
@@ -35,11 +38,11 @@
     <string name="item_cancel">Cancel</string>
     <string name="item_status">Status</string>
     <string name="item_delete">Delete</string>
+    <string name="item_remove">Remove</string>
     <string name="menu_add">Add</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_delete">Delete</string>
     <string-array name="contributor_status">
-        <item>All</item>
         <item>Active</item>
         <item>Disabled</item>
     </string-array>

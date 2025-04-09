@@ -5,17 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
 
-public class _Layout_Expectation_List extends BaseAdapter {
+public class _Layout_Expectation_List2 extends BaseAdapter {
     LayoutInflater mInflater;
     List<Expectation> expectations;
     Context context;
 
-    public _Layout_Expectation_List(Context c, List<Expectation> items){
+    public _Layout_Expectation_List2(Context c, List<Expectation> items){
         context = c;
         expectations = items;
         mInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -47,12 +46,11 @@ public class _Layout_Expectation_List extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.layout_expectation_list, parent, false);
+            convertView = mInflater.inflate(R.layout.layout_expectation_list2, parent, false);
 
             holder = new ViewHolder();
             holder.txtAmount = convertView.findViewById(R.id.txtAmount);
             holder.txtName = convertView.findViewById(R.id.lblName);
-            holder.btnPay = convertView.findViewById(R.id.btnPay);
 
             convertView.setTag(holder);
         } else {
@@ -66,13 +64,6 @@ public class _Layout_Expectation_List extends BaseAdapter {
             if (contribution != null) {
                 holder.txtAmount.setText(String.valueOf(contribution.getAmount()));
                 holder.txtName.setText(contribution.getName());
-
-                holder.btnPay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        handlePayButtonClick(expectation.getId());
-                    }
-                });
             }
         }
 
@@ -82,7 +73,6 @@ public class _Layout_Expectation_List extends BaseAdapter {
     static class ViewHolder {
         TextView txtAmount;
         TextView txtName;
-        Button btnPay;
     }
 
     private void handlePayButtonClick(int expectationId) {

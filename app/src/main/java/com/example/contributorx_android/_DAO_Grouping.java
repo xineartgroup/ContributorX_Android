@@ -46,7 +46,7 @@ public class _DAO_Grouping {
         }
     }
 
-    public static List<Grouping> GetPaymentsForContributor(int contributorId) {
+    public static List<Grouping> GetGroupingsForContributor(int contributorId) {
         List<Grouping> result = new ArrayList<>();
 
         for (int i = 0; i < groupings.size(); i++) {

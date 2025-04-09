@@ -58,6 +58,15 @@ public class _Activity_Login extends AppCompatActivity {
         _DAO_Expectation.AddExpectation(new Expectation(3, 1, 4500, 0.00f, 0, ""));
         _DAO_Expectation.AddExpectation(new Expectation(3, 2, 1250, 0.00f, 0, ""));
         _DAO_Expectation.AddExpectation(new Expectation(3, 3, 4500, 0.00f, 0, ""));
+
+        _DAO_Grouping.AddGrouping(new Grouping(1, 1));
+        _DAO_Grouping.AddGrouping(new Grouping(2, 1));
+        _DAO_Grouping.AddGrouping(new Grouping(3, 1));
+        _DAO_Grouping.AddGrouping(new Grouping(4, 1));
+        _DAO_Grouping.AddGrouping(new Grouping(1, 2));
+        _DAO_Grouping.AddGrouping(new Grouping(2, 2));
+        _DAO_Grouping.AddGrouping(new Grouping(3, 2));
+        _DAO_Grouping.AddGrouping(new Grouping(4, 2));
     }
 
     @Override

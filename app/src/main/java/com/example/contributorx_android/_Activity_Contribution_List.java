@@ -6,12 +6,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -55,18 +53,15 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
 
         btnAddContribution.setOnClickListener(_Activity_Contribution_List.this);
 
-        lstDetail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (_Activity_Login.LoggedOnUser.getRole().equals("Administrator")) {
-                    Contribution contribution = contributions.get(i);
-                    if (contribution != null){
-                        selectedId = contribution.getId();
-                        PopupMenu popup = new PopupMenu(_Activity_Contribution_List.this, view);
-                        popup.setOnMenuItemClickListener(_Activity_Contribution_List.this);
-                        popup.inflate(R.menu.contributionmenu);
-                        popup.show();
-                    }
+        lstDetail.setOnItemClickListener((adapterView, view, i, l) -> {
+            if (_Activity_Login.LoggedOnUser.getRole().equals("Administrator")) {
+                Contribution contribution = contributions.get(i);
+                if (contribution != null){
+                    selectedId = contribution.getId();
+                    PopupMenu popup = new PopupMenu(_Activity_Contribution_List.this, view);
+                    popup.setOnMenuItemClickListener(_Activity_Contribution_List.this);
+                    popup.inflate(R.menu.contributionmenu);
+                    popup.show();
                 }
             }
         });
