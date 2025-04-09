@@ -53,7 +53,7 @@
         android:layout_marginEnd="16dp"
         android:hint="@string/expense_description"
         android:importantForAutofill="no"
-        android:inputType="numberDecimal"
+        android:inputType="textPostalAddress"
         android:textColorHint="#A1887F"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"

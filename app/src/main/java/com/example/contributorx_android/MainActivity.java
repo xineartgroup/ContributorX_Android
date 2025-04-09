@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {

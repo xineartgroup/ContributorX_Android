@@ -5,6 +5,8 @@ import java.util.List;
 
 public class _DAO_Group {
 
+    private static int lastId = 0;
+
     private static List<Group> groups = new ArrayList<>();
 
     public static List<Group> GetAllGroups() {
@@ -12,7 +14,7 @@ public class _DAO_Group {
     }
 
     public static int AddGroup(Group group) {
-        group.setId(groups.isEmpty() ? 1 : groups.get(groups.size() - 1).getId() + 1);
+        group.setId(++lastId);
         groups.add(group);
         return group.getId();
     }

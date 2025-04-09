@@ -5,6 +5,8 @@ import java.util.List;
 
 public class _DAO_Expense {
 
+    private static int lastId = 0;
+
     private static List<Expense> expenses = new ArrayList<>();
 
     public static List<Expense> GetAllExpense() {
@@ -12,7 +14,7 @@ public class _DAO_Expense {
     }
 
     public static int AddExpense(Expense expense) {
-        expense.setId(expenses.isEmpty() ? 1 : expenses.get(expenses.size() - 1).getId() + 1);
+        expense.setId(++lastId);
         expenses.add(expense);
         return expense.getId();
     }

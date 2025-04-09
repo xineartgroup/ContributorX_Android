@@ -5,6 +5,8 @@ import java.util.List;
 
 public class _DAO_Community {
 
+    private static int lastId = 0;
+
     private static List<Community> communities = new ArrayList<>();
 
     public static List<Community> GetAllCommunitys() {
@@ -12,7 +14,7 @@ public class _DAO_Community {
     }
 
     public static int AddCommunity(Community community) {
-        community.setId(communities.isEmpty() ? 1 : communities.get(communities.size() - 1).getId() + 1);
+        community.setId(++lastId);
         communities.add(community);
         return community.getId();
     }

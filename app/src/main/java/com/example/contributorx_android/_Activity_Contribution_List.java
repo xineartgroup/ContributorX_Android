@@ -20,7 +20,7 @@ import java.util.List;
 
 public class _Activity_Contribution_List extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, View.OnClickListener {
 
-    int selectedIndex = -1;
+    int selectedId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
                 if (_Activity_Login.LoggedOnUser.getRole().equals("Administrator")) {
                     Contribution contribution = contributions.get(i);
                     if (contribution != null){
-                        selectedIndex = contribution.getId();
+                        selectedId = contribution.getId();
                         PopupMenu popup = new PopupMenu(_Activity_Contribution_List.this, view);
                         popup.setOnMenuItemClickListener(_Activity_Contribution_List.this);
                         popup.inflate(R.menu.contributionmenu);
@@ -82,8 +82,8 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         if (item.getItemId() == R.id.itmEditContribution) {
-            Intent intent = new Intent(this, _Activity_Contribution_Detail.class);
-            intent.putExtra("com.example.contributorx_android.ITEMINDEX", selectedIndex);
+            Intent intent = new Intent(getApplicationContext(), _Activity_Contribution_Detail.class);
+            intent.putExtra("com.example.contributorx_android.ITEMINDEX", selectedId);
             startActivity(intent);
             return true;
         }

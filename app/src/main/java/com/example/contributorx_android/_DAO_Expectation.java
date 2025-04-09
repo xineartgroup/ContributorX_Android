@@ -5,6 +5,8 @@ import java.util.List;
 
 public class _DAO_Expectation {
 
+    private static int lastId = 0;
+
     private static List<Expectation> expectations = new ArrayList<>();
 
     public static List<Expectation> GetAllExpectations() {
@@ -12,7 +14,7 @@ public class _DAO_Expectation {
     }
 
     public static int AddExpectation(Expectation expectation) {
-        expectation.setId(expectations.isEmpty() ? 1 : expectations.get(expectations.size() - 1).getId() + 1);
+        expectation.setId(++lastId);
         expectations.add(expectation);
         return expectation.getId();
     }

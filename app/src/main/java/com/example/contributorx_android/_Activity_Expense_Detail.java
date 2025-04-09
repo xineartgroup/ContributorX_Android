@@ -5,7 +5,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import java.util.List;
 
 public class _Activity_Expense_Detail extends AppCompatActivity {
     Expense expense = null;
@@ -52,12 +51,9 @@ public class _Activity_Expense_Detail extends AppCompatActivity {
                     expense.setName(txtExpenseName.getText().toString());
                     expense.setDescription(txtDescription.getText().toString());
                     expense.setAmountPaid(Float.parseFloat(txtAmount.getText().toString().trim()));
+                    expense.setCommunityId(_Activity_Login.LoggedOnUser.getCommunityId());
 
                     expense.setId(_DAO_Expense.AddExpense(expense));
-                    List<Contributor> contributors = _DAO_Contributor.GetContributorsInCommunity(_Activity_Login.LoggedOnUser.getCommunityId());
-                    for (int i = 0; i < contributors.size(); i++) {
-                        _DAO_Expectation.AddExpectation(new Expectation(contributors.get(i).getId(), expense.getId(), 0.00f, 0.00f, 0, ""));
-                    }
                 } else {
                     _DAO_Expense.UpdateExpense(expense);
                 }

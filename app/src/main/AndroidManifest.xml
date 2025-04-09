@@ -24,24 +24,24 @@
             android:exported="false"
             android:theme="@style/Theme.ContributorX_Android" />
         <activity
-            android:name="._Activity_Contribution_Detail"
-            android:exported="false"
-            android:theme="@style/Theme.ContributorX_Android" />
-        <activity
             android:name="._Activity_Contribution_List"
             android:exported="false"
             android:theme="@style/Theme.ContributorX_Android" />
         <activity
-            android:name="._Activity_Make_Payment"
+            android:name="._Activity_Contribution_Detail"
             android:exported="false"
+            android:theme="@style/Theme.ContributorX_Android" />
+        <activity
+            android:name="._Activity_Contributor_List"
+            android:exported="true"
             android:theme="@style/Theme.ContributorX_Android" />
         <activity
             android:name="._Activity_Contributor_Detail"
             android:exported="true"
             android:theme="@style/Theme.ContributorX_Android" />
         <activity
-            android:name="._Activity_Contributor_List"
-            android:exported="true"
+            android:name="._Activity_Make_Payment"
+            android:exported="false"
             android:theme="@style/Theme.ContributorX_Android" />
         <activity
             android:name="._Activity_Login"

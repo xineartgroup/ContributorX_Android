@@ -1,18 +1,20 @@
 package com.example.contributorx_android;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Calendar;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class _Activity_Contribution_Detail extends AppCompatActivity {
     Contribution contribution = null;
-    //DatePickerDialog.OnDateSetListener mDateSetListener;
-    //Calendar date = Calendar.getInstance();
+    DatePickerDialog.OnDateSetListener mDateSetListener;
+    Calendar date = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,6 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
             return;
         }
 
-        /*
         lblDateStart.setOnClickListener(view -> {
             int year = date.get(Calendar.YEAR);
             int month = date.get(Calendar.MONTH);
@@ -51,20 +52,19 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
 
         mDateSetListener = (datePicker, year, month, day) -> {
             date.set(year, month, day);
-            String strDate = GetDateString(date);
+            String strDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(date.getTime());
             lblDateStart.setText(strDate);
         };
-        */
 
         if (intent.hasExtra("com.example.contributorx_android.ITEMINDEX")) {
-            int index = intent.getIntExtra("com.example.contributorx_android.ITEMINDEX", -1);
-            if (index >= 0) {
-                contribution = _DAO_Contribution.GetContribution(index);
+            int id = intent.getIntExtra("com.example.contributorx_android.ITEMINDEX", -1);
+            if (id >= 0) {
+                contribution = _DAO_Contribution.GetContribution(id);
 
                 if (contribution != null) {
                     txtContributionName.setText(contribution.getName());
                     txtAmount.setText(String.format("%s", contribution.getAmount()));
-                    // Set the date if needed
+                    lblDateStart.setText(new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(date.getTime()));
                 }
             }
         }
@@ -76,12 +76,12 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
 
                     contribution.setName(txtContributionName.getText().toString());
                     contribution.setAmount(Float.parseFloat(txtAmount.getText().toString()));
-                    //contribution.setDueDate(date);
+                    contribution.setDueDate(date);
 
                     contribution.setId(_DAO_Contribution.AddContribution(contribution));
                     List<Contributor> contributors = _DAO_Contributor.GetContributorsInCommunity(_Activity_Login.LoggedOnUser.getCommunityId());
                     for (int i = 0; i < contributors.size(); i++) {
-                        _DAO_Expectation.AddExpectation(new Expectation(contributors.get(i).getId(), contribution.getId(), 0.00f, 0.00f, 0, ""));
+                        int expectationId = _DAO_Expectation.AddExpectation(new Expectation(contributors.get(i).getId(), contribution.getId(), 0.00f, 0.00f, 0, ""));
                     }
                 } else {
                     _DAO_Contribution.UpdateContribution(contribution);
@@ -97,12 +97,5 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
         btnCancel.setOnClickListener(view -> {
             finish();
         });
-    }
-
-    private String GetDateString(Calendar date) {
-        int year = date.get(Calendar.YEAR);
-        int month = date.get(Calendar.MONTH);
-        int day = date.get(Calendar.DAY_OF_MONTH);
-        return day + "/" + (month + 1) + "/" + year;
     }
 }

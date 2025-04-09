@@ -110,7 +110,9 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                 contributor.setUserName(txtFlatNumber.getText().toString());
                 contributor.setStartDate(date);
 
-                _DAO_Contributor.AddContributor(contributor);
+                int contributorId = _DAO_Contributor.AddContributor(contributor);
+
+                contributor.setId(contributorId);
             }
             else {
                 _DAO_Contributor.UpdateContributor(contributor);

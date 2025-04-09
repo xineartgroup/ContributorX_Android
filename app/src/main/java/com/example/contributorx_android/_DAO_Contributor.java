@@ -5,6 +5,8 @@ import java.util.List;
 
 public class _DAO_Contributor {
 
+    private static int lastId = 0;
+
     private static List<Contributor> contributors = new ArrayList<>();
 
     public static List<Contributor> GetAllContributors() {
@@ -12,7 +14,7 @@ public class _DAO_Contributor {
     }
 
     public static int AddContributor(Contributor contributor) {
-        contributor.setId(contributors.isEmpty() ? 1 : contributors.get(contributors.size() - 1).getId() + 1);
+        contributor.setId(++lastId);
         contributors.add(contributor);
         return contributor.getId();
     }
