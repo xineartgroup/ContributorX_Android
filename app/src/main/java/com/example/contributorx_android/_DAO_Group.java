@@ -46,4 +46,14 @@ public class _DAO_Group {
 
         return null;
     }
+
+    public static Group GetGroupByName(String name) {
+        for (int index = 0; index < groups.size(); index++) {
+            if (name.equals(groups.get(index).getName())) {
+                return groups.get(index);
+            }
+        }
+
+        return null;
+    }
 }

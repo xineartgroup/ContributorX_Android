@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -50,6 +51,7 @@ public class _Layout_User_Group_List extends BaseAdapter {
 
             holder = new ViewHolder();
             holder.lblName = convertView.findViewById(R.id.lblName);
+            holder.btnRemove = convertView.findViewById(R.id.btnRemove);
 
             convertView.setTag(holder);
         } else {
@@ -62,6 +64,11 @@ public class _Layout_User_Group_List extends BaseAdapter {
 
             if (group != null) {
                 holder.lblName.setText(group.getName());
+
+                holder.btnRemove.setOnClickListener(v -> {
+                    handleRemoveButtonClick(group.getId());
+                    notifyDataSetChanged();
+                });
             }
         }
 
@@ -70,13 +77,15 @@ public class _Layout_User_Group_List extends BaseAdapter {
 
     static class ViewHolder {
         TextView lblName;
+        Button btnRemove;
     }
 
-    private void handlePayButtonClick(int groupId) {
-        Intent makePaymentIntent = new Intent(context, _Activity_Make_Payment.class);
-
-        makePaymentIntent.putExtra("EXPECTATION_ID", groupId);
-
-        context.startActivity(makePaymentIntent);
+    private void handleRemoveButtonClick(int groupId) {
+        for (int i = 0; i < groupings.size(); i++){
+            if (groupings.get(i).getGroupId() == groupId){
+                groupings.remove(i);
+                break;
+            }
+        }
     }
 }

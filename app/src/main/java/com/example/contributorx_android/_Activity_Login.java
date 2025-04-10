@@ -27,6 +27,7 @@ public class _Activity_Login extends AppCompatActivity {
 
         _DAO_Group.AddGroup(new Group("13 Akinsanya Residents Bills", "Bills for residents of 13 Akinsanya, Ajao, Isolo Lagos", 1));
         _DAO_Group.AddGroup(new Group("13 Akinsanya Social Contributions", "Contributions for residents of 13 Akinsanya, Ajao, Isolo Lagos", 1));
+        _DAO_Group.AddGroup(new Group("13 Akinsanya Repairs", "Repairs for residents of 13 Akinsanya, Ajao, Isolo Lagos", 1));
 
         _DAO_Contributor.AddContributor(new Contributor("flat1", "Inaegwu", "Achichi", "Administrator", "x@x.com", "080", "img1.jpg", 1, true, date0));
         _DAO_Contributor.AddContributor(new Contributor("flat2", "Oluwafemi", "Akerele", "Contributor", "x@x.com", "080", "img2.jpg", 1, true, date0));

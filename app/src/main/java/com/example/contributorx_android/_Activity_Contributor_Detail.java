@@ -5,21 +5,27 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class _Activity_Contributor_Detail extends AppCompatActivity {
     int SELECT_PHOTO = 1;
-    int id = -1;
+    int contributorId = -1;
     Contributor contributor = null;
+    List<Grouping> groupings = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +39,12 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
         TextView lblName = findViewById(R.id.lblName);
         TextView lblEmail = findViewById(R.id.lblEmail);
         TextView lblPhoneNumber = findViewById(R.id.lblPhoneNumber);
-        Button btnSaveContributor = findViewById(R.id.btnSaveContributor);
         Spinner cboStatus = findViewById(R.id.cboStatus);
-        Button btnCancel = findViewById(R.id.btnCancel);
+        Spinner cboGroups = findViewById(R.id.cboGroups);
         ListView lstUserExpectation = findViewById(R.id.lstUserExpectation);
         ListView lstUserGroups = findViewById(R.id.lstUserGroups);
+        Button btnSaveContributor = findViewById(R.id.btnSaveContributor);
+        Button btnCancel = findViewById(R.id.btnCancel);
 
         imgContributor.setOnClickListener(view -> {
             Intent intent1 = new Intent(Intent.ACTION_PICK);
@@ -47,9 +54,9 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
 
         if (intent.hasExtra("com.example.contributorx_android.ITEMINDEX")){
             //EXISTING ITEM
-            id = Objects.requireNonNull(intent.getExtras()).getInt("com.example.contributorx_android.ITEMINDEX");
+            contributorId = Objects.requireNonNull(intent.getExtras()).getInt("com.example.contributorx_android.ITEMINDEX");
 
-            contributor = _DAO_Contributor.GetContributor(id);
+            contributor = _DAO_Contributor.GetContributor(contributorId);
 
             if (contributor != null) {
                 //setImage(imgContributor, contributor.getPicture());
@@ -58,12 +65,13 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                 lblEmail.setText(contributor.getEmail());
                 lblPhoneNumber.setText(contributor.getPhoneNumber());
                 cboStatus.setSelection(contributor.isActive() ? 0 : 1);
+                cboGroups.setAdapter(getStringArrayAdapter());
 
-                List<Grouping> groupings = _DAO_Grouping.GetGroupingsForContributor(id);
+                groupings = _DAO_Grouping.GetGroupingsForContributor(contributorId);
                 _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(this, groupings);
                 lstUserGroups.setAdapter(userGroupItemAdapter);
 
-                List<Expectation> expectations = _DAO_Expectation.GetExpectationsForContributor(id);
+                List<Expectation> expectations = _DAO_Expectation.GetExpectationsForContributor(contributorId);
                 _Layout_Expectation_List2 expectationItemAdapter = new _Layout_Expectation_List2(this, expectations);
                 lstUserExpectation.setAdapter(expectationItemAdapter);
             }
@@ -72,9 +80,28 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
         cboStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //String selectedItem = parent.getItemAtPosition(position).toString();
                 if (contributor != null) {
                     contributor.setActive(position == 0);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // This method is called when the selection disappears from the spinner
+                // This can happen for example when the adapter becomes empty
+            }
+        });
+
+        cboGroups.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                Group group = _DAO_Group.GetGroupByName(selectedItem);
+                if (group != null) {
+                    groupings.add(new Grouping(contributorId, group.getId()));
+                    _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(getApplicationContext(), groupings);
+                    lstUserGroups.setAdapter(userGroupItemAdapter);
+                    cboGroups.setSelection(0);
                 }
             }
 
@@ -88,6 +115,35 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
         btnSaveContributor.setOnClickListener(view -> {
             if (contributor != null) {
                 _DAO_Contributor.UpdateContributor(contributor);
+                List<Grouping> old_groupings = _DAO_Grouping.GetGroupingsForContributor(contributorId);
+
+                // Find items to delete (in old list but not in new list)
+                for (Grouping old_grouping : old_groupings) {
+                    boolean found = false;
+                    for (Grouping grouping : groupings) {
+                        if (old_grouping.getGroupId() == grouping.getGroupId()) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        _DAO_Grouping.DeleteGrouping(old_grouping.getId());
+                    }
+                }
+
+                // Add new items and update existing ones
+                for (Grouping grouping : groupings) {
+                    boolean found = false;
+                    for (Grouping old_grouping : old_groupings) {
+                        if (grouping.getId() == old_grouping.getId()){
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found){
+                        _DAO_Grouping.AddGrouping(grouping);
+                    }
+                }
             }
 
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
@@ -98,6 +154,22 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
             startActivity(startIntent);
         });
+    }
+
+    @NonNull
+    private ArrayAdapter<String> getStringArrayAdapter() {
+        List<Group> groups = _DAO_Group.GetAllGroups();
+        ArrayList<String> items = new ArrayList<>();
+        items.add("");
+        for (int position = 0; position < groups.size(); position++) {
+            Group group = groups.get(position);
+            if (group != null) {
+                items.add(group.getName());
+            }
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
     }
 
     @Override
