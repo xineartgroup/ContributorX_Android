@@ -3,6 +3,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +35,9 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contributor_detail);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
 
@@ -98,10 +105,22 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                 String selectedItem = parent.getItemAtPosition(position).toString();
                 Group group = _DAO_Group.GetGroupByName(selectedItem);
                 if (group != null) {
-                    groupings.add(new Grouping(contributorId, group.getId()));
-                    _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(getApplicationContext(), groupings);
-                    lstUserGroups.setAdapter(userGroupItemAdapter);
-                    cboGroups.setSelection(0);
+                    boolean found = false;
+                    for (Grouping grouping : groupings){
+                        if (grouping.getGroupId() == group.getId()){
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) {
+                        Toast.makeText(getApplicationContext(), "Contributor already belongs to the selected group", Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        groupings.add(new Grouping(contributorId, group.getId()));
+                        _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(getApplicationContext(), groupings);
+                        lstUserGroups.setAdapter(userGroupItemAdapter);
+                        cboGroups.setSelection(0);
+                    }
                 }
             }
 
@@ -186,6 +205,24 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                 Toast.makeText(this, ex.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mainmenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent startIntent = _Activity_Login.MenuAction(item.getItemId(), getApplicationContext());
+
+        if (startIntent != null) {
+            startActivity(startIntent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

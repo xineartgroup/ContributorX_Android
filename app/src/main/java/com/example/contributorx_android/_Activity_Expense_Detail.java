@@ -1,10 +1,16 @@
 package com.example.contributorx_android;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class _Activity_Expense_Detail extends AppCompatActivity {
     Expense expense = null;
@@ -13,6 +19,9 @@ public class _Activity_Expense_Detail extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_expense_detail);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
 
@@ -68,5 +77,24 @@ public class _Activity_Expense_Detail extends AppCompatActivity {
         btnCancel.setOnClickListener(view -> {
             finish();
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.mainmenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        Intent startIntent = _Activity_Login.MenuAction(item.getItemId(), getApplicationContext());
+
+        if (startIntent != null) {
+            startActivity(startIntent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
