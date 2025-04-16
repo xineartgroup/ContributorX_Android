@@ -118,15 +118,17 @@ public class _Activity_Login extends AppCompatActivity {
             return new Intent(context, _Activity_Contributor_List.class);
         } else if (id == R.id.itmContributions) {
             return new Intent(context, _Activity_Contribution_List.class);
-        } else if (id == R.id.itmReport) {
-            Toast.makeText(context, "Reporting...", Toast.LENGTH_LONG).show();
-            return null;
         } else if (id == R.id.itmExpenses) {
             return new Intent(context, _Activity_Expense_List.class);
+        } else if (id == R.id.itmGroups) {
+            return new Intent(context, _Activity_Group_List.class);
         } else if (id == R.id.itmLogout) {
             _Activity_Login.LoggedOnUser = null;
             return new Intent(context, _Activity_Login.class);
-        }/* else if (R.id.itmIndicatePayment) {
+        }/*  else if (id == R.id.itmReport) {
+            Toast.makeText(context, "Reporting...", Toast.LENGTH_LONG).show();
+            return null;
+        }else if (R.id.itmIndicatePayment) {
             Intent startIntent = new Intent(context, ContributorPaymentActivity.class);
             startIntent.putExtra("com.example.contributorx_android.ITEMINDEX", LoggedOnUser.getId());
             return startIntent;

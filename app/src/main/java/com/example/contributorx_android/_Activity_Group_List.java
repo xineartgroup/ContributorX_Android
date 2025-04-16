@@ -19,13 +19,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.List;
 
-public class _Activity_Expense_List extends AppCompatActivity {
+public class _Activity_Group_List extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_expense_list);
+        setContentView(R.layout.activity_group_list);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -36,7 +36,7 @@ public class _Activity_Expense_List extends AppCompatActivity {
             return insets;
         });
 
-        Button btnAddExpense = findViewById(R.id.btnAddExpense);
+        Button btnAddGroup = findViewById(R.id.btnAddGroup);
         ListView lstDetail = findViewById(R.id.lstDetail);
 
         if (_Activity_Login.LoggedOnUser == null){
@@ -48,30 +48,30 @@ public class _Activity_Expense_List extends AppCompatActivity {
         }
 
         if (_Activity_Login.LoggedOnUser.getRole().equals("Administrator")) {
-            btnAddExpense.setVisibility(View.VISIBLE);
+            btnAddGroup.setVisibility(View.VISIBLE);
         }
         else{
-            btnAddExpense.setVisibility(View.GONE);
+            btnAddGroup.setVisibility(View.GONE);
         }
 
-        List<Expense> expenses = _DAO_Expense.GetAllExpense();
+        List<Group> groups = _DAO_Group.GetAllGroups();
 
-        _Layout_Expense_List iAdapter = new _Layout_Expense_List(this, expenses);
+        _Layout_Group_List iAdapter = new _Layout_Group_List(this, groups);
         lstDetail.setAdapter(iAdapter);
 
         lstDetail.setOnItemClickListener((adapterView, view, i, l) -> {
             if ("Administrator".equals(_Activity_Login.LoggedOnUser.getRole())) {
-                Expense expense = expenses.get(i);
-                if (expense != null) {
-                    Intent startIntent = new Intent(getApplicationContext(), _Activity_Expense_Detail.class);
-                    startIntent.putExtra("com.example.contributorx_android.ITEMINDEX", expense.getId());
+                Group group = groups.get(i);
+                if (group != null) {
+                    Intent startIntent = new Intent(getApplicationContext(), _Activity_Group_Detail.class);
+                    startIntent.putExtra("com.example.contributorx_android.ITEMINDEX", group.getId());
                     startActivity(startIntent);
                 }
             }
         });
 
-        btnAddExpense.setOnClickListener(view -> {
-            Intent startIntent = new Intent(getApplicationContext(), _Activity_Expense_Detail.class);
+        btnAddGroup.setOnClickListener(view -> {
+            Intent startIntent = new Intent(getApplicationContext(), _Activity_Group_Detail.class);
             startActivity(startIntent);
         });
     }

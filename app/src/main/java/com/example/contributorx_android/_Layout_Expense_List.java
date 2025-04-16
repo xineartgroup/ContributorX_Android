@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -67,12 +65,5 @@ public class _Layout_Expense_List extends BaseAdapter {
         TextView lblExpenseName;
         TextView lblExpenseDescription;
         TextView lblExpenseAmount;
-    }
-
-    private String GetDateString(Calendar date) {
-        int year = date.get(Calendar.YEAR);
-        int month = date.get(Calendar.MONTH);
-        int day = date.get(Calendar.DAY_OF_MONTH);
-        return day + "/" + (month + 1) + "/" + year;
     }
 }

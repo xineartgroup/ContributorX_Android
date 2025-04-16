@@ -11,23 +11,22 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class _Activity_Expense_Detail extends AppCompatActivity {
-    Expense expense = null;
+public class _Activity_Group_Detail extends AppCompatActivity {
+    Group group = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_expense_detail);
+        setContentView(R.layout.activity_group_detail);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
 
-        TextView txtExpenseName = findViewById(R.id.txtExpenseName);
+        TextView txtGroupName = findViewById(R.id.txtGroupName);
         TextView txtDescription = findViewById(R.id.txtDescription);
-        TextView txtAmount = findViewById(R.id.txtAmount);
-        Button btnSaveExpense = findViewById(R.id.btnSaveExpense);
+        Button btnSaveGroup = findViewById(R.id.btnSaveGroup);
         Button btnCancel = findViewById(R.id.btnCancel);
 
         if (_Activity_Login.LoggedOnUser == null){
@@ -41,32 +40,30 @@ public class _Activity_Expense_Detail extends AppCompatActivity {
         if (intent.hasExtra("com.example.contributorx_android.ITEMINDEX")) {
             int id = intent.getIntExtra("com.example.contributorx_android.ITEMINDEX", -1);
             if (id >= 0) {
-                expense = _DAO_Expense.GetExpense(id);
+                group = _DAO_Group.GetGroup(id);
 
-                if (expense != null) {
-                    txtExpenseName.setText(expense.getName());
-                    txtDescription.setText(expense.getDescription());
-                    txtAmount.setText(String.format("%s", expense.getAmountPaid()));
+                if (group != null) {
+                    txtGroupName.setText(group.getName());
+                    txtDescription.setText(group.getDescription());
                 }
             }
         }
 
-        btnSaveExpense.setOnClickListener(view -> {
+        btnSaveGroup.setOnClickListener(view -> {
             try {
-                if (expense == null) {
-                    expense = new Expense();
+                if (group == null) {
+                    group = new Group();
 
-                    expense.setName(txtExpenseName.getText().toString());
-                    expense.setDescription(txtDescription.getText().toString());
-                    expense.setAmountPaid(Float.parseFloat(txtAmount.getText().toString().trim()));
-                    expense.setCommunityId(_Activity_Login.LoggedOnUser.getCommunityId());
+                    group.setName(txtGroupName.getText().toString());
+                    group.setDescription(txtDescription.getText().toString());
+                    group.setCommunityId(_Activity_Login.LoggedOnUser.getCommunityId());
 
-                    expense.setId(_DAO_Expense.AddExpense(expense));
+                    group.setId(_DAO_Group.AddGroup(group));
                 } else {
-                    _DAO_Expense.UpdateExpense(expense);
+                    _DAO_Group.UpdateGroup(group);
                 }
 
-                Intent startIntent = new Intent(getApplicationContext(), _Activity_Expense_List.class);
+                Intent startIntent = new Intent(getApplicationContext(), _Activity_Group_List.class);
                 startActivity(startIntent);
             } catch (Exception e) {
                 Toast.makeText(this, "Error saving: " + e.getMessage(), Toast.LENGTH_LONG).show();
