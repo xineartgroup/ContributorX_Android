@@ -32,11 +32,11 @@ public class MainActivity extends AppCompatActivity {
         ListView lstUserExpectation = findViewById(R.id.lstUserExpectation);
         List<Expectation> expectations = _DAO_Expectation.GetExpectationsForContributor(_Activity_Login.LoggedOnUser.getId());
 
-        _Layout_Expectation_List expectationItemAdapter = new _Layout_Expectation_List(this, expectations);
+        _Layout_Expectation_List1 expectationItemAdapter = new _Layout_Expectation_List1(this, expectations);
         lstUserExpectation.setAdapter(expectationItemAdapter);
 
         LayoutInflater inflater = LayoutInflater.from(this);
-        View itemView = inflater.inflate(R.layout.layout_expectation_list, null);
+        View itemView = inflater.inflate(R.layout.layout_expectation_list1, null);
 
         /*ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

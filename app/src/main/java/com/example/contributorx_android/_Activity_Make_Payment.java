@@ -50,7 +50,7 @@ public class _Activity_Make_Payment extends AppCompatActivity {
                 txtAmountPaid.setText(getString(R.string.amount_paid, amountPaid));
 
                 double remainingBalance = contribution.getAmount() - amountPaid;
-                txtPaymentAmount.setText(getString(R.string.payment_amount, remainingBalance));
+                txtPaymentAmount.setText("" + remainingBalance);
             }
         }
 
@@ -77,18 +77,29 @@ public class _Activity_Make_Payment extends AppCompatActivity {
         Expectation expectation = _DAO_Expectation.GetExpectation(expectationId);
 
         if (expectation != null) {
-            if ("Use Payment Gateway".equals(paymentMethod)) {
+            if ("Use Payment Gateway".equals(paymentMethod) && PaymentSuccessful(expectation)) {
                 expectation.setAmountPaid(paymentAmount);
+                _DAO_Expectation.UpdateExpectation(expectation);
+                Toast.makeText(this, "Payment successful!!!", Toast.LENGTH_SHORT).show();
+                // Return to previous screen
+                finish();
+            }
+            else if ("Send for Approval".equals(paymentMethod)) {
+                expectation.setPaymentStatus(1);
+                _DAO_Expectation.UpdateExpectation(expectation);
+                Toast.makeText(this, "Payment successful!!!", Toast.LENGTH_SHORT).show();
+                // Return to previous screen
+                finish();
             }
             else{
-                expectation.setPaymentStatus(1);
+                Toast.makeText(this, "Payment failed!!!", Toast.LENGTH_SHORT).show();
             }
-            _DAO_Expectation.UpdateExpectation(expectation);
-            Toast.makeText(this, "Payment successful", Toast.LENGTH_SHORT).show();
-            // Return to previous screen
-            finish();
         } else {
-            Toast.makeText(this, "Payment failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Payment failed!!!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private boolean PaymentSuccessful(Expectation expectation) {
+        return false;
     }
 }

@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class _Layout_Expectation_List extends BaseAdapter {
+public class _Layout_Expectation_List1 extends BaseAdapter {
     LayoutInflater mInflater;
     List<Expectation> expectations;
     Context context;
 
-    public _Layout_Expectation_List(Context c, List<Expectation> items){
+    public _Layout_Expectation_List1(Context c, List<Expectation> items){
         context = c;
         expectations = items;
         mInflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -47,7 +47,7 @@ public class _Layout_Expectation_List extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.layout_expectation_list, parent, false);
+            convertView = mInflater.inflate(R.layout.layout_expectation_list1, parent, false);
 
             holder = new ViewHolder();
             holder.txtAmount = convertView.findViewById(R.id.txtAmount);

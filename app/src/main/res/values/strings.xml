@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">ContributorX</string>
+    <string name="search">Search</string>
     <string name="user_home">Home</string>
     <string name="user_name">User Name</string>
     <string name="user_password">Password</string>

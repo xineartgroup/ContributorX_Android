@@ -114,6 +114,10 @@ public class _Activity_Login extends AppCompatActivity {
     public static Intent MenuAction(int id, Context context) {
         if (id == android.R.id.home || id == R.id.itmHome) {
             return new Intent(context, MainActivity.class);
+        } else if (id == R.id.itmCommunity) {
+            return new Intent(context, _Activity_Community_Detail.class);
+        } else if (id == R.id.itmExpectations) {
+            return new Intent(context, _Activity_Expectation_List.class);
         } else if (id == R.id.itmContributors) {
             return new Intent(context, _Activity_Contributor_List.class);
         } else if (id == R.id.itmContributions) {
@@ -128,10 +132,6 @@ public class _Activity_Login extends AppCompatActivity {
         }/*  else if (id == R.id.itmReport) {
             Toast.makeText(context, "Reporting...", Toast.LENGTH_LONG).show();
             return null;
-        }else if (R.id.itmIndicatePayment) {
-            Intent startIntent = new Intent(context, ContributorPaymentActivity.class);
-            startIntent.putExtra("com.example.contributorx_android.ITEMINDEX", LoggedOnUser.getId());
-            return startIntent;
         }*/
 
         return null;
