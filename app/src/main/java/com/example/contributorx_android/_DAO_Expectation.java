@@ -51,11 +51,42 @@ public class _DAO_Expectation {
         List<Expectation> result = new ArrayList<>();
 
         for (int i = 0; i < expectations.size(); i++) {
-            if (expectations.get(i).getContributorId() == contributorId) {
-                result.add(expectations.get(i));
+            Expectation expectation = expectations.get(i);
+            if (expectation.getContributorId() == contributorId) {
+                if (expectation.getPaymentStatus() != 2 && expectation.getPaymentStatus() != 3) {
+                    result.add(expectation);
+                }
             }
         }
 
         return result;
+    }
+
+    public static List<Expectation> GetUnclearedExpectationsIn(int communityId) {
+        List<Expectation> result = new ArrayList<>();
+
+        for (int i = 0; i < expectations.size(); i++) {
+            Expectation expectation = expectations.get(i);
+            Contributor contributor = _DAO_Contributor.GetContributor(expectation.getContributorId());
+            Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
+            if (contributor != null && contribution != null && contributor.getCommunityId() == communityId) {
+                if (expectation.getPaymentStatus() != 2 && expectation.getPaymentStatus() != 3 &&
+                        contribution.getAmount() - expectation.getAmountPaid() > 0) {
+                    result.add(expectation);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public static void ApprovePayment(int Id, int status) {
+        for (int i = 0; i < expectations.size(); i++) {
+            if (expectations.get(i).getId() == Id) {
+                Expectation expectation = expectations.get(i);
+                expectation.setPaymentStatus(status);
+                UpdateExpectation(expectation);
+            }
+        }
     }
 }

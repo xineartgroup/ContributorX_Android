@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,7 +32,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ListView lstUserExpectation = findViewById(R.id.lstUserExpectation);
-        List<Expectation> expectations = _DAO_Expectation.GetExpectationsForContributor(_Activity_Login.LoggedOnUser.getId());
+        List<Expectation> list = _DAO_Expectation.GetExpectationsForContributor(_Activity_Login.LoggedOnUser.getId());
+
+        List<Expectation> expectations = new ArrayList<>();
+
+        for (Expectation item : list){
+            Contribution contribution = _DAO_Contribution.GetContribution(item.getContributionId());
+            if (contribution != null) {
+                if (contribution.getAmount() - (item.getAmountPaid() + item.getAmountToApprove()) > 0.0) {
+                    expectations.add(item);
+                }
+            }
+        }
 
         _Layout_Expectation_List1 expectationItemAdapter = new _Layout_Expectation_List1(this, expectations);
         lstUserExpectation.setAdapter(expectationItemAdapter);

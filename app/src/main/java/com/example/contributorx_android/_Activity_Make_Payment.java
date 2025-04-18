@@ -78,6 +78,7 @@ public class _Activity_Make_Payment extends AppCompatActivity {
 
         if (expectation != null) {
             if ("Use Payment Gateway".equals(paymentMethod) && PaymentSuccessful(expectation)) {
+                expectation.setPaymentStatus(3);
                 expectation.setAmountPaid(paymentAmount);
                 _DAO_Expectation.UpdateExpectation(expectation);
                 Toast.makeText(this, "Payment successful!!!", Toast.LENGTH_SHORT).show();
@@ -86,8 +87,9 @@ public class _Activity_Make_Payment extends AppCompatActivity {
             }
             else if ("Send for Approval".equals(paymentMethod)) {
                 expectation.setPaymentStatus(1);
+                expectation.setAmountToApprove(paymentAmount);
                 _DAO_Expectation.UpdateExpectation(expectation);
-                Toast.makeText(this, "Payment successful!!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Payment sent for Approval!!!", Toast.LENGTH_SHORT).show();
                 // Return to previous screen
                 finish();
             }

@@ -67,12 +67,7 @@ public class _Layout_Expectation_List1 extends BaseAdapter {
                 holder.txtAmount.setText(String.valueOf(contribution.getAmount()));
                 holder.txtName.setText(contribution.getName());
 
-                holder.btnPay.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        handlePayButtonClick(expectation.getId());
-                    }
-                });
+                holder.btnPay.setOnClickListener(v -> handlePayButtonClick(expectation.getId()));
             }
         }
 

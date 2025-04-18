@@ -44,7 +44,7 @@ public class _Activity_Login extends AppCompatActivity {
 
         _DAO_Contribution.AddContribution(new Contribution("Monthly Dues for August", 4500, 1, date0, date1));
         _DAO_Contribution.AddContribution(new Contribution("Gate repair", 1250, 1, date0, date1));
-        _DAO_Contribution.AddContribution(new Contribution("Monthly Dues for September", 4500, 1, date0, date1));
+        _DAO_Contribution.AddContribution(new Contribution("Monthly Dues for September", 3500, 1, date0, date1));
 
         _DAO_Expense.AddExpense(new Expense("Cleaning Expense For Jan 2025", "Cleaning Expense For Jan 2025", 4500, 1, ""));
         _DAO_Expense.AddExpense(new Expense("LAWMA Expense For Jan 2025", "LAWMA Expense For Jan 2025", 1250, 1, ""));
@@ -54,11 +54,11 @@ public class _Activity_Login extends AppCompatActivity {
         _DAO_Expectation.AddExpectation(new Expectation(1, 2, 0.00f, 0.00f, 0, ""));
         _DAO_Expectation.AddExpectation(new Expectation(1, 3, 0.00f, 0.00f, 0, ""));
         _DAO_Expectation.AddExpectation(new Expectation(2, 1, 4500, 0.00f, 0, ""));
-        _DAO_Expectation.AddExpectation(new Expectation(2, 2, 1250, 0.00f, 0, ""));
-        _DAO_Expectation.AddExpectation(new Expectation(2, 3, 0, 0.00f, 0, ""));
-        _DAO_Expectation.AddExpectation(new Expectation(3, 1, 4500, 0.00f, 0, ""));
-        _DAO_Expectation.AddExpectation(new Expectation(3, 2, 1250, 0.00f, 0, ""));
-        _DAO_Expectation.AddExpectation(new Expectation(3, 3, 4500, 0.00f, 0, ""));
+        _DAO_Expectation.AddExpectation(new Expectation(2, 2, 0.00f, 1250, 0, ""));
+        _DAO_Expectation.AddExpectation(new Expectation(2, 3, 1500, 0.00f, 0, ""));
+        _DAO_Expectation.AddExpectation(new Expectation(3, 1, 0.00f, 0.00f, 0, ""));
+        _DAO_Expectation.AddExpectation(new Expectation(3, 2, 0.00f, 0.00f, 0, ""));
+        _DAO_Expectation.AddExpectation(new Expectation(3, 3, 0.00f, 0.00f, 0, ""));
 
         _DAO_Grouping.AddGrouping(new Grouping(1, 1));
         _DAO_Grouping.AddGrouping(new Grouping(2, 1));

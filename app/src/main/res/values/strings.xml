@@ -74,7 +74,15 @@
     <string name="no_file_selected_text">No file selected</string>
     <string name="make_payment_text">Make Payment</string>
     <string name="contribution_name_text">Contribution Name</string>
+    <string name="contribution_description_text">Contribution Description</string>
     <string name="pay_text">Pay</string>
     <string name="amount_value">0.00</string>
     <string name="pictures_folder">/sdcard/Pictures/%s</string>
+    <string name="payment_receipt">"Payment Receipt"</string>
+    <string name="no_payment_receipt">"No receipt uploaded."</string>
+    <string name="approve">"Approve"</string>
+    <string name="reject">"Reject"</string>
+    <string name="cancel">"Cancel"</string>
+    <string name="approve_reject">"Approve/Reject "</string>
+    <string name="write_off">"Write-off "</string>
 </resources>

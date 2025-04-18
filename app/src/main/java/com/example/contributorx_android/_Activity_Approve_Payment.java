@@ -1,0 +1,170 @@
+package com.example.contributorx_android;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import java.io.File;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+public class _Activity_Approve_Payment extends AppCompatActivity {
+
+    private TextView tvContributionName;
+    private TextView tvAmountOwed;
+    private TextView tvDueDate;
+    private TextView tvAmountToApprove;
+    private ImageView imgReceipt;
+    private TextView tvNoReceipt;
+    private Button btnApprove;
+    private Button btnReject;
+    private Button btnCancel;
+
+    int expectationId;
+    int contributionId;
+    int contributorId;
+    float amountToApprove;
+    String paymentReceipt;
+
+    private NumberFormat currencyFormatter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_approve_payment);
+
+        // Set up toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        // Initialize formatters
+        currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
+
+        // Initialize views
+        tvContributionName = findViewById(R.id.tvContributionName);
+        tvAmountOwed = findViewById(R.id.tvAmountOwed);
+        tvDueDate = findViewById(R.id.tvDueDate);
+        tvAmountToApprove = findViewById(R.id.tvAmountToApprove);
+        imgReceipt = findViewById(R.id.imgReceipt);
+        tvNoReceipt = findViewById(R.id.tvNoReceipt);
+        btnApprove = findViewById(R.id.btnApprove);
+        btnReject = findViewById(R.id.btnReject);
+        btnCancel = findViewById(R.id.btnCancel);
+
+        // Get data from intent
+        Intent intent = getIntent();
+        if (intent != null) {
+            expectationId = intent.getIntExtra("EXPECTATION_ID", 0);
+            loadExpectationDetails(expectationId);
+        }
+
+        // Set up button click listeners
+        setupButtonListeners(expectationId);
+    }
+
+    private void loadExpectationDetails(int expectationId) {
+        Expectation expectation = _DAO_Expectation.GetExpectation(expectationId);
+        if (expectation == null) {
+            Toast.makeText(this, "Error loading expectation details", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        // Store data for use by button handlers
+        this.contributionId = expectation.getContributionId();
+        this.contributorId = expectation.getContributorId();
+        this.amountToApprove = expectation.getAmountToApprove();
+        this.paymentReceipt = expectation.getPaymentReceipt();
+
+        // Get related data
+        Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
+        
+        if (contribution != null) {
+            tvContributionName.setText(contribution.getName());
+            tvAmountOwed.setText(currencyFormatter.format(contribution.getAmount()));
+            tvDueDate.setText(new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(contribution.getDueDate().getTime()));
+        }
+
+        // Set amount to approve
+        tvAmountToApprove.setText(currencyFormatter.format(expectation.getAmountToApprove()));
+
+        // Handle receipt image
+        if (expectation.getPaymentReceipt() != null && !expectation.getPaymentReceipt().isEmpty()) {
+            loadReceiptImage(expectation.getPaymentReceipt());
+        } else {
+            imgReceipt.setVisibility(View.GONE);
+            tvNoReceipt.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void loadReceiptImage(String receiptPath) {
+        // This method would load the receipt image from storage
+        // For a real app, you would need to handle file storage and permissions
+        
+        try {
+            File imgFile = new File(getFilesDir(), receiptPath);
+            if (imgFile.exists()) {
+                Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                imgReceipt.setImageBitmap(bitmap);
+                imgReceipt.setVisibility(View.VISIBLE);
+                tvNoReceipt.setVisibility(View.GONE);
+            } else {
+                imgReceipt.setVisibility(View.GONE);
+                tvNoReceipt.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            imgReceipt.setVisibility(View.GONE);
+            tvNoReceipt.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setupButtonListeners(int expectationId) {
+        btnApprove.setOnClickListener(v -> {
+            _DAO_Expectation.ApprovePayment(expectationId, 2);
+            // Navigate back to expectations list
+            navigateToExpectationsList();
+        });
+
+        btnReject.setOnClickListener(v -> {
+            _DAO_Expectation.ApprovePayment(expectationId, 0);
+            // Navigate back to expectations list
+            navigateToExpectationsList();
+        });
+
+        btnCancel.setOnClickListener(v -> {
+            finish(); // Simply close this activity
+        });
+    }
+
+    private void navigateToExpectationsList() {
+        Intent intent = new Intent(this, _Activity_Expectation_List.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Clear the activity stack
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}

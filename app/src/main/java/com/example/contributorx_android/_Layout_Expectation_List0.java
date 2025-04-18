@@ -1,10 +1,12 @@
 package com.example.contributorx_android;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
@@ -20,7 +22,7 @@ public class _Layout_Expectation_List0 extends BaseAdapter {
 
     public _Layout_Expectation_List0(Context context, List<Expectation> list) {
         this.context = context;
-        mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.expectations = list;
         this.currencyFormatter = NumberFormat.getCurrencyInstance(Locale.US);
     }
@@ -51,7 +53,6 @@ public class _Layout_Expectation_List0 extends BaseAdapter {
             holder.tvContributor = convertView.findViewById(R.id.tvContributor);
             holder.tvBillPledge = convertView.findViewById(R.id.tvBillPledge);
             holder.tvAmountOwed = convertView.findViewById(R.id.tvAmountOwed);
-            holder.tvPreviouslyPaid = convertView.findViewById(R.id.tvPreviouslyPaid);
             holder.tvAmountToApprove = convertView.findViewById(R.id.tvAmountToApprove);
 
             convertView.setTag(holder);
@@ -68,8 +69,21 @@ public class _Layout_Expectation_List0 extends BaseAdapter {
             holder.tvContributor.setText(contributor.getUserName());
             holder.tvBillPledge.setText(contribution.getName());
             holder.tvAmountOwed.setText(currencyFormatter.format(contribution.getAmount() - expectation.getAmountPaid()));
-            holder.tvPreviouslyPaid.setText(currencyFormatter.format(expectation.getAmountPaid()));
-            holder.tvAmountToApprove.setText(currencyFormatter.format(expectation.getAmountToApprove()));
+            if (expectation.getPaymentStatus() == 2 || expectation.getPaymentStatus() == 3){
+                holder.tvAmountToApprove.setVisibility(View.GONE); // Or use View.INVISIBLE if you want to preserve the layout space
+            }
+            else {
+                holder.tvAmountToApprove.setVisibility(View.VISIBLE);
+                if (expectation.getAmountToApprove() > 0.00f) {
+                    holder.tvAmountToApprove.setText(String.format("%s%s", context.getString(R.string.approve_reject),
+                            currencyFormatter.format(expectation.getAmountToApprove())));
+                    holder.tvAmountToApprove.setOnClickListener(v -> handlePayButtonClick(expectation.getId(), "approve"));
+                } else {
+                    holder.tvAmountToApprove.setText(String.format("%s%s", context.getString(R.string.write_off),
+                            currencyFormatter.format(contribution.getAmount() - expectation.getAmountPaid())));
+                    holder.tvAmountToApprove.setOnClickListener(v -> handlePayButtonClick(expectation.getId(), "write-off"));
+                }
+            }
         }
 
         return convertView;
@@ -79,7 +93,14 @@ public class _Layout_Expectation_List0 extends BaseAdapter {
         TextView tvContributor;
         TextView tvBillPledge;
         TextView tvAmountOwed;
-        TextView tvPreviouslyPaid;
-        TextView tvAmountToApprove;
+        Button tvAmountToApprove;
+    }
+
+    private void handlePayButtonClick(int expectationId, String str) {
+        if ("approve".equals(str)) {
+            Intent approvePaymentIntent = new Intent(context, _Activity_Approve_Payment.class);
+            approvePaymentIntent.putExtra("EXPECTATION_ID", expectationId);
+            context.startActivity(approvePaymentIntent);
+        }
     }
 }
