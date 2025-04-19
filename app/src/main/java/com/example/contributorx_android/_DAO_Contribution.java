@@ -15,6 +15,19 @@ public class _DAO_Contribution {
 
     }
 
+    public static List<Contribution> GetAllContributionsInCommunity(int communityId) {
+        List<Contribution> list = new ArrayList<>();
+        for (Contribution contribution : contributions) {
+            Group group = _DAO_Group.GetGroup(contribution.getGroupId());
+            if (group != null) {
+                if (group.getCommunityId() == communityId) {
+                    list.add(contribution);
+                }
+            }
+        }
+        return list;
+    }
+
     public static int AddContribution(Contribution contribution) {
         contribution.setId(++lastId);
         contributions.add(contribution);

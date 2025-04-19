@@ -13,6 +13,16 @@ public class _DAO_Group {
         return groups;
     }
 
+    public static List<Group> GetAllGroupsInCommunity(int communityId) {
+        List<Group> list = new ArrayList<>();
+        for (Group group : groups) {
+            if (group.getCommunityId() == communityId) {
+                list.add(group);
+            }
+        }
+        return list;
+    }
+
     public static int AddGroup(Group group) {
         group.setId(++lastId);
         groups.add(group);

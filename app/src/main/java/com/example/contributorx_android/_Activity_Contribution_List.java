@@ -49,7 +49,7 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
             btnAddContribution.setVisibility(View.GONE);
         }
 
-        List<Contribution> contributions = _DAO_Contribution.GetAllContributions();
+        List<Contribution> contributions = _DAO_Contribution.GetAllContributionsInCommunity(_Activity_Login.LoggedOnUser.getCommunityId());
 
         _Layout_Contribution_List iAdapter = new _Layout_Contribution_List(this, contributions);
         lstDetail.setAdapter(iAdapter);

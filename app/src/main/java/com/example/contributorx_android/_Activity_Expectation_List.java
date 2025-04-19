@@ -4,12 +4,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,7 +40,7 @@ public class _Activity_Expectation_List extends AppCompatActivity {
         ListView lstDetail = findViewById(R.id.lstDetail);
         SearchView searchView = findViewById(R.id.searchView);
 
-        List<Expectation> expectations = _DAO_Expectation.GetUnclearedExpectationsIn(_Activity_Login.LoggedOnUser.getCommunityId());
+        List<Expectation> expectations = _DAO_Expectation.GetUnclearedExpectationsInCommunity(_Activity_Login.LoggedOnUser.getCommunityId());
 
         _Layout_Expectation_List0 iAdapter = new _Layout_Expectation_List0(this, expectations);
         lstDetail.setAdapter(iAdapter);

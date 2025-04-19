@@ -57,7 +57,7 @@ public class _Activity_Expense_List extends AppCompatActivity {
             btnAddExpense.setVisibility(View.GONE);
         }
 
-        List<Expense> expenses = _DAO_Expense.GetAllExpense();
+        List<Expense> expenses = _DAO_Expense.GetAllExpensesInCommunity(_Activity_Login.LoggedOnUser.getCommunityId());
 
         _Layout_Expense_List iAdapter = new _Layout_Expense_List(this, expenses);
         lstDetail.setAdapter(iAdapter);

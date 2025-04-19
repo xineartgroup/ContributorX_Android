@@ -9,8 +9,18 @@ public class _DAO_Expense {
 
     private static List<Expense> expenses = new ArrayList<>();
 
-    public static List<Expense> GetAllExpense() {
+    public static List<Expense> GetAllExpenses() {
         return expenses;
+    }
+
+    public static List<Expense> GetAllExpensesInCommunity(int communityId) {
+        List<Expense> list = new ArrayList<>();
+        for (Expense expense : expenses) {
+            if (expense.getCommunityId() == communityId) {
+                list.add(expense);
+            }
+        }
+        return list;
     }
 
     public static int AddExpense(Expense expense) {

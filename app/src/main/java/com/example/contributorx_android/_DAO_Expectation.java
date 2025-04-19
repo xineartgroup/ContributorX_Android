@@ -62,7 +62,7 @@ public class _DAO_Expectation {
         return result;
     }
 
-    public static List<Expectation> GetUnclearedExpectationsIn(int communityId) {
+    public static List<Expectation> GetUnclearedExpectationsInCommunity(int communityId) {
         List<Expectation> result = new ArrayList<>();
 
         for (int i = 0; i < expectations.size(); i++) {

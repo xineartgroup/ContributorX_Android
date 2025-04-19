@@ -57,7 +57,7 @@ public class _Activity_Group_List extends AppCompatActivity {
             btnAddGroup.setVisibility(View.GONE);
         }
 
-        List<Group> groups = _DAO_Group.GetAllGroups();
+        List<Group> groups = _DAO_Group.GetAllGroupsInCommunity(_Activity_Login.LoggedOnUser.getCommunityId());
 
         _Layout_Group_List iAdapter = new _Layout_Group_List(this, groups);
         lstDetail.setAdapter(iAdapter);
