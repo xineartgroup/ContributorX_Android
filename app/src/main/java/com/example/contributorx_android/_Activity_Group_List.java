@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class _Activity_Group_List extends AppCompatActivity {
@@ -38,6 +40,7 @@ public class _Activity_Group_List extends AppCompatActivity {
 
         Button btnAddGroup = findViewById(R.id.btnAddGroup);
         ListView lstDetail = findViewById(R.id.lstDetail);
+        SearchView searchView = findViewById(R.id.searchView);
 
         if (_Activity_Login.LoggedOnUser == null){
             Toast.makeText(this, "Please log in first", Toast.LENGTH_LONG).show();
@@ -74,6 +77,41 @@ public class _Activity_Group_List extends AppCompatActivity {
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Group_Detail.class);
             startActivity(startIntent);
         });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Optional: handle action on submit, but not needed for filtering
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Filter expenses and update adapter data
+                iAdapter.groups = Groups(groups, newText.trim());
+                iAdapter.notifyDataSetChanged(); // Very important to refresh the view
+                return true;
+            }
+        });
+    }
+
+    private List<Group> Groups(List<Group> groups, String query) {
+        List<Group> result = new ArrayList<>();
+
+        if (query.isEmpty()) {
+            result.addAll(groups);
+        } else {
+            query = query.toLowerCase();
+            for (Group group : groups) {
+                // Filter by group name or group description
+                if (group.getDescription().toLowerCase().contains(query) ||
+                        group.getName().toLowerCase().contains(query)) {
+                    result.add(group);
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override

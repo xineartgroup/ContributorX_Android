@@ -9,29 +9,29 @@ import android.widget.TextView;
 import java.util.List;
 
 public class _Layout_Group_List extends BaseAdapter {
-    List<Group> group;
+    List<Group> groups;
     LayoutInflater mInflater;
     Context context;
 
     public _Layout_Group_List(Context c, List<Group> t) {
-        group = t;
+        groups = t;
         mInflater = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         context = c;
     }
 
     @Override
     public int getCount() {
-        return group.size();
+        return groups.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return group.get(i);
+        return groups.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return group.get(i).getId();
+        return groups.get(i).getId();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class _Layout_Group_List extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Group expense = group.get(i);
+        Group expense = groups.get(i);
 
         holder.lblGroupName.setText(expense.getName());
         holder.lblGroupDescription.setText(expense.getDescription());

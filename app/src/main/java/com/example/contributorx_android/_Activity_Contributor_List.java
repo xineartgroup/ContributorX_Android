@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.Manifest;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class _Activity_Contributor_List extends AppCompatActivity {
         Button btnAddContributor = findViewById(R.id.btnAddContributor);
         Spinner cboStatus = findViewById(R.id.cboStatus);
         ListView lstDetail = findViewById(R.id.lstDetail);
+        SearchView searchView = findViewById(R.id.searchView);
 
         if (_Activity_Login.LoggedOnUser == null){
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
@@ -106,6 +108,44 @@ public class _Activity_Contributor_List extends AppCompatActivity {
 
             }
         });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Optional: handle action on submit, but not needed for filtering
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Filter contributors and update adapter data
+                iAdapter.contributors = Contributors(contributors, newText.trim());
+                iAdapter.notifyDataSetChanged(); // Very important to refresh the view
+                return true;
+            }
+        });
+    }
+
+    private List<Contributor> Contributors(List<Contributor> contributors, String query) {
+        List<Contributor> result = new ArrayList<>();
+
+        if (query.isEmpty()) {
+            result.addAll(contributors);
+        } else {
+            query = query.toLowerCase();
+            for (Contributor contributor : contributors) {
+                // Filter by contributor username or firstname or surname
+                if (contributor.getUserName().toLowerCase().contains(query) ||
+                        contributor.getFirstname().toLowerCase().contains(query) ||
+                        contributor.getLastname().toLowerCase().contains(query) ||
+                        contributor.getEmail().toLowerCase().contains(query) ||
+                        contributor.getPhoneNumber().toLowerCase().contains(query)) {
+                    result.add(contributor);
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override

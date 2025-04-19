@@ -73,7 +73,6 @@ public class _Activity_Approve_Payment extends AppCompatActivity {
             loadExpectationDetails(expectationId);
         }
 
-        // Set up button click listeners
         setupButtonListeners(expectationId);
     }
 
@@ -113,8 +112,7 @@ public class _Activity_Approve_Payment extends AppCompatActivity {
     }
 
     private void loadReceiptImage(String receiptPath) {
-        // This method would load the receipt image from storage
-        // For a real app, you would need to handle file storage and permissions
+        // You would need to handle file storage and permissions
         
         try {
             File imgFile = new File(getFilesDir(), receiptPath);
@@ -136,15 +134,23 @@ public class _Activity_Approve_Payment extends AppCompatActivity {
 
     private void setupButtonListeners(int expectationId) {
         btnApprove.setOnClickListener(v -> {
-            _DAO_Expectation.ApprovePayment(expectationId, 2);
-            // Navigate back to expectations list
-            navigateToExpectationsList();
+            Expectation expectation = _DAO_Expectation.GetExpectation(expectationId);
+            if (expectation != null) {
+                expectation.setPaymentStatus(2);
+                expectation.setAmountPaid(expectation.getAmountPaid());
+                _DAO_Expectation.UpdateExpectation(expectation);
+                navigateToExpectationsList();
+            }
         });
 
         btnReject.setOnClickListener(v -> {
-            _DAO_Expectation.ApprovePayment(expectationId, 0);
-            // Navigate back to expectations list
-            navigateToExpectationsList();
+            Expectation expectation = _DAO_Expectation.GetExpectation(expectationId);
+            if (expectation != null) {
+                expectation.setPaymentStatus(0);
+                expectation.setAmountToApprove(0.00f);
+                _DAO_Expectation.UpdateExpectation(expectation);
+                navigateToExpectationsList();
+            }
         });
 
         btnCancel.setOnClickListener(v -> {

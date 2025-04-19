@@ -41,25 +41,36 @@ public class _Activity_Expectation_List extends AppCompatActivity {
         }
 
         // Initialize views
-        SearchView searchView = findViewById(R.id.searchView);
         ListView lstDetail = findViewById(R.id.lstDetail);
+        SearchView searchView = findViewById(R.id.searchView);
 
         List<Expectation> expectations = _DAO_Expectation.GetUnclearedExpectationsIn(_Activity_Login.LoggedOnUser.getCommunityId());
 
         _Layout_Expectation_List0 iAdapter = new _Layout_Expectation_List0(this, expectations);
         lstDetail.setAdapter(iAdapter);
 
-        searchView.setOnSearchClickListener(v -> {
-            String query = searchView.getQuery().toString().trim();
-            filterExpectations(expectations, query);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Optional: handle action on submit, but not needed for filtering
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Filter expectations and update adapter data
+                iAdapter.expectations = Expectations(expectations, newText.trim());
+                iAdapter.notifyDataSetChanged(); // Very important to refresh the view
+                return true;
+            }
         });
     }
 
-    private void filterExpectations(List<Expectation> expectations, String query) {
-        List<Expectation> filteredList = new ArrayList<>();
+    private List<Expectation> Expectations(List<Expectation> expectations, String query) {
+        List<Expectation> result = new ArrayList<>();
         
         if (query.isEmpty()) {
-            filteredList.addAll(expectations);
+            result.addAll(expectations);
         } else {
             query = query.toLowerCase();
             for (Expectation expectation : expectations) {
@@ -70,11 +81,13 @@ public class _Activity_Expectation_List extends AppCompatActivity {
                     // Filter by contributor name or contribution name
                     if (contributor.getUserName().toLowerCase().contains(query) ||
                             contribution.getName().toLowerCase().contains(query)) {
-                        filteredList.add(expectation);
+                        result.add(expectation);
                     }
                 }
             }
         }
+
+        return result;
     }
 
     @Override

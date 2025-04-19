@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:title="@string/app_name"
+                app:title="Contributors"
                 app:popupTheme="@style/ThemeOverlay.Material3.Light" />
 
             <!-- ConstraintLayout inside AppBarLayout for buttons -->
@@ -45,8 +45,7 @@
                     android:layout_marginEnd="8dp"
                     app:layout_constraintStart_toEndOf="@id/btnAddContributor"
                     app:layout_constraintEnd_toStartOf="@id/cboStatus"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.5" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Spinner
                     android:id="@+id/cboStatus"

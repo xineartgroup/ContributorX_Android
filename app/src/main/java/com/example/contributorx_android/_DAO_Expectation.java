@@ -79,14 +79,4 @@ public class _DAO_Expectation {
 
         return result;
     }
-
-    public static void ApprovePayment(int Id, int status) {
-        for (int i = 0; i < expectations.size(); i++) {
-            if (expectations.get(i).getId() == Id) {
-                Expectation expectation = expectations.get(i);
-                expectation.setPaymentStatus(status);
-                UpdateExpectation(expectation);
-            }
-        }
-    }
 }

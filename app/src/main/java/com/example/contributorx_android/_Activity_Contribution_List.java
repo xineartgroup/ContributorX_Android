@@ -9,11 +9,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.SearchView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class _Activity_Contribution_List extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, View.OnClickListener {
@@ -30,6 +32,7 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
 
         Button btnAddContribution = findViewById(R.id.btnAddContribution);
         ListView lstDetail = findViewById(R.id.lstDetail);
+        SearchView searchView = findViewById(R.id.searchView);
 
         if (_Activity_Login.LoggedOnUser == null){
             Toast.makeText(this, "Please log in first", Toast.LENGTH_LONG).show();
@@ -66,6 +69,38 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
             }
         });
 
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Optional: handle action on submit, but not needed for filtering
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Filter contributions and update adapter data
+                iAdapter.contributions = Contributions(contributions, newText.trim());
+                iAdapter.notifyDataSetChanged(); // Very important to refresh the view
+                return true;
+            }
+        });
+    }
+
+    private List<Contribution> Contributions(List<Contribution> contributions, String query) {
+        List<Contribution> result = new ArrayList<>();
+
+        if (query.isEmpty()) {
+            result.addAll(contributions);
+        } else {
+            query = query.toLowerCase();
+            for (Contribution contribution : contributions) {
+                if (contribution.getName().toLowerCase().contains(query)) {
+                    result.add(contribution);
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override

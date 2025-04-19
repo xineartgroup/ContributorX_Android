@@ -102,5 +102,14 @@ public class _Layout_Expectation_List0 extends BaseAdapter {
             approvePaymentIntent.putExtra("EXPECTATION_ID", expectationId);
             context.startActivity(approvePaymentIntent);
         }
+        else if ("write-off".equals(str)) {
+            Expectation expectation = _DAO_Expectation.GetExpectation(expectationId);
+            if (expectation != null) {
+                expectation.setPaymentStatus(3);
+                expectation.setAmountToApprove(0.00f);
+                _DAO_Expectation.UpdateExpectation(expectation);
+                notifyDataSetChanged();
+            }
+        }
     }
 }
