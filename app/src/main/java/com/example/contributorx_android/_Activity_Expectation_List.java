@@ -1,6 +1,8 @@
 package com.example.contributorx_android;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +17,8 @@ import androidx.appcompat.widget.Toolbar;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class _Activity_Expectation_List extends AppCompatActivity {
 
@@ -39,6 +43,18 @@ public class _Activity_Expectation_List extends AppCompatActivity {
         // Initialize views
         ListView lstDetail = findViewById(R.id.lstDetail);
         SearchView searchView = findViewById(R.id.searchView);
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        executor.execute(() -> {
+            String result = _DAO_Expectation.GetExpectationString(1);
+
+            handler.post(() -> {
+                // Update UI here with result
+                Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+            });
+        });
 
         List<Expectation> expectations = _DAO_Expectation.GetUnclearedExpectationsInCommunity(_Activity_Login.LoggedOnUser.getCommunityId());
 

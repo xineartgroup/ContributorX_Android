@@ -1,5 +1,9 @@
 package com.example.contributorx_android;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +41,32 @@ public class _DAO_Expectation {
         }
     }
 
+    public static String GetExpectationString(int Id) {
+        try {
+            URL url = new URL("http://192.168.0.123:3000/expectation/api/" + Id);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                return response.toString();
+            } else {
+                return "GET request failed";
+            }
+        } catch (Exception e) {
+            return e.toString();
+        }
+    }
+
     public static Expectation GetExpectation(int Id) {
         for (int i = 0; i < expectations.size(); i++) {
             if (expectations.get(i).getId() == Id) {
@@ -63,6 +93,7 @@ public class _DAO_Expectation {
     }
 
     public static List<Expectation> GetUnclearedExpectationsInCommunity(int communityId) {
+
         List<Expectation> result = new ArrayList<>();
 
         for (int i = 0; i < expectations.size(); i++) {
