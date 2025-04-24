@@ -51,13 +51,13 @@ public class _Activity_Contributor_List extends AppCompatActivity {
         ListView lstDetail = findViewById(R.id.lstDetail);
         SearchView searchView = findViewById(R.id.searchView);
 
-        if (_Activity_Login.LoggedOnUser == null){
+        if (APIClass.LoggedOnUser == null){
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
             startActivity(startIntent);
             finish();
         }
 
-        contributors = _DAO_Contributor.GetContributorsInCommunity(_Activity_Login.LoggedOnUser.getId());
+        contributors = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getId());
 
         iAdapter = new _Layout_Contributor_List(this, contributors);
         lstDetail.setAdapter(iAdapter);
@@ -67,7 +67,7 @@ public class _Activity_Contributor_List extends AppCompatActivity {
         }
 
         lstDetail.setOnItemClickListener((adapterView, view, i, l) -> {
-            if ("Administrator".equals(_Activity_Login.LoggedOnUser.getRole())) {
+            if ("Administrator".equals(APIClass.LoggedOnUser.getRole())) {
                 Contributor contributor = contributors.get(i);
                 if (contributor != null) {
                     Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_Detail.class);

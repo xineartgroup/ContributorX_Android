@@ -34,7 +34,7 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
         ListView lstDetail = findViewById(R.id.lstDetail);
         SearchView searchView = findViewById(R.id.searchView);
 
-        if (_Activity_Login.LoggedOnUser == null){
+        if (APIClass.LoggedOnUser == null){
             Toast.makeText(this, "Please log in first", Toast.LENGTH_LONG).show();
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
             startActivity(startIntent);
@@ -42,14 +42,14 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
             return;
         }
 
-        if (_Activity_Login.LoggedOnUser.getRole().equals("Administrator")) {
+        if (APIClass.LoggedOnUser.getRole().equals("Administrator")) {
             btnAddContribution.setVisibility(View.VISIBLE);
         }
         else{
             btnAddContribution.setVisibility(View.GONE);
         }
 
-        List<Contribution> contributions = _DAO_Contribution.GetAllContributionsInCommunity(_Activity_Login.LoggedOnUser.getCommunityId());
+        List<Contribution> contributions = _DAO_Contribution.GetAllContributionsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
         _Layout_Contribution_List iAdapter = new _Layout_Contribution_List(this, contributions);
         lstDetail.setAdapter(iAdapter);
@@ -57,7 +57,7 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
         btnAddContribution.setOnClickListener(_Activity_Contribution_List.this);
 
         lstDetail.setOnItemClickListener((adapterView, view, i, l) -> {
-            if (_Activity_Login.LoggedOnUser.getRole().equals("Administrator")) {
+            if (APIClass.LoggedOnUser.getRole().equals("Administrator")) {
                 Contribution contribution = contributions.get(i);
                 if (contribution != null){
                     selectedId = contribution.getId();

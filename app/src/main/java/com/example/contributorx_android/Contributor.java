@@ -1,10 +1,13 @@
 package com.example.contributorx_android;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Calendar;
 import java.util.Objects;
 
 public class Contributor {
     private int id = 0;
+    private String userid = "";
     private String username = "";
     private String firstname = "";
     private String password = "";
@@ -35,6 +38,7 @@ public class Contributor {
         this.startDate = startDate;
     }
 
+    @JsonProperty("Id")
     public int getId() {
         return id;
     }
@@ -43,6 +47,12 @@ public class Contributor {
         this.id = id;
     }
 
+    @JsonProperty("UserID")
+    public String getUserID() { return userid; }
+
+    public void setUserID(String userID) { userid = userID; }
+
+    @JsonProperty("UserName")
     public String getUserName() {
         return username;
     }
@@ -51,6 +61,7 @@ public class Contributor {
         this.username = number;
     }
 
+    @JsonProperty("FirstName")
     public String getFirstname() {
         return firstname;
     }
@@ -59,6 +70,7 @@ public class Contributor {
         this.firstname = firstname;
     }
 
+    @JsonProperty("LastName")
     public String getLastname() {
         return lastname;
     }
@@ -67,6 +79,7 @@ public class Contributor {
         this.lastname = lastname;
     }
 
+    @JsonProperty("Password")
     public String getPassword() {
         return password;
     }
@@ -75,6 +88,7 @@ public class Contributor {
         this.password = password;
     }
 
+    @JsonProperty("CommunityId")
     public int getCommunityId() {
         return communityId;
     }
@@ -83,6 +97,7 @@ public class Contributor {
         this.communityId = communityId;
     }
 
+    @JsonProperty("Email")
     public String getEmail() {
 		return email;
 	}
@@ -91,6 +106,7 @@ public class Contributor {
 		this.email = email;
 	}
 
+    @JsonProperty("PhoneNumber")
     public String getPhoneNumber() {
 		return phoneNumber;
 	}
@@ -99,6 +115,7 @@ public class Contributor {
 		this.phoneNumber = phoneNumber;
 	}
 
+    @JsonProperty("Picture")
     public String getPicture() {
         return picture;
     }
@@ -107,6 +124,7 @@ public class Contributor {
         this.picture = picture;
     }
 
+    @JsonProperty("Role")
     public String getRole() {
         return role;
     }
@@ -115,6 +133,7 @@ public class Contributor {
         role = role;
     }
 
+    @JsonProperty("IsActive")
     public boolean isActive() {
         return active;
     }
@@ -123,6 +142,7 @@ public class Contributor {
         this.active = active;
     }
 
+    @JsonProperty("StartDate")
     public Calendar getStartDate() {
         return startDate;
     }

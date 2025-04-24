@@ -42,29 +42,7 @@ public class _DAO_Expectation {
     }
 
     public static String GetExpectationString(int Id) {
-        try {
-            URL url = new URL("http://192.168.0.123:3000/expectation/api/" + Id);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                return response.toString();
-            } else {
-                return "GET request failed";
-            }
-        } catch (Exception e) {
-            return e.toString();
-        }
+        return APIClass.SendMessage("GET", "expectation/api/" + Id,"", "", false);
     }
 
     public static Expectation GetExpectation(int Id) {

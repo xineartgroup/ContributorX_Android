@@ -3,7 +3,8 @@ package com.example.contributorx_android;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -11,10 +12,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class _Activity_Login extends AppCompatActivity {
-
-    public static Contributor LoggedOnUser = null;
 
     public static void PopulateDummyData()
     {
@@ -75,39 +76,38 @@ public class _Activity_Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button btnLogin = (Button)findViewById(R.id.btnLogin);
+        Button btnLogin = findViewById(R.id.btnLogin);
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnLogin.setOnClickListener(view -> {
 
-                if (_DAO_Contributor.GetAllContributors().isEmpty()) {
-                    PopulateDummyData();
-                }
-
-                EditText txtUsername = (EditText) findViewById(R.id.txtUsername);
-                EditText txtPassword = (EditText) findViewById(R.id.txtPassword);
-
-                LoggedOnUser = _DAO_Contributor.GetContributorByUsername(txtUsername.getText().toString());
-
-                if (LoggedOnUser != null && LoggedOnUser.getPassword().equals(txtPassword.getText().toString())) {
-                    Toast.makeText(_Activity_Login.this, "Login in " + txtUsername.getText().toString() + "...", Toast.LENGTH_LONG).show();
-
-                    Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
-                    startIntent.putExtra("MAIN_INFO_LOGINUSERNAME", txtUsername.getText().toString());
-                    startActivity(startIntent);
-                }
-                else {
-                    Toast.makeText(_Activity_Login.this, "Invalid username/password", Toast.LENGTH_LONG).show();
-                }
-
-                /*
-                Intent browseUrl = new Intent(Intent.ACTION_VIEW, Uri.parse("www.google.com"));
-                if (browseUrl.resolveActivity(getPackageManager()) != null) {
-                    startActivity(browseUrl);
-                }
-                */
+            if (_DAO_Contributor.GetAllContributors().isEmpty()) {
+                PopulateDummyData();
             }
+
+            EditText txtUsername = findViewById(R.id.txtUsername);
+            EditText txtPassword = findViewById(R.id.txtPassword);
+
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Handler handler = new Handler(Looper.getMainLooper());
+
+            executor.execute(() -> {
+                String result = _DAO_Auth.Login(txtUsername.getText().toString(), txtPassword.getText().toString());
+
+                handler.post(() -> {
+                    APIContributorResponse response = APIClass.GetContributorResponse(result);
+                    if (response != null && response.getIssuccess() && response.getContributor() != null) {
+                        APIClass.LoggedOnUser = response.getContributor();
+                        Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
+                        startIntent.putExtra("MAIN_INFO_LOGINUSERNAME", txtUsername.getText().toString());
+                        startActivity(startIntent);
+                        Toast.makeText(_Activity_Login.this, "Logged in " + APIClass.LoggedOnUser.getUserName(), Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        APIClass.LoggedOnUser = null;
+                        Toast.makeText(_Activity_Login.this, "Invalid username/password", Toast.LENGTH_LONG).show();
+                    }
+                });
+            });
         });
     }
 
@@ -127,7 +127,7 @@ public class _Activity_Login extends AppCompatActivity {
         } else if (id == R.id.itmGroups) {
             return new Intent(context, _Activity_Group_List.class);
         } else if (id == R.id.itmLogout) {
-            _Activity_Login.LoggedOnUser = null;
+            APIClass.LoggedOnUser = null;
             return new Intent(context, _Activity_Login.class);
         }/*  else if (id == R.id.itmReport) {
             Toast.makeText(context, "Reporting...", Toast.LENGTH_LONG).show();

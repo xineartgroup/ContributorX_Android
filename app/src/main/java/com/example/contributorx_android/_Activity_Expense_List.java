@@ -42,7 +42,7 @@ public class _Activity_Expense_List extends AppCompatActivity {
         ListView lstDetail = findViewById(R.id.lstDetail);
         SearchView searchView = findViewById(R.id.searchView);
 
-        if (_Activity_Login.LoggedOnUser == null){
+        if (APIClass.LoggedOnUser == null){
             Toast.makeText(this, "Please log in first", Toast.LENGTH_LONG).show();
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
             startActivity(startIntent);
@@ -50,20 +50,20 @@ public class _Activity_Expense_List extends AppCompatActivity {
             return;
         }
 
-        if (_Activity_Login.LoggedOnUser.getRole().equals("Administrator")) {
+        if (APIClass.LoggedOnUser.getRole().equals("Administrator")) {
             btnAddExpense.setVisibility(View.VISIBLE);
         }
         else{
             btnAddExpense.setVisibility(View.GONE);
         }
 
-        List<Expense> expenses = _DAO_Expense.GetAllExpensesInCommunity(_Activity_Login.LoggedOnUser.getCommunityId());
+        List<Expense> expenses = _DAO_Expense.GetAllExpensesInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
         _Layout_Expense_List iAdapter = new _Layout_Expense_List(this, expenses);
         lstDetail.setAdapter(iAdapter);
 
         lstDetail.setOnItemClickListener((adapterView, view, i, l) -> {
-            if ("Administrator".equals(_Activity_Login.LoggedOnUser.getRole())) {
+            if ("Administrator".equals(APIClass.LoggedOnUser.getRole())) {
                 Expense expense = expenses.get(i);
                 if (expense != null) {
                     Intent startIntent = new Intent(getApplicationContext(), _Activity_Expense_Detail.class);

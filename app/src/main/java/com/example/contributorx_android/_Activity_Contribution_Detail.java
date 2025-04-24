@@ -37,7 +37,7 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
         Button btnSaveContribution = findViewById(R.id.btnSaveContribution);
         Button btnCancel = findViewById(R.id.btnCancel);
 
-        if (_Activity_Login.LoggedOnUser == null){
+        if (APIClass.LoggedOnUser == null){
             Toast.makeText(this, "Please log in first", Toast.LENGTH_LONG).show();
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
             startActivity(startIntent);
@@ -87,7 +87,7 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
                     contribution.setDueDate(date);
 
                     contribution.setId(_DAO_Contribution.AddContribution(contribution));
-                    List<Contributor> contributors = _DAO_Contributor.GetContributorsInCommunity(_Activity_Login.LoggedOnUser.getCommunityId());
+                    List<Contributor> contributors = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getCommunityId());
                     for (int i = 0; i < contributors.size(); i++) {
                         Expectation expectation = new Expectation(contributors.get(i).getId(), contribution.getId(), 0.00f, 0.00f, 0, "");
                         expectation.setId(_DAO_Expectation.AddExpectation(expectation));

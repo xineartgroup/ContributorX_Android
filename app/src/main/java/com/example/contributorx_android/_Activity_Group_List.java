@@ -42,7 +42,7 @@ public class _Activity_Group_List extends AppCompatActivity {
         ListView lstDetail = findViewById(R.id.lstDetail);
         SearchView searchView = findViewById(R.id.searchView);
 
-        if (_Activity_Login.LoggedOnUser == null){
+        if (APIClass.LoggedOnUser == null){
             Toast.makeText(this, "Please log in first", Toast.LENGTH_LONG).show();
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
             startActivity(startIntent);
@@ -50,20 +50,20 @@ public class _Activity_Group_List extends AppCompatActivity {
             return;
         }
 
-        if (_Activity_Login.LoggedOnUser.getRole().equals("Administrator")) {
+        if (APIClass.LoggedOnUser.getRole().equals("Administrator")) {
             btnAddGroup.setVisibility(View.VISIBLE);
         }
         else{
             btnAddGroup.setVisibility(View.GONE);
         }
 
-        List<Group> groups = _DAO_Group.GetAllGroupsInCommunity(_Activity_Login.LoggedOnUser.getCommunityId());
+        List<Group> groups = _DAO_Group.GetAllGroupsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
         _Layout_Group_List iAdapter = new _Layout_Group_List(this, groups);
         lstDetail.setAdapter(iAdapter);
 
         lstDetail.setOnItemClickListener((adapterView, view, i, l) -> {
-            if ("Administrator".equals(_Activity_Login.LoggedOnUser.getRole())) {
+            if ("Administrator".equals(APIClass.LoggedOnUser.getRole())) {
                 Group group = groups.get(i);
                 if (group != null) {
                     Intent startIntent = new Intent(getApplicationContext(), _Activity_Group_Detail.class);

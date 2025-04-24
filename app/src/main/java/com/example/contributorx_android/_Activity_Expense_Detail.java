@@ -30,7 +30,7 @@ public class _Activity_Expense_Detail extends AppCompatActivity {
         Button btnSaveExpense = findViewById(R.id.btnSaveExpense);
         Button btnCancel = findViewById(R.id.btnCancel);
 
-        if (_Activity_Login.LoggedOnUser == null){
+        if (APIClass.LoggedOnUser == null){
             Toast.makeText(this, "Please log in first", Toast.LENGTH_LONG).show();
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
             startActivity(startIntent);
@@ -59,7 +59,7 @@ public class _Activity_Expense_Detail extends AppCompatActivity {
                     expense.setName(txtExpenseName.getText().toString());
                     expense.setDescription(txtDescription.getText().toString());
                     expense.setAmountPaid(Float.parseFloat(txtAmount.getText().toString().trim()));
-                    expense.setCommunityId(_Activity_Login.LoggedOnUser.getCommunityId());
+                    expense.setCommunityId(APIClass.LoggedOnUser.getCommunityId());
 
                     expense.setId(_DAO_Expense.AddExpense(expense));
                 } else {

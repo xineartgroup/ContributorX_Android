@@ -29,7 +29,7 @@ public class _Activity_Group_Detail extends AppCompatActivity {
         Button btnSaveGroup = findViewById(R.id.btnSaveGroup);
         Button btnCancel = findViewById(R.id.btnCancel);
 
-        if (_Activity_Login.LoggedOnUser == null){
+        if (APIClass.LoggedOnUser == null){
             Toast.makeText(this, "Please log in first", Toast.LENGTH_LONG).show();
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
             startActivity(startIntent);
@@ -56,7 +56,7 @@ public class _Activity_Group_Detail extends AppCompatActivity {
 
                     group.setName(txtGroupName.getText().toString());
                     group.setDescription(txtDescription.getText().toString());
-                    group.setCommunityId(_Activity_Login.LoggedOnUser.getCommunityId());
+                    group.setCommunityId(APIClass.LoggedOnUser.getCommunityId());
 
                     group.setId(_DAO_Group.AddGroup(group));
                 } else {

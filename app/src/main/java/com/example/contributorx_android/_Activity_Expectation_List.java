@@ -32,7 +32,7 @@ public class _Activity_Expectation_List extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        if (_Activity_Login.LoggedOnUser == null){
+        if (APIClass.LoggedOnUser == null){
             Toast.makeText(this, "Please log in first", Toast.LENGTH_LONG).show();
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
             startActivity(startIntent);
@@ -51,12 +51,11 @@ public class _Activity_Expectation_List extends AppCompatActivity {
             String result = _DAO_Expectation.GetExpectationString(1);
 
             handler.post(() -> {
-                // Update UI here with result
                 Toast.makeText(this, result, Toast.LENGTH_LONG).show();
             });
         });
 
-        List<Expectation> expectations = _DAO_Expectation.GetUnclearedExpectationsInCommunity(_Activity_Login.LoggedOnUser.getCommunityId());
+        List<Expectation> expectations = _DAO_Expectation.GetUnclearedExpectationsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
         _Layout_Expectation_List0 iAdapter = new _Layout_Expectation_List0(this, expectations);
         lstDetail.setAdapter(iAdapter);

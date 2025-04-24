@@ -25,14 +25,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (_Activity_Login.LoggedOnUser == null){
+        if (APIClass.LoggedOnUser == null){
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
             startActivity(startIntent);
             finish();
         }
 
         ListView lstUserExpectation = findViewById(R.id.lstUserExpectation);
-        List<Expectation> list = _DAO_Expectation.GetExpectationsForContributor(_Activity_Login.LoggedOnUser.getId());
+        List<Expectation> list = _DAO_Expectation.GetExpectationsForContributor(APIClass.LoggedOnUser.getId());
 
         List<Expectation> expectations = new ArrayList<>();
 

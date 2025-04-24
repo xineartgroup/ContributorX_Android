@@ -27,7 +27,7 @@ public class _Activity_Community_Detail extends AppCompatActivity {
         Button btnSaveCommunity = findViewById(R.id.btnSaveCommunity);
         Button btnCancel = findViewById(R.id.btnCancel);
 
-        if (_Activity_Login.LoggedOnUser == null){
+        if (APIClass.LoggedOnUser == null){
             Toast.makeText(this, "Please log in first", Toast.LENGTH_LONG).show();
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
             startActivity(startIntent);
@@ -35,8 +35,8 @@ public class _Activity_Community_Detail extends AppCompatActivity {
             return;
         }
 
-        if (_Activity_Login.LoggedOnUser.getId() >= 0) {
-            community = _DAO_Community.GetCommunity(_Activity_Login.LoggedOnUser.getId());
+        if (APIClass.LoggedOnUser.getId() >= 0) {
+            community = _DAO_Community.GetCommunity(APIClass.LoggedOnUser.getId());
 
             if (community != null) {
                 txtCommunityName.setText(community.getName());
