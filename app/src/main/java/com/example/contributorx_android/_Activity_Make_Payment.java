@@ -44,7 +44,7 @@ public class _Activity_Make_Payment extends AppCompatActivity {
                 txtAmount.setText(getString(R.string.amount, contribution.getAmount()));
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                txtDueDate.setText(getString(R.string.due_date, dateFormat.format(contribution.getDueDate().getTime())));
+                txtDueDate.setText(getString(R.string.due_date, contribution.getDueDate()));
 
                 float amountPaid = expectation.getAmountPaid();
                 txtAmountPaid.setText(getString(R.string.amount_paid, amountPaid));

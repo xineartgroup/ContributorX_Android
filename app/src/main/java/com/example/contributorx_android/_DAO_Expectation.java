@@ -1,6 +1,9 @@
 package com.example.contributorx_android;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -41,8 +44,14 @@ public class _DAO_Expectation {
         }
     }
 
-    public static String GetExpectationString(int Id) {
-        return APIClass.SendMessage("GET", "expectation/api/" + Id,"", "", false);
+    public static APIExpectationResponse GetExpectationString(int Id) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String result = APIClass.SendMessage("GET", "expectation/api/" + Id,"", "", false);
+            return APIClass.GetExpectationResponse(result);
+        } catch (Exception e) {
+            return new APIExpectationResponse(e.getMessage());
+        }
     }
 
     public static Expectation GetExpectation(int Id) {

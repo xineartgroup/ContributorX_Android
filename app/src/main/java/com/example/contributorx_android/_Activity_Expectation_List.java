@@ -48,10 +48,13 @@ public class _Activity_Expectation_List extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            String result = _DAO_Expectation.GetExpectationString(1);
+            APIExpectationResponse response = _DAO_Expectation.GetExpectationString(1);
+            android.util.Log.d("JSON Result", response.getMessage());
 
             handler.post(() -> {
-                Toast.makeText(this, result, Toast.LENGTH_LONG).show();
+                if (response.getIssuccess() && response.getExpectation() != null) {
+                    Toast.makeText(this, response.getExpectation().getContribution().getName(), Toast.LENGTH_LONG).show();
+                }
             });
         });
 

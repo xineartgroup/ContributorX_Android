@@ -57,7 +57,7 @@ public class _Layout_Contribution_List extends BaseAdapter {
         Contribution contribution = contributions.get(i);
 
         holder.lblContributionName.setText(contribution.getName());
-        holder.lblContributionDate.setText(GetDateString(contribution.getDueDate()));
+        holder.lblContributionDate.setText(contribution.getDueDate());
         holder.lblContributionAmount.setText(String.format(Locale.getDefault(), "%.2f", contribution.getAmount()));
 
         return convertView;
@@ -67,12 +67,5 @@ public class _Layout_Contribution_List extends BaseAdapter {
         TextView lblContributionName;
         TextView lblContributionDate;
         TextView lblContributionAmount;
-    }
-
-    private String GetDateString(Calendar date) {
-        int year = date.get(Calendar.YEAR);
-        int month = date.get(Calendar.MONTH);
-        int day = date.get(Calendar.DAY_OF_MONTH);
-        return day + "/" + (month + 1) + "/" + year;
     }
 }

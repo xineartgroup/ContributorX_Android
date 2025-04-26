@@ -1,5 +1,7 @@
 package com.example.contributorx_android;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Calendar;
 
 public class Contribution {
@@ -7,14 +9,14 @@ public class Contribution {
     private String name = "";
     private float amount = 0.00f;
     private int groupId = 0;
-    private Calendar dateCreated = Calendar.getInstance();
-    private Calendar dueDate = Calendar.getInstance();
+    private String dateCreated = "";
+    private String dueDate = "";
 
     public Contribution() {
 
     }
 
-    public Contribution(String name, float amount, int groupId, Calendar dateCreated, Calendar dueDate) {
+    public Contribution(String name, float amount, int groupId, String dateCreated, String dueDate) {
         this.name = name;
         this.amount = amount;
         this.groupId = groupId;
@@ -22,6 +24,7 @@ public class Contribution {
         this.dueDate = dueDate;
     }
 
+    @JsonProperty("Id")
     public int getId() {
         return id;
     }
@@ -30,6 +33,7 @@ public class Contribution {
         this.id = id;
     }
 
+    @JsonProperty("Name")
     public String getName() {
         return name;
     }
@@ -38,6 +42,7 @@ public class Contribution {
         this.name = name;
     }
 
+    @JsonProperty("Amount")
     public float getAmount() {
         return amount;
     }
@@ -46,6 +51,7 @@ public class Contribution {
         this.amount = amount;
     }
 
+    @JsonProperty("GroupId")
     public int getGroupId() {
         return groupId;
     }
@@ -54,19 +60,21 @@ public class Contribution {
         this.groupId = groupId;
     }
 
-    public Calendar getDateCreated() {
+    @JsonProperty("DateCreated")
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Calendar dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
 
-    public Calendar getDueDate() {
+    @JsonProperty("DueDate")
+    public String getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Calendar dueDate) {
+    public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
     }
 }

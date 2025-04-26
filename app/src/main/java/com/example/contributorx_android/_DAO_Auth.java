@@ -7,19 +7,16 @@ import java.io.IOException;
 
 public class _DAO_Auth {
 
-    public static String Login(String username, String password) {
+    public static APIContributorResponse Login(String username, String password) {
         User user = new User(username, password);
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(user);
             System.out.println(jsonData);
-            android.util.Log.d("JSON Data", jsonData);
             String result = APIClass.SendMessage("GET", "auth/api/login", "", jsonData, true);
-            android.util.Log.d("JSON Result", result);
-            return result;
+            return APIClass.GetContributorResponse(result);
         } catch (IOException e) {
-            android.util.Log.e("JSON Error", "Error converting User to JSON", e);
-            return e.toString();
+            return new APIContributorResponse(e.getMessage());
         }
     }
 

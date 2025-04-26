@@ -18,13 +18,13 @@ public class Contributor {
     private String picture = "";
     private int communityId;
     private boolean active = true;
-    private Calendar startDate = Calendar.getInstance();
+    private String startDate = "";
 
     public Contributor() {
 
     }
 
-    public Contributor(String username, String firstname, String lastname, String role, String email, String phoneNumber, String picture, int communityId, boolean active, Calendar startDate) {
+    public Contributor(String username, String firstname, String lastname, String role, String email, String phoneNumber, String picture, int communityId, boolean active, String startDate) {
         this.password = "password";
         this.username = username;
         this.firstname = firstname;
@@ -143,11 +143,11 @@ public class Contributor {
     }
 
     @JsonProperty("StartDate")
-    public Calendar getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Calendar startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 

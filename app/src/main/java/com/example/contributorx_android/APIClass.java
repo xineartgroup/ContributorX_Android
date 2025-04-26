@@ -89,9 +89,18 @@ public class APIClass {
         try {
             return objectMapper.readValue(jsonResponse, APIContributorResponse.class);
         } catch (IOException e) {
-            android.util.Log.e("JSON Error", "Error deserializing APIContributorResponse", e);
+            return new APIContributorResponse(e.getMessage());
         }
-        return null;
+    }
+
+    public static APIExpectationResponse GetExpectationResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            android.util.Log.d("jsonResponse", jsonResponse);
+            return objectMapper.readValue(jsonResponse, APIExpectationResponse.class);
+        } catch (IOException e) {
+            return new APIExpectationResponse(e.getMessage());
+        }
     }
 
     public static void LoadURL() {

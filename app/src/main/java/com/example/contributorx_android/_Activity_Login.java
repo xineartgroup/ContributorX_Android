@@ -30,22 +30,22 @@ public class _Activity_Login extends AppCompatActivity {
         _DAO_Group.AddGroup(new Group("13 Akinsanya Social Contributions", "Contributions for residents of 13 Akinsanya, Ajao, Isolo Lagos", 1));
         _DAO_Group.AddGroup(new Group("13 Akinsanya Repairs", "Repairs for residents of 13 Akinsanya, Ajao, Isolo Lagos", 1));
 
-        _DAO_Contributor.AddContributor(new Contributor("flat1", "Inaegwu", "Achichi", "Administrator", "x@x.com", "080", "img1.jpg", 1, true, date0));
-        _DAO_Contributor.AddContributor(new Contributor("flat2", "Oluwafemi", "Akerele", "Contributor", "x@x.com", "080", "img2.jpg", 1, true, date0));
-        _DAO_Contributor.AddContributor(new Contributor("flat3", "Seun", "Oresegun", "Contributor", "x@x.com", "080", "img3.jpg", 1, true, date0));
-        _DAO_Contributor.AddContributor(new Contributor("flat4", "Obinna", "Chikwendu", "Contributor", "x@x.com", "080", "img4.jpg", 1, true, date0));
-        _DAO_Contributor.AddContributor(new Contributor("flat5", "Mike", "Owen", "Contributor", "x@x.com", "080", "img5.jpg", 1, true, date0));
-        _DAO_Contributor.AddContributor(new Contributor("Flat6", "Danny", "Chukwu", "Contributor", "x@x.com", "080", "img6.jpg", 1, true, date0));
-        _DAO_Contributor.AddContributor(new Contributor("Flat7", "Emmanuel", "Nwokoma", "Contributor", "x@x.com", "080", "img7.jpg", 1, true, date0));
-        _DAO_Contributor.AddContributor(new Contributor("Flat8", "Vincent", "Nwachukwu", "Contributor", "x@x.com", "080", "img8.jpg", 1, true, date0));
-        _DAO_Contributor.AddContributor(new Contributor("Flat9", "Ay", "Dk", "Contributor", "x@x.com", "080", "img9.jpg", 1, false, date0));
-        _DAO_Contributor.AddContributor(new Contributor("Flat10", "John", "Doe", "Contributor", "x@x.com", "080", "img10.jpg", 1, false, date0));
-        _DAO_Contributor.AddContributor(new Contributor("flat11", "Adaeze", "Nburuka", "Contributor", "x@x.com", "080", "img11.jpg", 1, true, date0));
-        _DAO_Contributor.AddContributor(new Contributor("flat12", "Anthony", "Mmadu", "Contributor", "x@x.com", "080", "img12.jpg", 1, true, date0));
+        _DAO_Contributor.AddContributor(new Contributor("flat1", "Inaegwu", "Achichi", "Administrator", "x@x.com", "080", "img1.jpg", 1, true, date0.toString()));
+        _DAO_Contributor.AddContributor(new Contributor("flat2", "Oluwafemi", "Akerele", "Contributor", "x@x.com", "080", "img2.jpg", 1, true, date0.toString()));
+        _DAO_Contributor.AddContributor(new Contributor("flat3", "Seun", "Oresegun", "Contributor", "x@x.com", "080", "img3.jpg", 1, true, date0.toString()));
+        _DAO_Contributor.AddContributor(new Contributor("flat4", "Obinna", "Chikwendu", "Contributor", "x@x.com", "080", "img4.jpg", 1, true, date0.toString()));
+        _DAO_Contributor.AddContributor(new Contributor("flat5", "Mike", "Owen", "Contributor", "x@x.com", "080", "img5.jpg", 1, true, date0.toString()));
+        _DAO_Contributor.AddContributor(new Contributor("Flat6", "Danny", "Chukwu", "Contributor", "x@x.com", "080", "img6.jpg", 1, true, date0.toString()));
+        _DAO_Contributor.AddContributor(new Contributor("Flat7", "Emmanuel", "Nwokoma", "Contributor", "x@x.com", "080", "img7.jpg", 1, true, date0.toString()));
+        _DAO_Contributor.AddContributor(new Contributor("Flat8", "Vincent", "Nwachukwu", "Contributor", "x@x.com", "080", "img8.jpg", 1, true, date0.toString()));
+        _DAO_Contributor.AddContributor(new Contributor("Flat9", "Ay", "Dk", "Contributor", "x@x.com", "080", "img9.jpg", 1, false, date0.toString()));
+        _DAO_Contributor.AddContributor(new Contributor("Flat10", "John", "Doe", "Contributor", "x@x.com", "080", "img10.jpg", 1, false, date0.toString()));
+        _DAO_Contributor.AddContributor(new Contributor("flat11", "Adaeze", "Nburuka", "Contributor", "x@x.com", "080", "img11.jpg", 1, true, date0.toString()));
+        _DAO_Contributor.AddContributor(new Contributor("flat12", "Anthony", "Mmadu", "Contributor", "x@x.com", "080", "img12.jpg", 1, true, date0.toString()));
 
-        _DAO_Contribution.AddContribution(new Contribution("Monthly Dues for August", 4500, 1, date0, date1));
-        _DAO_Contribution.AddContribution(new Contribution("Gate repair", 1250, 1, date0, date1));
-        _DAO_Contribution.AddContribution(new Contribution("Monthly Dues for September", 3500, 1, date0, date1));
+        _DAO_Contribution.AddContribution(new Contribution("Monthly Dues for August", 4500, 1, date0.toString(), date1.toString()));
+        _DAO_Contribution.AddContribution(new Contribution("Gate repair", 1250, 1, date0.toString(), date1.toString()));
+        _DAO_Contribution.AddContribution(new Contribution("Monthly Dues for September", 3500, 1, date0.toString(), date1.toString()));
 
         _DAO_Expense.AddExpense(new Expense("Cleaning Expense For Jan 2025", "Cleaning Expense For Jan 2025", 4500, 1, ""));
         _DAO_Expense.AddExpense(new Expense("LAWMA Expense For Jan 2025", "LAWMA Expense For Jan 2025", 1250, 1, ""));
@@ -91,10 +91,9 @@ public class _Activity_Login extends AppCompatActivity {
             Handler handler = new Handler(Looper.getMainLooper());
 
             executor.execute(() -> {
-                String result = _DAO_Auth.Login(txtUsername.getText().toString(), txtPassword.getText().toString());
+                APIContributorResponse response = _DAO_Auth.Login(txtUsername.getText().toString(), txtPassword.getText().toString());
 
                 handler.post(() -> {
-                    APIContributorResponse response = APIClass.GetContributorResponse(result);
                     if (response != null && response.getIssuccess() && response.getContributor() != null) {
                         APIClass.LoggedOnUser = response.getContributor();
                         Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);

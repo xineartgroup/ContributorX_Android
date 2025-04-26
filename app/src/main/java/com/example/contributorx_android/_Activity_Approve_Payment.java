@@ -96,7 +96,7 @@ public class _Activity_Approve_Payment extends AppCompatActivity {
         if (contribution != null) {
             tvContributionName.setText(contribution.getName());
             tvAmountOwed.setText(currencyFormatter.format(contribution.getAmount()));
-            tvDueDate.setText(new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(contribution.getDueDate().getTime()));
+            tvDueDate.setText(contribution.getDueDate());
         }
 
         // Set amount to approve

@@ -84,7 +84,7 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
 
                     contribution.setName(txtContributionName.getText().toString());
                     contribution.setAmount(Float.parseFloat(txtAmount.getText().toString()));
-                    contribution.setDueDate(date);
+                    contribution.setDueDate(date.toString());
 
                     contribution.setId(_DAO_Contribution.AddContribution(contribution));
                     List<Contributor> contributors = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getCommunityId());
