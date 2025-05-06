@@ -48,35 +48,48 @@ public class _Activity_Expectation_List extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            APIExpectationResponse response = _DAO_Expectation.GetExpectationString(1);
-            android.util.Log.d("JSON Result", response.getMessage());
+            APIExpectationsResponse response = _DAO_Expectation.GetUnclearedExpectationsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
             handler.post(() -> {
-                if (response.getIssuccess() && response.getExpectation() != null) {
-                    Toast.makeText(this, response.getExpectation().getContribution().getName(), Toast.LENGTH_LONG).show();
+                if (response.getIsSuccess()) {
+                    if (response.getExpectations() != null) {
+                        List<Expectation> list = response.getExpectations();
+
+                        /*List<Expectation> expectations = new ArrayList<>();
+
+                        for (int i = 0; i < list.size(); i++) {
+                            Expectation expectation = expectations.get(i);
+                            Contributor contributor = _DAO_Contributor.GetContributor(expectation.getContributorId());
+                            Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                            if (contributor != null && contribution != null) {
+                                if (expectation.getPaymentStatus() != 2 && expectation.getPaymentStatus() != 3 &&
+                                        contribution.getAmount() - expectation.getAmountPaid() > 0) {
+                                    expectations.add(expectation);
+                                }
+                            }
+                        }*/
+
+                        _Layout_Expectation_List0 iAdapter = new _Layout_Expectation_List0(this, list);
+                        lstDetail.setAdapter(iAdapter);
+
+                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                            @Override
+                            public boolean onQueryTextSubmit(String query) {
+                                // Optional: handle action on submit, but not needed for filtering
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onQueryTextChange(String newText) {
+                                // Filter expectations and update adapter data
+                                iAdapter.expectations = Expectations(list, newText.trim());
+                                iAdapter.notifyDataSetChanged(); // Very important to refresh the view
+                                return true;
+                            }
+                        });
+                    }
                 }
             });
-        });
-
-        List<Expectation> expectations = _DAO_Expectation.GetUnclearedExpectationsInCommunity(APIClass.LoggedOnUser.getCommunityId());
-
-        _Layout_Expectation_List0 iAdapter = new _Layout_Expectation_List0(this, expectations);
-        lstDetail.setAdapter(iAdapter);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Optional: handle action on submit, but not needed for filtering
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // Filter expectations and update adapter data
-                iAdapter.expectations = Expectations(expectations, newText.trim());
-                iAdapter.notifyDataSetChanged(); // Very important to refresh the view
-                return true;
-            }
         });
     }
 
@@ -88,16 +101,31 @@ public class _Activity_Expectation_List extends AppCompatActivity {
         } else {
             query = query.toLowerCase();
             for (Expectation expectation : expectations) {
-                Contributor contributor = _DAO_Contributor.GetContributor(expectation.getContributorId());
-                Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
 
-                if (contributor != null && contribution != null) {
-                    // Filter by contributor name or contribution name
-                    if (contributor.getUserName().toLowerCase().contains(query) ||
-                            contribution.getName().toLowerCase().contains(query)) {
-                        result.add(expectation);
-                    }
-                }
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                Handler handler = new Handler(Looper.getMainLooper());
+
+                String finalQuery = query;
+                executor.execute(() -> {
+                    APIContributorResponse response = _DAO_Contributor.GetContributor(expectation.getContributorId());
+
+                    handler.post(() -> {
+                        if (response.getIsSuccess()) {
+                            Contributor contributor = response.getContributor();
+                            Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
+
+                            if (contributor != null && contribution != null) {
+                                // Filter by contributor name or contribution name
+                                if (contributor.getUserName().toLowerCase().contains(finalQuery) ||
+                                        contribution.getName().toLowerCase().contains(finalQuery)) {
+                                    result.add(expectation);
+                                }
+                            }
+                        }
+                    });
+                });
+
+                executor.shutdown();
             }
         }
 

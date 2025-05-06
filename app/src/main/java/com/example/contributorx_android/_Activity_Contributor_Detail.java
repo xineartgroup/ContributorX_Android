@@ -2,6 +2,8 @@ package com.example.contributorx_android;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +26,8 @@ import androidx.appcompat.widget.Toolbar;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class _Activity_Contributor_Detail extends AppCompatActivity {
     int SELECT_PHOTO = 1;
@@ -63,25 +67,45 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
             //EXISTING ITEM
             contributorId = Objects.requireNonNull(intent.getExtras()).getInt("com.example.contributorx_android.ITEMINDEX");
 
-            contributor = _DAO_Contributor.GetContributor(contributorId);
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Handler handler = new Handler(Looper.getMainLooper());
 
-            if (contributor != null) {
-                //setImage(imgContributor, contributor.getPicture());
-                lblUsername.setText(contributor.getUserName());
-                lblName.setText(String.format("%s %s", contributor.getFirstname(), contributor.getLastname()));
-                lblEmail.setText(contributor.getEmail());
-                lblPhoneNumber.setText(contributor.getPhoneNumber());
-                cboStatus.setSelection(contributor.isActive() ? 0 : 1);
-                cboGroups.setAdapter(getStringArrayAdapter());
+            executor.execute(() -> {
+                APIContributorResponse contributorResponse = _DAO_Contributor.GetContributor(contributorId);
 
-                groupings = _DAO_Grouping.GetGroupingsForContributor(contributorId);
-                _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(this, groupings);
-                lstUserGroups.setAdapter(userGroupItemAdapter);
+                if (contributorResponse.getIsSuccess() && contributorResponse.getContributor() != null) {
+                    Contributor contributor = contributorResponse.getContributor();
 
-                List<Expectation> expectations = _DAO_Expectation.GetExpectationsForContributor(contributorId);
-                _Layout_Expectation_List2 expectationItemAdapter = new _Layout_Expectation_List2(this, expectations);
-                lstUserExpectation.setAdapter(expectationItemAdapter);
-            }
+                    APIExpectationsResponse expectationsResponse = _DAO_Expectation.GetExpectationsForContributor(contributorId);
+
+                    handler.post(() -> {
+                        // setImage(imgContributor, contributor.getPicture());
+                        lblUsername.setText(contributor.getUserName());
+                        lblName.setText(String.format("%s %s", contributor.getFirstname(), contributor.getLastname()));
+                        lblEmail.setText(contributor.getEmail());
+                        lblPhoneNumber.setText(contributor.getPhoneNumber());
+                        cboStatus.setSelection(contributor.isActive() ? 0 : 1);
+                        cboGroups.setAdapter(getStringArrayAdapter());
+
+                        groupings = _DAO_Grouping.GetGroupingsForContributor(contributorId);
+                        _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(this, groupings);
+                        lstUserGroups.setAdapter(userGroupItemAdapter);
+
+                        if (expectationsResponse != null && expectationsResponse.getIsSuccess() && expectationsResponse.getExpectations() != null) {
+                            _Layout_Expectation_List2 expectationItemAdapter = new _Layout_Expectation_List2(this, expectationsResponse.getExpectations());
+                            lstUserExpectation.setAdapter(expectationItemAdapter);
+                        } else {
+                            android.util.Log.w("Expectations Fetch", "Failed or no expectations found.");
+                        }
+                    });
+                } else {
+                    handler.post(() -> {
+                        android.util.Log.e("Contributor Response", contributorResponse.getMessage());
+                    });
+                }
+            });
+
+            executor.shutdown();
         }
 
         cboStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

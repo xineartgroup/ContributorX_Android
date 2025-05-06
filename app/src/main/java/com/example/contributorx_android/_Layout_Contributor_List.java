@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class _Layout_Contributor_List extends BaseAdapter {
     List<Contributor> contributors;
@@ -69,8 +73,30 @@ public class _Layout_Contributor_List extends BaseAdapter {
         holder.lblFlatNumber.setText(contributor.getUserName());
         holder.lblFullName.setText(context.getString(R.string.full_name_display, contributor.getFirstname(), contributor.getLastname()));
         holder.lblStatus.setText(contributor.isActive() ? "Active" : "Inactive");
-        holder.lblAmountDue.setText(context.getString(R.string.amount_display, (double) getContributorAmount(contributor)));
         holder.lblStatus.setTextColor(contributor.isActive() ? Color.BLUE : Color.RED);
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+
+        executor.execute(() -> {
+            APIExpectationsResponse response = _DAO_Expectation.GetExpectationsForContributor(contributor.getId());
+
+            handler.post(() -> {
+                if (response.getIsSuccess() && response.getExpectations() != null) {
+                    float totalAmountOwed = 0.00f;
+                    float totalAmountPaid = 0.00f;
+                    for (int index = 0; index < response.getExpectations().size(); index++) {
+                        Expectation expectation = response.getExpectations().get(index);
+                        totalAmountPaid += expectation.getAmountPaid();
+                        Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                        if (contribution != null)
+                            totalAmountOwed += contribution.getAmount();
+                    }
+
+                    holder.lblAmountDue.setText(context.getString(R.string.amount_display, (totalAmountOwed > totalAmountPaid) ? totalAmountOwed - totalAmountPaid : 0.00f));
+                }
+            });
+        });
 
         setImage(holder.imgContributor, getPicturePath(contributor.getPicture()));
 
@@ -88,22 +114,6 @@ public class _Layout_Contributor_List extends BaseAdapter {
         TextView lblAmountDue;
         TextView lblStatus;
         ImageView imgContributor;
-    }
-
-    private float getContributorAmount(Contributor contributor) {
-        List<Expectation> expectations = _DAO_Expectation.GetExpectationsForContributor(contributor.getId());
-
-        float totalAmountOwed = 0.00f;
-        float totalAmountPaid = 0.00f;
-        for (int i = 0; i < expectations.size(); i++) {
-            Expectation expectation = expectations.get(i);
-            totalAmountPaid += expectation.getAmountPaid();
-            Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
-            if (contribution != null)
-                totalAmountOwed += contribution.getAmount();
-        }
-
-        return (totalAmountOwed > totalAmountPaid) ? totalAmountOwed - totalAmountPaid : 0.00f;
     }
 
     public void setImage(ImageView img, String imagePath) {

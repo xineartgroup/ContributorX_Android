@@ -24,24 +24,24 @@ public class _Activity_Login extends AppCompatActivity {
         Calendar date1 = Calendar.getInstance();
         date1.set(2025, 6, 31);
 
-        _DAO_Community.AddCommunity(new Community("13 Akinsanya Residents", "Residents of 13 Akinsanya, Ajao, Isolo Lagos"));
+        //_DAO_Community.AddCommunity(new Community("13 Akinsanya Residents", "Residents of 13 Akinsanya, Ajao, Isolo Lagos"));
 
         _DAO_Group.AddGroup(new Group("13 Akinsanya Residents Bills", "Bills for residents of 13 Akinsanya, Ajao, Isolo Lagos", 1));
         _DAO_Group.AddGroup(new Group("13 Akinsanya Social Contributions", "Contributions for residents of 13 Akinsanya, Ajao, Isolo Lagos", 1));
         _DAO_Group.AddGroup(new Group("13 Akinsanya Repairs", "Repairs for residents of 13 Akinsanya, Ajao, Isolo Lagos", 1));
 
-        _DAO_Contributor.AddContributor(new Contributor("flat1", "Inaegwu", "Achichi", "Administrator", "x@x.com", "080", "img1.jpg", 1, true, date0.toString()));
-        _DAO_Contributor.AddContributor(new Contributor("flat2", "Oluwafemi", "Akerele", "Contributor", "x@x.com", "080", "img2.jpg", 1, true, date0.toString()));
-        _DAO_Contributor.AddContributor(new Contributor("flat3", "Seun", "Oresegun", "Contributor", "x@x.com", "080", "img3.jpg", 1, true, date0.toString()));
-        _DAO_Contributor.AddContributor(new Contributor("flat4", "Obinna", "Chikwendu", "Contributor", "x@x.com", "080", "img4.jpg", 1, true, date0.toString()));
-        _DAO_Contributor.AddContributor(new Contributor("flat5", "Mike", "Owen", "Contributor", "x@x.com", "080", "img5.jpg", 1, true, date0.toString()));
-        _DAO_Contributor.AddContributor(new Contributor("Flat6", "Danny", "Chukwu", "Contributor", "x@x.com", "080", "img6.jpg", 1, true, date0.toString()));
-        _DAO_Contributor.AddContributor(new Contributor("Flat7", "Emmanuel", "Nwokoma", "Contributor", "x@x.com", "080", "img7.jpg", 1, true, date0.toString()));
-        _DAO_Contributor.AddContributor(new Contributor("Flat8", "Vincent", "Nwachukwu", "Contributor", "x@x.com", "080", "img8.jpg", 1, true, date0.toString()));
-        _DAO_Contributor.AddContributor(new Contributor("Flat9", "Ay", "Dk", "Contributor", "x@x.com", "080", "img9.jpg", 1, false, date0.toString()));
-        _DAO_Contributor.AddContributor(new Contributor("Flat10", "John", "Doe", "Contributor", "x@x.com", "080", "img10.jpg", 1, false, date0.toString()));
-        _DAO_Contributor.AddContributor(new Contributor("flat11", "Adaeze", "Nburuka", "Contributor", "x@x.com", "080", "img11.jpg", 1, true, date0.toString()));
-        _DAO_Contributor.AddContributor(new Contributor("flat12", "Anthony", "Mmadu", "Contributor", "x@x.com", "080", "img12.jpg", 1, true, date0.toString()));
+        _DAO_Contributor.AddContributor(new Contributor("flat1", "Inaegwu", "Achichi", "Administrator", "x@x.com", "080", "img1.jpg", 1, true, date0.getTime().toString()));
+        _DAO_Contributor.AddContributor(new Contributor("flat2", "Oluwafemi", "Akerele", "Contributor", "x@x.com", "080", "img2.jpg", 1, true, date0.getTime().toString()));
+        _DAO_Contributor.AddContributor(new Contributor("flat3", "Seun", "Oresegun", "Contributor", "x@x.com", "080", "img3.jpg", 1, true, date0.getTime().toString()));
+        _DAO_Contributor.AddContributor(new Contributor("flat4", "Obinna", "Chikwendu", "Contributor", "x@x.com", "080", "img4.jpg", 1, true, date0.getTime().toString()));
+        _DAO_Contributor.AddContributor(new Contributor("flat5", "Mike", "Owen", "Contributor", "x@x.com", "080", "img5.jpg", 1, true, date0.getTime().toString()));
+        _DAO_Contributor.AddContributor(new Contributor("Flat6", "Danny", "Chukwu", "Contributor", "x@x.com", "080", "img6.jpg", 1, true, date0.getTime().toString()));
+        _DAO_Contributor.AddContributor(new Contributor("Flat7", "Emmanuel", "Nwokoma", "Contributor", "x@x.com", "080", "img7.jpg", 1, true, date0.getTime().toString()));
+        _DAO_Contributor.AddContributor(new Contributor("Flat8", "Vincent", "Nwachukwu", "Contributor", "x@x.com", "080", "img8.jpg", 1, true, date0.getTime().toString()));
+        _DAO_Contributor.AddContributor(new Contributor("Flat9", "Ay", "Dk", "Contributor", "x@x.com", "080", "img9.jpg", 1, false, date0.getTime().toString()));
+        _DAO_Contributor.AddContributor(new Contributor("Flat10", "John", "Doe", "Contributor", "x@x.com", "080", "img10.jpg", 1, false, date0.getTime().toString()));
+        _DAO_Contributor.AddContributor(new Contributor("flat11", "Adaeze", "Nburuka", "Contributor", "x@x.com", "080", "img11.jpg", 1, true, date0.getTime().toString()));
+        _DAO_Contributor.AddContributor(new Contributor("flat12", "Anthony", "Mmadu", "Contributor", "x@x.com", "080", "img12.jpg", 1, true, date0.getTime().toString()));
 
         _DAO_Contribution.AddContribution(new Contribution("Monthly Dues for August", 4500, 1, date0.toString(), date1.toString()));
         _DAO_Contribution.AddContribution(new Contribution("Gate repair", 1250, 1, date0.toString(), date1.toString()));
@@ -51,15 +51,15 @@ public class _Activity_Login extends AppCompatActivity {
         _DAO_Expense.AddExpense(new Expense("LAWMA Expense For Jan 2025", "LAWMA Expense For Jan 2025", 1250, 1, ""));
         _DAO_Expense.AddExpense(new Expense("Security Expense for Jan 2025", "Security Expense for Jan 2025", 4500, 1, ""));
 
-        _DAO_Expectation.AddExpectation(new Expectation(1, 1, 0.00f, 0.00f, 0, ""));
-        _DAO_Expectation.AddExpectation(new Expectation(1, 2, 0.00f, 0.00f, 0, ""));
-        _DAO_Expectation.AddExpectation(new Expectation(1, 3, 0.00f, 0.00f, 0, ""));
-        _DAO_Expectation.AddExpectation(new Expectation(2, 1, 4500, 0.00f, 0, ""));
-        _DAO_Expectation.AddExpectation(new Expectation(2, 2, 0.00f, 1250, 0, ""));
-        _DAO_Expectation.AddExpectation(new Expectation(2, 3, 1500, 0.00f, 0, ""));
-        _DAO_Expectation.AddExpectation(new Expectation(3, 1, 0.00f, 0.00f, 0, ""));
-        _DAO_Expectation.AddExpectation(new Expectation(3, 2, 0.00f, 0.00f, 0, ""));
-        _DAO_Expectation.AddExpectation(new Expectation(3, 3, 0.00f, 0.00f, 0, ""));
+        //_DAO_Expectation.AddExpectation(new Expectation(1, 1, 0.00f, 0.00f, 0, ""));
+        //_DAO_Expectation.AddExpectation(new Expectation(1, 2, 0.00f, 0.00f, 0, ""));
+        //_DAO_Expectation.AddExpectation(new Expectation(1, 3, 0.00f, 0.00f, 0, ""));
+        //_DAO_Expectation.AddExpectation(new Expectation(2, 1, 4500, 0.00f, 0, ""));
+        //_DAO_Expectation.AddExpectation(new Expectation(2, 2, 0.00f, 1250, 0, ""));
+        //_DAO_Expectation.AddExpectation(new Expectation(2, 3, 1500, 0.00f, 0, ""));
+        //_DAO_Expectation.AddExpectation(new Expectation(3, 1, 0.00f, 0.00f, 0, ""));
+        //_DAO_Expectation.AddExpectation(new Expectation(3, 2, 0.00f, 0.00f, 0, ""));
+        //_DAO_Expectation.AddExpectation(new Expectation(3, 3, 0.00f, 0.00f, 0, ""));
 
         _DAO_Grouping.AddGrouping(new Grouping(1, 1));
         _DAO_Grouping.AddGrouping(new Grouping(2, 1));
@@ -94,7 +94,7 @@ public class _Activity_Login extends AppCompatActivity {
                 APIContributorResponse response = _DAO_Auth.Login(txtUsername.getText().toString(), txtPassword.getText().toString());
 
                 handler.post(() -> {
-                    if (response != null && response.getIssuccess() && response.getContributor() != null) {
+                    if (response != null && response.getIsSuccess() && response.getContributor() != null) {
                         APIClass.LoggedOnUser = response.getContributor();
                         Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
                         startIntent.putExtra("MAIN_INFO_LOGINUSERNAME", txtUsername.getText().toString());

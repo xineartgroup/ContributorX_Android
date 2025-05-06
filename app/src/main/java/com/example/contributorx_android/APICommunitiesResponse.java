@@ -2,21 +2,24 @@ package com.example.contributorx_android;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class APIExpectationResponse {
+import java.util.ArrayList;
+import java.util.List;
+
+public class APICommunitiesResponse {
     private boolean isSuccess;
     private String message;
-    private Expectation expectation;
+    private List<Community> communities;
 
-    public APIExpectationResponse(){
+    public APICommunitiesResponse(){
         this.isSuccess = true;
         this.message = "";
-        this.expectation = null;
+        this.communities = new ArrayList<>();
     }
 
-    public APIExpectationResponse(String message){
+    public APICommunitiesResponse(String message){
         this.isSuccess = false;
         this.message = message;
-        this.expectation = null;
+        this.communities = new ArrayList<>();
     }
 
     @JsonProperty("issuccess")
@@ -37,12 +40,12 @@ public class APIExpectationResponse {
         this.message = message;
     }
 
-    @JsonProperty("expectation")
-    public Expectation getExpectation() {
-        return expectation;
+    @JsonProperty("communities")
+    public List<Community> getCommunities() {
+        return communities;
     }
 
-    public void setExpectation(Expectation expectation) {
-        this.expectation = expectation;
+    public void setCommunities(List<Community> communities) {
+        this.communities = communities;
     }
 }

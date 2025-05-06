@@ -38,11 +38,14 @@ public class APIClass {
                     SetSessionCookie(connection);
                 }
 
+                android.util.Log.d("API SUCCESS!!!", response.toString());
                 return response.toString();
             } else {
+                android.util.Log.e("API FAILURE!!!", "GET request failed");
                 return "GET request failed";
             }
         } catch (Exception e) {
+            android.util.Log.e("API ERROR!!!", e.toString());
             return e.toString();
         }
     }
@@ -84,6 +87,42 @@ public class APIClass {
         return connection;
     }
 
+    public static APICommunityResponse GetCommunityResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, APICommunityResponse.class);
+        } catch (IOException e) {
+            return new APICommunityResponse(e.getMessage());
+        }
+    }
+
+    public static APICommunitiesResponse GetCommunitiesResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, APICommunitiesResponse.class);
+        } catch (IOException e) {
+            return new APICommunitiesResponse(e.getMessage());
+        }
+    }
+
+    public static APIContributionResponse GetContributionResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, APIContributionResponse.class);
+        } catch (IOException e) {
+            return new APIContributionResponse(e.getMessage());
+        }
+    }
+
+    public static APIContributionsResponse GetContributionsResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, APIContributionsResponse.class);
+        } catch (IOException e) {
+            return new APIContributionsResponse(e.getMessage());
+        }
+    }
+
     public static APIContributorResponse GetContributorResponse(String jsonResponse) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -93,13 +132,84 @@ public class APIClass {
         }
     }
 
+    public static APIContributorsResponse GetContributorsResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, APIContributorsResponse.class);
+        } catch (IOException e) {
+            return new APIContributorsResponse(e.getMessage());
+        }
+    }
+
     public static APIExpectationResponse GetExpectationResponse(String jsonResponse) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            android.util.Log.d("jsonResponse", jsonResponse);
             return objectMapper.readValue(jsonResponse, APIExpectationResponse.class);
         } catch (IOException e) {
             return new APIExpectationResponse(e.getMessage());
+        }
+    }
+
+    public static APIExpectationsResponse GetExpectationsResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, APIExpectationsResponse.class);
+        } catch (IOException e) {
+            return new APIExpectationsResponse(e.getMessage());
+        }
+    }
+
+    public static APIExpenseResponse GetExpenseResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, APIExpenseResponse.class);
+        } catch (IOException e) {
+            return new APIExpenseResponse(e.getMessage());
+        }
+    }
+
+    public static APIExpensesResponse GetExpensesResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, APIExpensesResponse.class);
+        } catch (IOException e) {
+            return new APIExpensesResponse(e.getMessage());
+        }
+    }
+
+    public static APIGroupingResponse GetGroupingResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, APIGroupingResponse.class);
+        } catch (IOException e) {
+            return new APIGroupingResponse(e.getMessage());
+        }
+    }
+
+    public static APIGroupingsResponse GetGroupingsResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, APIGroupingsResponse.class);
+        } catch (IOException e) {
+            return new APIGroupingsResponse(e.getMessage());
+        }
+    }
+
+    public static APIGroupResponse GetGroupResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, APIGroupResponse.class);
+        } catch (IOException e) {
+            return new APIGroupResponse(e.getMessage());
+        }
+    }
+
+    public static APIGroupsResponse GetGroupsResponse(String jsonResponse) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(jsonResponse, APIGroupsResponse.class);
+        } catch (IOException e) {
+            return new APIGroupsResponse(e.getMessage());
         }
     }
 

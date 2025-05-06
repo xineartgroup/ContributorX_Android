@@ -2,7 +2,9 @@ package com.example.contributorx_android;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
 public class Contributor {
@@ -18,7 +20,9 @@ public class Contributor {
     private String picture = "";
     private int communityId;
     private boolean active = true;
-    private String startDate = "";
+    private String startDate = Calendar.getInstance().getTime().toString();
+    private List<Expectation> expectations = new ArrayList<>();
+    private List<Group> groups = new ArrayList<>();
 
     public Contributor() {
 
@@ -149,6 +153,24 @@ public class Contributor {
 
     public void setStartDate(String startDate) {
         this.startDate = startDate;
+    }
+
+    @JsonProperty("Expectations")
+    public List<Expectation> getExpectations() {
+        return expectations;
+    }
+
+    public void setExpectations(List<Expectation> expectations) {
+        this.expectations = expectations;
+    }
+
+    @JsonProperty("Groups")
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
     }
 
     @Override

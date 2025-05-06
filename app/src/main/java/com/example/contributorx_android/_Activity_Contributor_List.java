@@ -4,15 +4,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Spinner;
 import android.Manifest;
 import android.widget.Toast;
 
@@ -24,6 +23,8 @@ import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class _Activity_Contributor_List extends AppCompatActivity {
 
@@ -47,7 +48,6 @@ public class _Activity_Contributor_List extends AppCompatActivity {
         }
 
         Button btnAddContributor = findViewById(R.id.btnAddContributor);
-        Spinner cboStatus = findViewById(R.id.cboStatus);
         ListView lstDetail = findViewById(R.id.lstDetail);
         SearchView searchView = findViewById(R.id.searchView);
 
@@ -57,14 +57,27 @@ public class _Activity_Contributor_List extends AppCompatActivity {
             finish();
         }
 
-        contributors = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getId());
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
-        iAdapter = new _Layout_Contributor_List(this, contributors);
-        lstDetail.setAdapter(iAdapter);
+        executor.execute(() -> {
+            APIContributorsResponse response = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
-        if (!"".equals(iAdapter.error)) {
-            Toast.makeText(this, iAdapter.error, Toast.LENGTH_SHORT).show();
-        }
+            handler.post(() -> {
+                if (response.getIsSuccess()) {
+
+                    contributors = response.getContributors();
+
+                    iAdapter = new _Layout_Contributor_List(this, contributors);
+                    lstDetail.setAdapter(iAdapter);
+
+                    if (!"".equals(iAdapter.error)) {
+                        Toast.makeText(this, iAdapter.error, Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+        });
 
         lstDetail.setOnItemClickListener((adapterView, view, i, l) -> {
             if ("Administrator".equals(APIClass.LoggedOnUser.getRole())) {
@@ -80,33 +93,6 @@ public class _Activity_Contributor_List extends AppCompatActivity {
         btnAddContributor.setOnClickListener(view -> {
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_Detail.class);
             startActivity(startIntent);
-        });
-
-        cboStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-                if (iAdapter != null) {
-                    if (i == 0) {
-                        iAdapter.contributors = _DAO_Contributor.GetAllContributors();
-                        lstDetail.setAdapter(iAdapter);
-                    }
-                    else if (i == 1) {
-                        iAdapter.contributors = _DAO_Contributor.GetActive();
-                        lstDetail.setAdapter(iAdapter);
-                    }
-                    else if (i == 2) {
-                        iAdapter.contributors = _DAO_Contributor.GetInActive();
-                        lstDetail.setAdapter(iAdapter);
-                    }
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
         });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

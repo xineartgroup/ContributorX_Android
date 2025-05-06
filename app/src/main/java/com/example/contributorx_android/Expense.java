@@ -1,15 +1,17 @@
 package com.example.contributorx_android;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Calendar;
 
 public class Expense {
 
-    private int id;
-    private String name;
-    private String description;
-    private Calendar dateCreated = Calendar.getInstance();
+    private int id = 0;
+    private String name = "";
+    private String description = "";
+    private String dateCreated = Calendar.getInstance().getTime().toString();
     private float amountPaid = 0.00f;
-    private int communityId;
+    private int communityId = 0;
     private String paymentReceipt = "";
 
     public Expense() {
@@ -19,7 +21,7 @@ public class Expense {
     public Expense(String name, String description, float amountPaid, int communityId, String paymentReceipt) {
         this.name = name;
         this.description = description;
-        this.dateCreated = Calendar.getInstance();
+        this.dateCreated = Calendar.getInstance().getTime().toString();
         this.amountPaid = amountPaid;
         this.communityId = communityId;
         this.paymentReceipt = paymentReceipt;
@@ -29,6 +31,7 @@ public class Expense {
         this.name = name;
     }
 
+    @JsonProperty("Id")
     public int getId() {
         return id;
     }
@@ -37,6 +40,7 @@ public class Expense {
         this.id = id;
     }
 
+    @JsonProperty("Name")
     public String getName() {
         return name;
     }
@@ -45,6 +49,7 @@ public class Expense {
         this.name = name;
     }
 
+    @JsonProperty("Description")
     public String getDescription() {
         return description;
     }
@@ -53,14 +58,16 @@ public class Expense {
         this.description = description;
     }
 
-    public Calendar getDateCreated() {
+    @JsonProperty("DateCreated")
+    public String getDateCreated() {
         return dateCreated;
     }
 
-    public void setDateCreated(Calendar dateCreated) {
+    public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
     }
 
+    @JsonProperty("AmountPaid")
     public float getAmountPaid() {
         return amountPaid;
     }
@@ -69,6 +76,7 @@ public class Expense {
         this.amountPaid = amountPaid;
     }
 
+    @JsonProperty("CommunityId")
     public int getCommunityId() {
         return communityId;
     }
@@ -77,6 +85,7 @@ public class Expense {
         this.communityId = communityId;
     }
 
+    @JsonProperty("PaymentReceipt")
     public String getPaymentReceipt() { return paymentReceipt; }
 
     public void setPaymentReceipt(String paymentReceipt) { this.paymentReceipt = paymentReceipt; }

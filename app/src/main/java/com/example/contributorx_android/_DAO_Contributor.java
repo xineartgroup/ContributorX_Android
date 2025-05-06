@@ -1,5 +1,7 @@
 package com.example.contributorx_android;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,87 +30,18 @@ public class _DAO_Contributor {
         }
     }
 
-    public static void DeleteContributor(int id) {
-        for (int index = 0; index < contributors.size(); index++) {
-            if (contributors.get(index).getId() == id) {
-                contributors.remove(index);
-                return;
-            }
-        }
+    public static APIContributorResponse DeleteContributor(int id) {
+        String result = APIClass.SendMessage("POST", "contributor/api/delete/" + id,"", "", false);
+        return APIClass.GetContributorResponse(result);
     }
 
-    public static Contributor GetContributor(int id) {
-        for (int index = 0; index < contributors.size(); index++) {
-            if (contributors.get(index).getId() == id) {
-                return contributors.get(index);
-            }
-        }
-
-        return null;
+    public static APIContributorResponse GetContributor(int id) {
+        String result = APIClass.SendMessage("GET", "contributor/api/" + id,"", "", false);
+        return APIClass.GetContributorResponse(result);
     }
 
-    public static Contributor GetContributorByUsername(String username) {
-        for (int i = 0; i < contributors.size(); i++) {
-            Contributor contributor = contributors.get(i);
-            if (contributor != null && contributor.getUserName().equals(username)) {
-                return contributor;
-            }
-        }
-
-        return null;
-    }
-
-    public static List<Contributor> SearchContributors(String strName) {
-        List<Contributor> result = new ArrayList<>();
-
-        if ("".equals(strName)) {
-            return contributors;
-        }
-        else {
-            for (int i = 0; i < contributors.size(); i++) {
-                if (contributors.get(i).getFirstname().contains(strName) ||
-                        contributors.get(i).getLastname().contains(strName)) {
-                    result.add(contributors.get(i));
-                }
-            }
-        }
-
-        return result;
-    }
-
-    public static List<Contributor> GetActive() {
-        List<Contributor> result = new ArrayList<>();
-
-        for (int i = 0; i < contributors.size(); i++) {
-            if (contributors.get(i).isActive()) {
-                result.add(contributors.get(i));
-            }
-        }
-
-        return result;
-    }
-
-    public static List<Contributor> GetInActive() {
-        List<Contributor> result = new ArrayList<>();
-
-        for (int i = 0; i < contributors.size(); i++) {
-            if (!contributors.get(i).isActive()) {
-                result.add(contributors.get(i));
-            }
-        }
-
-        return result;
-    }
-
-    public static List<Contributor> GetContributorsInCommunity(int communityId) {
-        List<Contributor> result = new ArrayList<>();
-
-        for (int i = 0; i < contributors.size(); i++) {
-            if (contributors.get(i).getCommunityId() == communityId) {
-                result.add(contributors.get(i));
-            }
-        }
-
-        return result;
+    public static APIContributorsResponse GetContributorsInCommunity(int communityId) {
+        String result = APIClass.SendMessage("GET", "contributor/api?communityid=" + communityId + String.format("&searchValue=%s&sortName=%s&sortOrder=%s", "*", "Id", "ASC"),"", "", false);
+        return APIClass.GetContributorsResponse(result);
     }
 }

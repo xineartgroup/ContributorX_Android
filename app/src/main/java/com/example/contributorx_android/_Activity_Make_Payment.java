@@ -3,6 +3,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +14,8 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class _Activity_Make_Payment extends AppCompatActivity {
 
@@ -35,24 +39,32 @@ public class _Activity_Make_Payment extends AppCompatActivity {
         Intent intent = getIntent();
         expectationId = intent.getIntExtra("EXPECTATION_ID", -1);
 
-        Expectation expectation = _DAO_Expectation.GetExpectation(expectationId);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
-        if (expectation != null) {
-            Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
-            if (contribution != null) {
-                txtContributionName.setText(contribution.getName());
-                txtAmount.setText(getString(R.string.amount, contribution.getAmount()));
+        executor.execute(() -> {
+            APIExpectationResponse response = _DAO_Expectation.GetExpectation(expectationId);
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                txtDueDate.setText(getString(R.string.due_date, contribution.getDueDate()));
+            handler.post(() -> {
+                Expectation expectation = response.getExpectation();
+                if (expectation != null) {
+                    Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                    if (contribution != null) {
+                        txtContributionName.setText(contribution.getName());
+                        txtAmount.setText(getString(R.string.amount, contribution.getAmount()));
 
-                float amountPaid = expectation.getAmountPaid();
-                txtAmountPaid.setText(getString(R.string.amount_paid, amountPaid));
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                        txtDueDate.setText(getString(R.string.due_date, contribution.getDueDate()));
 
-                double remainingBalance = contribution.getAmount() - amountPaid;
-                txtPaymentAmount.setText("" + remainingBalance);
-            }
-        }
+                        float amountPaid = expectation.getAmountPaid();
+                        txtAmountPaid.setText(getString(R.string.amount_paid, amountPaid));
+
+                        double remainingBalance = contribution.getAmount() - amountPaid;
+                        txtPaymentAmount.setText("" + remainingBalance);
+                    }
+                }
+            });
+        });
 
         Button btnMakePayment = findViewById(R.id.btnMakePayment);
         if (btnMakePayment != null) {
@@ -74,31 +86,39 @@ public class _Activity_Make_Payment extends AppCompatActivity {
         float paymentAmount = Float.parseFloat(txtPaymentAmount.getText().toString());
         String paymentMethod = edtPaymentMethod.getSelectedItem().toString();
 
-        Expectation expectation = _DAO_Expectation.GetExpectation(expectationId);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
-        if (expectation != null) {
-            if ("Use Payment Gateway".equals(paymentMethod) && PaymentSuccessful(expectation)) {
-                expectation.setPaymentStatus(3);
-                expectation.setAmountPaid(paymentAmount);
-                _DAO_Expectation.UpdateExpectation(expectation);
-                Toast.makeText(this, "Payment successful!!!", Toast.LENGTH_SHORT).show();
-                // Return to previous screen
-                finish();
-            }
-            else if ("Send for Approval".equals(paymentMethod)) {
-                expectation.setPaymentStatus(1);
-                expectation.setAmountToApprove(paymentAmount);
-                _DAO_Expectation.UpdateExpectation(expectation);
-                Toast.makeText(this, "Payment sent for Approval!!!", Toast.LENGTH_SHORT).show();
-                // Return to previous screen
-                finish();
-            }
-            else{
-                Toast.makeText(this, "Payment failed!!!", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, "Payment failed!!!", Toast.LENGTH_SHORT).show();
-        }
+        executor.execute(() -> {
+            APIExpectationResponse response = _DAO_Expectation.GetExpectation(expectationId);
+
+            handler.post(() -> {
+                Expectation expectation = response.getExpectation();
+                if (expectation != null) {
+                    if ("Use Payment Gateway".equals(paymentMethod) && PaymentSuccessful(expectation)) {
+                        expectation.setPaymentStatus(3);
+                        expectation.setAmountPaid(paymentAmount);
+                        APIExpectationResponse resp = _DAO_Expectation.UpdateExpectation(expectation);
+                        Toast.makeText(this, "Payment successful!!!", Toast.LENGTH_SHORT).show();
+                        // Return to previous screen
+                        finish();
+                    }
+                    else if ("Send for Approval".equals(paymentMethod)) {
+                        expectation.setPaymentStatus(1);
+                        expectation.setAmountToApprove(paymentAmount);
+                        APIExpectationResponse resp = _DAO_Expectation.UpdateExpectation(expectation);
+                        Toast.makeText(this, "Payment sent for Approval!!!", Toast.LENGTH_SHORT).show();
+                        // Return to previous screen
+                        finish();
+                    }
+                    else{
+                        Toast.makeText(this, "Payment failed!!!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "Payment failed!!!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     private boolean PaymentSuccessful(Expectation expectation) {

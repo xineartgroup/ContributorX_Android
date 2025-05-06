@@ -1,9 +1,12 @@
 package com.example.contributorx_android;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Grouping {
     private int id = 0;
     private int contributorId = 0;
     private int groupId = 0;
+    private Group group = null;
 
     public Grouping() {
     }
@@ -13,6 +16,7 @@ public class Grouping {
         this.groupId = groupId;
     }
 
+    @JsonProperty("Id")
     public int getId() {
         return id;
     }
@@ -21,6 +25,7 @@ public class Grouping {
         this.id = id;
     }
 
+    @JsonProperty("ContributorId")
     public int getContributorId() {
         return contributorId;
     }
@@ -29,11 +34,21 @@ public class Grouping {
         this.contributorId = contributorId;
     }
 
+    @JsonProperty("GroupId")
     public int getGroupId() {
         return groupId;
     }
 
     public void setGroupId(int groupId) {
         this.groupId = groupId;
+    }
+
+    @JsonProperty("Group")
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 }

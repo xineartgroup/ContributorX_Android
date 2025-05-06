@@ -2,6 +2,8 @@ package com.example.contributorx_android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -13,6 +15,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -32,30 +36,46 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ListView lstUserExpectation = findViewById(R.id.lstUserExpectation);
-        List<Expectation> list = _DAO_Expectation.GetExpectationsForContributor(APIClass.LoggedOnUser.getId());
 
-        List<Expectation> expectations = new ArrayList<>();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
-        for (Expectation item : list){
-            Contribution contribution = _DAO_Contribution.GetContribution(item.getContributionId());
-            if (contribution != null) {
-                if (contribution.getAmount() - (item.getAmountPaid() + item.getAmountToApprove()) > 0.0) {
-                    expectations.add(item);
+        executor.execute(() -> {
+            APIExpectationsResponse response = _DAO_Expectation.GetExpectationsForContributor(APIClass.LoggedOnUser.getId());
+
+            handler.post(() -> {
+                if (response.getIsSuccess()) {
+                    if (response.getExpectations() != null) {
+                        List<Expectation> list = response.getExpectations();
+
+                        List<Expectation> expectations = new ArrayList<>();
+
+                        for (Expectation item : list){
+                            if (item.getPaymentStatus() != 2 && item.getPaymentStatus() != 3) {
+                                Contribution contribution = _DAO_Contribution.GetContribution(item.getContributionId());
+                                if (contribution != null) {
+                                    if (contribution.getAmount() - (item.getAmountPaid() + item.getAmountToApprove()) > 0.0) {
+                                        expectations.add(item);
+                                    }
+                                }
+                            }
+                        }
+
+                        _Layout_Expectation_List1 expectationItemAdapter = new _Layout_Expectation_List1(this, expectations);
+                        lstUserExpectation.setAdapter(expectationItemAdapter);
+
+                        LayoutInflater inflater = LayoutInflater.from(this);
+                        View itemView = inflater.inflate(R.layout.layout_expectation_list1, null);
+
+                        /*ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+                            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                            return insets;
+                        });*/
+                    }
                 }
-            }
-        }
-
-        _Layout_Expectation_List1 expectationItemAdapter = new _Layout_Expectation_List1(this, expectations);
-        lstUserExpectation.setAdapter(expectationItemAdapter);
-
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View itemView = inflater.inflate(R.layout.layout_expectation_list1, null);
-
-        /*ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });*/
+            });
+        });
     }
 
     @Override

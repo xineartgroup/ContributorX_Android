@@ -1,49 +1,45 @@
 package com.example.contributorx_android;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class _DAO_Community {
 
-    private static int lastId = 0;
-
-    private static List<Community> communities = new ArrayList<>();
-
-    public static List<Community> GetAllCommunitys() {
-        return communities;
+    public static APICommunitiesResponse GetAllCommunities() {
+        String result = APIClass.SendMessage("GET", "community/api/all","", "", false);
+        return APIClass.GetCommunitiesResponse(result);
     }
 
-    public static int AddCommunity(Community community) {
-        community.setId(++lastId);
-        communities.add(community);
-        return community.getId();
-    }
-
-    public static void UpdateCommunity(Community community) {
-        for (int index = 0; index < communities.size(); index++) {
-            if (communities.get(index).getId() == community.getId()) {
-                communities.set(index, community);
-                return;
-            }
+    public static APICommunityResponse AddCommunity(Community community) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonData = objectMapper.writeValueAsString(community);
+            String result = APIClass.SendMessage("POST", "community/api/","", jsonData, false);
+            return APIClass.GetCommunityResponse(result);
+        } catch (Exception e) {
+            android.util.Log.d("ERROR!!!", e.toString());
+            return new APICommunityResponse(e.getMessage());
         }
     }
 
-    public static void DeleteCommunity(int id) {
-        for (int index = 0; index < communities.size(); index++) {
-            if (communities.get(index).getId() == id) {
-                communities.remove(index);
-                return;
-            }
+    public static APICommunityResponse UpdateCommunity(Community community) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonData = objectMapper.writeValueAsString(community);
+            String result = APIClass.SendMessage("POST", "community/api/update/" + community.getId(),"", jsonData, false);
+            return APIClass.GetCommunityResponse(result);
+        } catch (Exception e) {
+            android.util.Log.d("ERROR!!!", e.toString());
+            return new APICommunityResponse(e.getMessage());
         }
     }
 
-    public static Community GetCommunity(int id) {
-        for (int index = 0; index < communities.size(); index++) {
-            if (communities.get(index).getId() == id) {
-                return communities.get(index);
-            }
-        }
+    public static APICommunityResponse DeleteCommunity(int id) {
+        String result = APIClass.SendMessage("POST", "community/api/delete/" + id,"", "", false);
+        return APIClass.GetCommunityResponse(result);
+    }
 
-        return null;
+    public static APICommunityResponse GetCommunity(int id) {
+        String result = APIClass.SendMessage("GET", "community/api/" + id,"", "", false);
+        return APIClass.GetCommunityResponse(result);
     }
 }

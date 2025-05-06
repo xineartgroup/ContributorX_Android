@@ -9,8 +9,8 @@ public class Contribution {
     private String name = "";
     private float amount = 0.00f;
     private int groupId = 0;
-    private String dateCreated = "";
-    private String dueDate = "";
+    private String dateCreated = Calendar.getInstance().getTime().toString();
+    private String dueDate = Calendar.getInstance().getTime().toString();
 
     public Contribution() {
 

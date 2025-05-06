@@ -1,6 +1,8 @@
 package com.example.contributorx_android;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,6 +12,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class _Activity_Community_Detail extends AppCompatActivity {
     Community community = null;
@@ -35,26 +40,60 @@ public class _Activity_Community_Detail extends AppCompatActivity {
             return;
         }
 
-        if (APIClass.LoggedOnUser.getId() >= 0) {
-            community = _DAO_Community.GetCommunity(APIClass.LoggedOnUser.getId());
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
-            if (community != null) {
-                txtCommunityName.setText(community.getName());
-                txtDescription.setText(community.getDescription());
-            }
+        if (APIClass.LoggedOnUser.getCommunityId() >= 0) {
+
+            executor.execute(() -> {
+                APICommunityResponse response = _DAO_Community.GetCommunity(APIClass.LoggedOnUser.getCommunityId());
+
+                handler.post(() -> {
+                    if (response.getIssuccess()) {
+                        if (response.getCommunity() != null) {
+                            community = response.getCommunity();
+                            txtCommunityName.setText(community.getName());
+                            txtDescription.setText(community.getDescription());
+                        }
+                    }
+                });
+            });
         }
 
         btnSaveCommunity.setOnClickListener(view -> {
             try {
                 if (community == null) {
-                    community = new Community();
+                    executor.execute(() -> {
+                        community = new Community();
 
-                    community.setName(txtCommunityName.getText().toString());
-                    community.setDescription(txtDescription.getText().toString());
+                        community.setName(txtCommunityName.getText().toString());
+                        community.setDescription(txtDescription.getText().toString());
 
-                    community.setId(_DAO_Community.AddCommunity(community));
+                        APICommunityResponse response = _DAO_Community.AddCommunity(community);
+
+                        handler.post(() -> {
+                            if (response.getIssuccess()) {
+                                if (response.getCommunity() != null) {
+                                    community = response.getCommunity();
+                                }
+                            }
+                        });
+                    });
                 } else {
-                    _DAO_Community.UpdateCommunity(community);
+                    executor.execute(() -> {
+                        community.setName(txtCommunityName.getText().toString());
+                        community.setDescription(txtDescription.getText().toString());
+
+                        APICommunityResponse response = _DAO_Community.UpdateCommunity(community);
+
+                        handler.post(() -> {
+                            if (response.getIssuccess()) {
+                                if (response.getCommunity() != null) {
+                                    community = response.getCommunity();
+                                }
+                            }
+                        });
+                    });
                 }
 
                 Toast.makeText(this, "Community Updated", Toast.LENGTH_LONG).show();

@@ -2,6 +2,8 @@ package com.example.contributorx_android;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,8 @@ import android.widget.TextView;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class _Layout_Expectation_List0 extends BaseAdapter {
 
@@ -60,31 +64,44 @@ public class _Layout_Expectation_List0 extends BaseAdapter {
             holder = (_Layout_Expectation_List0.ViewHolder) convertView.getTag();
         }
 
-        Expectation expectation = expectations.get(position);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
-        Contributor contributor = _DAO_Contributor.GetContributor(expectation.getContributorId());
-        Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
+        executor.execute(() -> {
+            Expectation expectation = expectations.get(position);
 
-        if (contributor != null && contribution != null) {
-            holder.tvContributor.setText(contributor.getUserName());
-            holder.tvBillPledge.setText(contribution.getName());
-            holder.tvAmountOwed.setText(currencyFormatter.format(contribution.getAmount() - expectation.getAmountPaid()));
-            if (expectation.getPaymentStatus() == 2 || expectation.getPaymentStatus() == 3){
-                holder.tvAmountToApprove.setVisibility(View.GONE); // Or use View.INVISIBLE if you want to preserve the layout space
-            }
-            else {
-                holder.tvAmountToApprove.setVisibility(View.VISIBLE);
-                if (expectation.getAmountToApprove() > 0.00f) {
-                    holder.tvAmountToApprove.setText(String.format("%s%s", context.getString(R.string.approve_reject),
-                            currencyFormatter.format(expectation.getAmountToApprove())));
-                    holder.tvAmountToApprove.setOnClickListener(v -> handlePayButtonClick(expectation.getId(), "approve"));
-                } else {
-                    holder.tvAmountToApprove.setText(String.format("%s%s", context.getString(R.string.write_off),
-                            currencyFormatter.format(contribution.getAmount() - expectation.getAmountPaid())));
-                    holder.tvAmountToApprove.setOnClickListener(v -> handlePayButtonClick(expectation.getId(), "write-off"));
+            APIContributorResponse response = _DAO_Contributor.GetContributor(expectation.getContributorId());
+
+            handler.post(() -> {
+                if (response.getIsSuccess()) {
+                    Contributor contributor = response.getContributor();
+                    Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
+
+                    if (contributor != null && contribution != null) {
+                        holder.tvContributor.setText(contributor.getUserName());
+                        holder.tvBillPledge.setText(contribution.getName());
+                        holder.tvAmountOwed.setText(currencyFormatter.format(contribution.getAmount() - expectation.getAmountPaid()));
+                        if (expectation.getPaymentStatus() == 2 || expectation.getPaymentStatus() == 3){
+                            holder.tvAmountToApprove.setVisibility(View.GONE); // Or use View.INVISIBLE if you want to preserve the layout space
+                        }
+                        else {
+                            holder.tvAmountToApprove.setVisibility(View.VISIBLE);
+                            if (expectation.getAmountToApprove() > 0.00f) {
+                                holder.tvAmountToApprove.setText(String.format("%s%s", context.getString(R.string.approve_reject),
+                                        currencyFormatter.format(expectation.getAmountToApprove())));
+                                holder.tvAmountToApprove.setOnClickListener(v -> handlePayButtonClick(expectation.getId(), "approve"));
+                            } else {
+                                holder.tvAmountToApprove.setText(String.format("%s%s", context.getString(R.string.write_off),
+                                        currencyFormatter.format(contribution.getAmount() - expectation.getAmountPaid())));
+                                holder.tvAmountToApprove.setOnClickListener(v -> handlePayButtonClick(expectation.getId(), "write-off"));
+                            }
+                        }
+                    }
                 }
-            }
-        }
+            });
+        });
+
+        executor.shutdown();
 
         return convertView;
     }
@@ -103,13 +120,23 @@ public class _Layout_Expectation_List0 extends BaseAdapter {
             context.startActivity(approvePaymentIntent);
         }
         else if ("write-off".equals(str)) {
-            Expectation expectation = _DAO_Expectation.GetExpectation(expectationId);
-            if (expectation != null) {
-                expectation.setPaymentStatus(3);
-                expectation.setAmountToApprove(0.00f);
-                _DAO_Expectation.UpdateExpectation(expectation);
-                notifyDataSetChanged();
-            }
+
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Handler handler = new Handler(Looper.getMainLooper());
+
+            executor.execute(() -> {
+                APIExpectationResponse response = _DAO_Expectation.GetExpectation(expectationId);
+
+                handler.post(() -> {
+                    Expectation expectation = response.getExpectation();
+                    if (expectation != null) {
+                        expectation.setPaymentStatus(3);
+                        expectation.setAmountToApprove(0.00f);
+                        APIExpectationResponse resp = _DAO_Expectation.UpdateExpectation(expectation);
+                        notifyDataSetChanged();
+                    }
+                });
+            });
         }
     }
 }

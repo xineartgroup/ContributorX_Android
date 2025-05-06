@@ -12,7 +12,7 @@ public class _DAO_Auth {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(user);
-            System.out.println(jsonData);
+            //System.out.println(jsonData);
             String result = APIClass.SendMessage("GET", "auth/api/login", "", jsonData, true);
             return APIClass.GetContributorResponse(result);
         } catch (IOException e) {

@@ -2,99 +2,52 @@ package com.example.contributorx_android;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 public class _DAO_Expectation {
 
-    private static int lastId = 0;
-
-    private static List<Expectation> expectations = new ArrayList<>();
-
-    public static List<Expectation> GetAllExpectations() {
-        return expectations;
+    public static APIExpectationsResponse GetAllExpectations() {
+        String result = APIClass.SendMessage("GET", "expectation/api/all","", "", false);
+        return APIClass.GetExpectationsResponse(result);
     }
 
-    public static int AddExpectation(Expectation expectation) {
-        expectation.setId(++lastId);
-        expectations.add(expectation);
-        return expectation.getId();
-    }
-
-    public static void UpdateExpectation(Expectation expectation) {
-        for (int index = 0; index < expectations.size(); index++) {
-            if (expectations.get(index).getId() == expectation.getId()) {
-                expectations.set(index, expectation);
-                return;
-            }
-        }
-    }
-
-    public static void DeleteExpectation(int id) {
-        for (int index = 0; index < expectations.size(); index++) {
-            if (expectations.get(index).getId() == id) {
-                    expectations.remove(index);
-                    return;
-            }
-        }
-    }
-
-    public static APIExpectationResponse GetExpectationString(int Id) {
+    public static APIExpectationResponse AddExpectation(Expectation expectation) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            String result = APIClass.SendMessage("GET", "expectation/api/" + Id,"", "", false);
+            String jsonData = objectMapper.writeValueAsString(expectation);
+            String result = APIClass.SendMessage("POST", "expectation/api/","", jsonData, false);
             return APIClass.GetExpectationResponse(result);
         } catch (Exception e) {
             return new APIExpectationResponse(e.getMessage());
         }
     }
 
-    public static Expectation GetExpectation(int Id) {
-        for (int i = 0; i < expectations.size(); i++) {
-            if (expectations.get(i).getId() == Id) {
-                return expectations.get(i);
-            }
+    public static APIExpectationResponse UpdateExpectation(Expectation expectation) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonData = objectMapper.writeValueAsString(expectation);
+            String result = APIClass.SendMessage("POST", "expectation/api/update/" + expectation.getId(),"", jsonData, false);
+            return APIClass.GetExpectationResponse(result);
+        } catch (Exception e) {
+            return new APIExpectationResponse(e.getMessage());
         }
-
-        return null;
     }
 
-    public static List<Expectation> GetExpectationsForContributor(int contributorId) {
-        List<Expectation> result = new ArrayList<>();
-
-        for (int i = 0; i < expectations.size(); i++) {
-            Expectation expectation = expectations.get(i);
-            if (expectation.getContributorId() == contributorId) {
-                if (expectation.getPaymentStatus() != 2 && expectation.getPaymentStatus() != 3) {
-                    result.add(expectation);
-                }
-            }
-        }
-
-        return result;
+    public static APIExpectationResponse DeleteExpectation(int id) {
+        String result = APIClass.SendMessage("POST", "expectation/api/delete/" + id,"", "", false);
+        return APIClass.GetExpectationResponse(result);
     }
 
-    public static List<Expectation> GetUnclearedExpectationsInCommunity(int communityId) {
+    public static APIExpectationResponse GetExpectation(int id) {
+        String result = APIClass.SendMessage("GET", "expectation/api/" + id,"", "", false);
+        return APIClass.GetExpectationResponse(result);
+    }
 
-        List<Expectation> result = new ArrayList<>();
+    public static APIExpectationsResponse GetExpectationsForContributor(int contributorId) {
+        String result = APIClass.SendMessage("GET", "expectation/api/getbycontributor/" + contributorId + "/*","", "", false);
+        return APIClass.GetExpectationsResponse(result);
+    }
 
-        for (int i = 0; i < expectations.size(); i++) {
-            Expectation expectation = expectations.get(i);
-            Contributor contributor = _DAO_Contributor.GetContributor(expectation.getContributorId());
-            Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
-            if (contributor != null && contribution != null && contributor.getCommunityId() == communityId) {
-                if (expectation.getPaymentStatus() != 2 && expectation.getPaymentStatus() != 3 &&
-                        contribution.getAmount() - expectation.getAmountPaid() > 0) {
-                    result.add(expectation);
-                }
-            }
-        }
-
-        return result;
+    public static APIExpectationsResponse GetUnclearedExpectationsInCommunity(int communityId) {
+        String result = APIClass.SendMessage("GET", "expectation/api?communityid=" + communityId + String.format("&searchValue=%s&sortName=%s&sortOrder=%s", "*", "Id", "ASC"),"", "", false);
+        return APIClass.GetExpectationsResponse(result);
     }
 }

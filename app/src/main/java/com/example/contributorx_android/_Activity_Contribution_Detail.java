@@ -2,6 +2,8 @@ package com.example.contributorx_android;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +17,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class _Activity_Contribution_Detail extends AppCompatActivity {
     Contribution contribution = null;
@@ -87,11 +91,25 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
                     contribution.setDueDate(date.toString());
 
                     contribution.setId(_DAO_Contribution.AddContribution(contribution));
-                    List<Contributor> contributors = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getCommunityId());
-                    for (int i = 0; i < contributors.size(); i++) {
-                        Expectation expectation = new Expectation(contributors.get(i).getId(), contribution.getId(), 0.00f, 0.00f, 0, "");
-                        expectation.setId(_DAO_Expectation.AddExpectation(expectation));
-                    }
+
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    Handler handler = new Handler(Looper.getMainLooper());
+
+                    executor.execute(() -> {
+                        APIContributorsResponse response = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getCommunityId());
+
+                        handler.post(() -> {
+                            if (response.getIsSuccess()) {
+
+                                List<Contributor> contributors = response.getContributors();
+                                for (int i = 0; i < contributors.size(); i++) {
+                                    Expectation expectation = new Expectation(contributors.get(i).getId(), contribution.getId(), 0.00f, 0.00f, 0, "");
+                                    APIExpectationResponse resp = _DAO_Expectation.AddExpectation(expectation);
+                                }
+                            }
+
+                        });
+                    });
                 } else {
                     _DAO_Contribution.UpdateContribution(contribution);
                 }

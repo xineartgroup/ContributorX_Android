@@ -1,5 +1,7 @@
 package com.example.contributorx_android;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Calendar;
 
 public class Community {
@@ -18,6 +20,7 @@ public class Community {
         this.description = description;
     }
 
+    @JsonProperty("Id")
     public int getId() {
         return id;
     }
@@ -26,6 +29,7 @@ public class Community {
         this.id = id;
     }
 
+    @JsonProperty("Name")
     public String getName() {
         return name;
     }
@@ -34,6 +38,7 @@ public class Community {
         this.name = name;
     }
 
+    @JsonProperty("Description")
     public String getDescription() {
         return description;
     }
@@ -42,6 +47,7 @@ public class Community {
         this.description = description;
     }
 
+    @JsonProperty("DateCreated")
     public Calendar getDateCreated() {
         return dateCreated;
     }

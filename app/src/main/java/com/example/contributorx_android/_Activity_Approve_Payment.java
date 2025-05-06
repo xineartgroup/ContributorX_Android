@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -16,8 +18,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.io.File;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class _Activity_Approve_Payment extends AppCompatActivity {
 
@@ -77,38 +80,49 @@ public class _Activity_Approve_Payment extends AppCompatActivity {
     }
 
     private void loadExpectationDetails(int expectationId) {
-        Expectation expectation = _DAO_Expectation.GetExpectation(expectationId);
-        if (expectation == null) {
-            Toast.makeText(this, "Error loading expectation details", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
 
-        // Store data for use by button handlers
-        this.contributionId = expectation.getContributionId();
-        this.contributorId = expectation.getContributorId();
-        this.amountToApprove = expectation.getAmountToApprove();
-        this.paymentReceipt = expectation.getPaymentReceipt();
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
-        // Get related data
-        Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
-        
-        if (contribution != null) {
-            tvContributionName.setText(contribution.getName());
-            tvAmountOwed.setText(currencyFormatter.format(contribution.getAmount()));
-            tvDueDate.setText(contribution.getDueDate());
-        }
+        executor.execute(() -> {
+            APIExpectationResponse response = _DAO_Expectation.GetExpectation(expectationId);
 
-        // Set amount to approve
-        tvAmountToApprove.setText(currencyFormatter.format(expectation.getAmountToApprove()));
+            handler.post(() -> {
+                Expectation expectation = response.getExpectation();
+                if (expectation == null) {
+                    Toast.makeText(this, "Error loading expectation details", Toast.LENGTH_SHORT).show();
+                    finish();
+                    return;
+                }
 
-        // Handle receipt image
-        if (expectation.getPaymentReceipt() != null && !expectation.getPaymentReceipt().isEmpty()) {
-            loadReceiptImage(expectation.getPaymentReceipt());
-        } else {
-            imgReceipt.setVisibility(View.GONE);
-            tvNoReceipt.setVisibility(View.VISIBLE);
-        }
+                // Store data for use by button handlers
+                this.contributionId = expectation.getContributionId();
+                this.contributorId = expectation.getContributorId();
+                this.amountToApprove = expectation.getAmountToApprove();
+                this.paymentReceipt = expectation.getPaymentReceipt();
+
+                // Get related data
+                if (expectation.getContribution() == null)
+                    expectation.setContribution(_DAO_Contribution.GetContribution(expectation.getContributionId()));
+
+                if (expectation.getContribution() != null) {
+                    tvContributionName.setText(expectation.getContribution().getName());
+                    tvAmountOwed.setText(currencyFormatter.format(expectation.getContribution().getAmount()));
+                    tvDueDate.setText(expectation.getContribution().getDueDate());
+                }
+
+                // Set amount to approve
+                tvAmountToApprove.setText(currencyFormatter.format(expectation.getAmountToApprove()));
+
+                // Handle receipt image
+                if (expectation.getPaymentReceipt() != null && !expectation.getPaymentReceipt().isEmpty()) {
+                    loadReceiptImage(expectation.getPaymentReceipt());
+                } else {
+                    imgReceipt.setVisibility(View.GONE);
+                    tvNoReceipt.setVisibility(View.VISIBLE);
+                }
+            });
+        });
     }
 
     private void loadReceiptImage(String receiptPath) {
@@ -134,23 +148,44 @@ public class _Activity_Approve_Payment extends AppCompatActivity {
 
     private void setupButtonListeners(int expectationId) {
         btnApprove.setOnClickListener(v -> {
-            Expectation expectation = _DAO_Expectation.GetExpectation(expectationId);
-            if (expectation != null) {
-                expectation.setPaymentStatus(2);
-                expectation.setAmountPaid(expectation.getAmountPaid());
-                _DAO_Expectation.UpdateExpectation(expectation);
-                navigateToExpectationsList();
-            }
+
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Handler handler = new Handler(Looper.getMainLooper());
+
+            executor.execute(() -> {
+                APIExpectationResponse response = _DAO_Expectation.GetExpectation(expectationId);
+
+                handler.post(() -> {
+                    Expectation expectation = response.getExpectation();
+                    if (expectation != null) {
+                        expectation.setPaymentStatus(2);
+                        expectation.setAmountPaid(expectation.getAmountPaid());
+                        APIExpectationResponse resp = _DAO_Expectation.UpdateExpectation(expectation);
+                        navigateToExpectationsList();
+                    }
+                });
+            });
+
         });
 
         btnReject.setOnClickListener(v -> {
-            Expectation expectation = _DAO_Expectation.GetExpectation(expectationId);
-            if (expectation != null) {
-                expectation.setPaymentStatus(0);
-                expectation.setAmountToApprove(0.00f);
-                _DAO_Expectation.UpdateExpectation(expectation);
-                navigateToExpectationsList();
-            }
+
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Handler handler = new Handler(Looper.getMainLooper());
+
+            executor.execute(() -> {
+                APIExpectationResponse response = _DAO_Expectation.GetExpectation(expectationId);
+
+                handler.post(() -> {
+                    Expectation expectation = response.getExpectation();
+                    if (expectation != null) {
+                        expectation.setPaymentStatus(0);
+                        expectation.setAmountToApprove(0.00f);
+                        APIExpectationResponse resp = _DAO_Expectation.UpdateExpectation(expectation);
+                        navigateToExpectationsList();
+                    }
+                });
+            });
         });
 
         btnCancel.setOnClickListener(v -> {
