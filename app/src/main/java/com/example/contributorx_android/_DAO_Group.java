@@ -1,69 +1,55 @@
 package com.example.contributorx_android;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class _DAO_Group {
 
-    private static int lastId = 0;
-
-    private static List<Group> groups = new ArrayList<>();
-
-    public static List<Group> GetAllGroups() {
-        return groups;
+    public static APIGroupsResponse GetAllGroups() {
+        String result = APIClass.SendMessage("GET", "group/api/all","", "", false);
+        return APIClass.GetGroupsResponse(result);
     }
 
-    public static List<Group> GetAllGroupsInCommunity(int communityId) {
-        List<Group> list = new ArrayList<>();
-        for (Group group : groups) {
-            if (group.getCommunityId() == communityId) {
-                list.add(group);
-            }
-        }
-        return list;
+    public static APIGroupsResponse GetAllGroupsInCommunity(int communityId) {
+        String result = APIClass.SendMessage("GET", "group/api?communityid=" + communityId + String.format("&searchValue=%s&sortName=%s&sortOrder=%s", "*", "Id", "ASC"),"", "", false);
+        return APIClass.GetGroupsResponse(result);
     }
 
-    public static int AddGroup(Group group) {
-        group.setId(++lastId);
-        groups.add(group);
-        return group.getId();
-    }
-
-    public static void UpdateGroup(Group group) {
-        for (int index = 0; index < groups.size(); index++) {
-            if (groups.get(index).getId() == group.getId()) {
-                groups.set(index, group);
-                return;
-            }
+    public static APIGroupResponse AddGroup(Group group) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonData = objectMapper.writeValueAsString(group);
+            String result = APIClass.SendMessage("POST", "group/api/","", jsonData, false);
+            return APIClass.GetGroupResponse(result);
+        } catch (Exception e) {
+            android.util.Log.d("ERROR!!!", e.toString());
+            return new APIGroupResponse(e.getMessage());
         }
     }
 
-    public static void DeleteGroup(int id) {
-        for (int index = 0; index < groups.size(); index++) {
-            if (groups.get(index).getId() == id) {
-                groups.remove(index);
-                return;
-            }
+    public static APIGroupResponse UpdateGroup(Group group) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonData = objectMapper.writeValueAsString(group);
+            String result = APIClass.SendMessage("POST", "group/api/update/" + group.getId(),"", jsonData, false);
+            return APIClass.GetGroupResponse(result);
+        } catch (Exception e) {
+            android.util.Log.d("ERROR!!!", e.toString());
+            return new APIGroupResponse(e.getMessage());
         }
     }
 
-    public static Group GetGroup(int id) {
-        for (int index = 0; index < groups.size(); index++) {
-            if (groups.get(index).getId() == id) {
-                return groups.get(index);
-            }
-        }
-
-        return null;
+    public static APIGroupResponse DeleteGroup(int id) {
+        String result = APIClass.SendMessage("POST", "group/api/delete/" + id,"", "", false);
+        return APIClass.GetGroupResponse(result);
     }
 
-    public static Group GetGroupByName(String name) {
-        for (int index = 0; index < groups.size(); index++) {
-            if (name.equals(groups.get(index).getName())) {
-                return groups.get(index);
-            }
-        }
+    public static APIGroupResponse GetGroup(int id) {
+        String result = APIClass.SendMessage("GET", "group/api/" + id,"", "", false);
+        return APIClass.GetGroupResponse(result);
+    }
 
-        return null;
+    public static APIGroupResponse GetGroupByName(String name) {
+        String result = APIClass.SendMessage("GET", "group/api/getbyname/" + name,"", "", false);
+        return APIClass.GetGroupResponse(result);
     }
 }

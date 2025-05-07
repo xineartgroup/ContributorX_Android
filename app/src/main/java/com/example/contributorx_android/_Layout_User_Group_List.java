@@ -1,6 +1,8 @@
 package com.example.contributorx_android;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class _Layout_User_Group_List extends BaseAdapter {
     LayoutInflater mInflater;
@@ -58,19 +62,32 @@ public class _Layout_User_Group_List extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Grouping grouping = position < groupings.size() && position >= 0 ? groupings.get(position) : null;
-        if (grouping != null) {
-            Group group = _DAO_Group.GetGroup(grouping.getGroupId());
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
-            if (group != null) {
-                holder.lblName.setText(group.getName());
+        executor.execute(() -> {
+            Grouping grouping = position < groupings.size() && position >= 0 ? groupings.get(position) : null;
+            if (grouping != null) {
+                APIGroupResponse response = _DAO_Group.GetGroup(grouping.getGroupId());
 
-                holder.btnRemove.setOnClickListener(v -> {
-                    handleRemoveButtonClick(group.getId());
-                    notifyDataSetChanged();
+                handler.post(() -> {
+                    if (response.getIsSuccess()) {
+                        Group group = response.getGroup();
+
+                        if (group != null) {
+                            holder.lblName.setText(group.getName());
+
+                            holder.btnRemove.setOnClickListener(v -> {
+                                handleRemoveButtonClick(group.getId());
+                                notifyDataSetChanged();
+                            });
+                        }
+                    }
                 });
             }
-        }
+        });
+
+        executor.shutdown();
 
         return convertView;
     }

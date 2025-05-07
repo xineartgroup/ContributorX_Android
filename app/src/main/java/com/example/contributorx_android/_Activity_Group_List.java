@@ -2,6 +2,8 @@ package com.example.contributorx_android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +22,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class _Activity_Group_List extends AppCompatActivity {
 
@@ -57,42 +61,55 @@ public class _Activity_Group_List extends AppCompatActivity {
             btnAddGroup.setVisibility(View.GONE);
         }
 
-        List<Group> groups = _DAO_Group.GetAllGroupsInCommunity(APIClass.LoggedOnUser.getCommunityId());
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
-        _Layout_Group_List iAdapter = new _Layout_Group_List(this, groups);
-        lstDetail.setAdapter(iAdapter);
+        executor.execute(() -> {
+            APIGroupsResponse response = _DAO_Group.GetAllGroupsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
-        lstDetail.setOnItemClickListener((adapterView, view, i, l) -> {
-            if ("Administrator".equals(APIClass.LoggedOnUser.getRole())) {
-                Group group = groups.get(i);
-                if (group != null) {
-                    Intent startIntent = new Intent(getApplicationContext(), _Activity_Group_Detail.class);
-                    startIntent.putExtra("com.example.contributorx_android.ITEMINDEX", group.getId());
-                    startActivity(startIntent);
+            handler.post(() -> {
+                if (response.getIsSuccess()) {
+                    List<Group> groups = response.getGroups();
+
+                    _Layout_Group_List iAdapter = new _Layout_Group_List(this, groups);
+                    lstDetail.setAdapter(iAdapter);
+
+                    lstDetail.setOnItemClickListener((adapterView, view, i, l) -> {
+                        if ("Administrator".equals(APIClass.LoggedOnUser.getRole())) {
+                            Group group = groups.get(i);
+                            if (group != null) {
+                                Intent startIntent = new Intent(getApplicationContext(), _Activity_Group_Detail.class);
+                                startIntent.putExtra("com.example.contributorx_android.ITEMINDEX", group.getId());
+                                startActivity(startIntent);
+                            }
+                        }
+                    });
+
+                    btnAddGroup.setOnClickListener(view -> {
+                        Intent startIntent = new Intent(getApplicationContext(), _Activity_Group_Detail.class);
+                        startActivity(startIntent);
+                    });
+
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            // Optional: handle action on submit, but not needed for filtering
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            // Filter expenses and update adapter data
+                            iAdapter.groups = Groups(groups, newText.trim());
+                            iAdapter.notifyDataSetChanged(); // Very important to refresh the view
+                            return true;
+                        }
+                    });
                 }
-            }
+            });
         });
 
-        btnAddGroup.setOnClickListener(view -> {
-            Intent startIntent = new Intent(getApplicationContext(), _Activity_Group_Detail.class);
-            startActivity(startIntent);
-        });
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Optional: handle action on submit, but not needed for filtering
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // Filter expenses and update adapter data
-                iAdapter.groups = Groups(groups, newText.trim());
-                iAdapter.notifyDataSetChanged(); // Very important to refresh the view
-                return true;
-            }
-        });
+        executor.shutdown();
     }
 
     private List<Group> Groups(List<Group> groups, String query) {

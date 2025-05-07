@@ -11,6 +11,7 @@ public class Group {
     private String description = "";
     private int communityId = 0;
     private String dateCreated = Calendar.getInstance().getTime().toString();
+    private Community community = null;
 
     public Group() {
 
@@ -62,5 +63,14 @@ public class Group {
 
     public void setDateCreated(String dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    @JsonProperty("Community")
+    public Community getCommunity() {
+        return community;
+    }
+
+    public void setCommunity(Community community) {
+        this.community = community;
     }
 }

@@ -78,24 +78,39 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
 
                     APIExpectationsResponse expectationsResponse = _DAO_Expectation.GetExpectationsForContributor(contributorId);
 
+                    APIGroupsResponse groupsResponse = _DAO_Group.GetAllGroups();
+
                     handler.post(() -> {
-                        // setImage(imgContributor, contributor.getPicture());
-                        lblUsername.setText(contributor.getUserName());
-                        lblName.setText(String.format("%s %s", contributor.getFirstname(), contributor.getLastname()));
-                        lblEmail.setText(contributor.getEmail());
-                        lblPhoneNumber.setText(contributor.getPhoneNumber());
-                        cboStatus.setSelection(contributor.isActive() ? 0 : 1);
-                        cboGroups.setAdapter(getStringArrayAdapter());
+                        if (groupsResponse.getIsSuccess()) {
+                            ArrayList<String> items = new ArrayList<>();
+                            items.add("");
+                            for (int position = 0; position < groupsResponse.getGroups().size(); position++) {
+                                Group group = groupsResponse.getGroups().get(position);
+                                if (group != null) {
+                                    items.add(group.getName());
+                                }
+                            }
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-                        groupings = _DAO_Grouping.GetGroupingsForContributor(contributorId);
-                        _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(this, groupings);
-                        lstUserGroups.setAdapter(userGroupItemAdapter);
+                            // setImage(imgContributor, contributor.getPicture());
+                            lblUsername.setText(contributor.getUserName());
+                            lblName.setText(String.format("%s %s", contributor.getFirstname(), contributor.getLastname()));
+                            lblEmail.setText(contributor.getEmail());
+                            lblPhoneNumber.setText(contributor.getPhoneNumber());
+                            cboStatus.setSelection(contributor.isActive() ? 0 : 1);
+                            cboGroups.setAdapter(adapter);
 
-                        if (expectationsResponse != null && expectationsResponse.getIsSuccess() && expectationsResponse.getExpectations() != null) {
-                            _Layout_Expectation_List2 expectationItemAdapter = new _Layout_Expectation_List2(this, expectationsResponse.getExpectations());
-                            lstUserExpectation.setAdapter(expectationItemAdapter);
-                        } else {
-                            android.util.Log.w("Expectations Fetch", "Failed or no expectations found.");
+                            groupings = _DAO_Grouping.GetGroupingsForContributor(contributorId);
+                            _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(this, groupings);
+                            lstUserGroups.setAdapter(userGroupItemAdapter);
+
+                            if (expectationsResponse != null && expectationsResponse.getIsSuccess() && expectationsResponse.getExpectations() != null) {
+                                _Layout_Expectation_List2 expectationItemAdapter = new _Layout_Expectation_List2(this, expectationsResponse.getExpectations());
+                                lstUserExpectation.setAdapter(expectationItemAdapter);
+                            } else {
+                                android.util.Log.w("Expectations Fetch", "Failed or no expectations found.");
+                            }
                         }
                     });
                 } else {
@@ -126,26 +141,40 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
         cboGroups.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = parent.getItemAtPosition(position).toString();
-                Group group = _DAO_Group.GetGroupByName(selectedItem);
-                if (group != null) {
-                    boolean found = false;
-                    for (Grouping grouping : groupings){
-                        if (grouping.getGroupId() == group.getId()){
-                            found = true;
-                            break;
+
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                Handler handler = new Handler(Looper.getMainLooper());
+
+                executor.execute(() -> {
+                    String selectedItem = parent.getItemAtPosition(position).toString();
+                    APIGroupResponse response = _DAO_Group.GetGroupByName(selectedItem);
+
+                    handler.post(() -> {
+                        if (response.getIsSuccess()) {
+                            Group group = response.getGroup();
+                            if (group != null) {
+                                boolean found = false;
+                                for (Grouping grouping : groupings){
+                                    if (grouping.getGroupId() == group.getId()){
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (found) {
+                                    Toast.makeText(getApplicationContext(), "Contributor already belongs to the selected group", Toast.LENGTH_LONG).show();
+                                }
+                                else{
+                                    groupings.add(new Grouping(contributorId, group.getId()));
+                                    _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(getApplicationContext(), groupings);
+                                    lstUserGroups.setAdapter(userGroupItemAdapter);
+                                    cboGroups.setSelection(0);
+                                }
+                            }
                         }
-                    }
-                    if (found) {
-                        Toast.makeText(getApplicationContext(), "Contributor already belongs to the selected group", Toast.LENGTH_LONG).show();
-                    }
-                    else{
-                        groupings.add(new Grouping(contributorId, group.getId()));
-                        _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(getApplicationContext(), groupings);
-                        lstUserGroups.setAdapter(userGroupItemAdapter);
-                        cboGroups.setSelection(0);
-                    }
-                }
+                    });
+                });
+
+                executor.shutdown();
             }
 
             @Override
@@ -197,22 +226,6 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
             Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
             startActivity(startIntent);
         });
-    }
-
-    @NonNull
-    private ArrayAdapter<String> getStringArrayAdapter() {
-        List<Group> groups = _DAO_Group.GetAllGroups();
-        ArrayList<String> items = new ArrayList<>();
-        items.add("");
-        for (int position = 0; position < groups.size(); position++) {
-            Group group = groups.get(position);
-            if (group != null) {
-                items.add(group.getName());
-            }
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        return adapter;
     }
 
     @Override

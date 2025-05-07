@@ -21,6 +21,8 @@ public class APIClass {
 
     public static String SendMessage(String verb, String method, String params, String jsonData, boolean isLogin) {
         try {
+            android.util.Log.d("API jsonData!!!", jsonData);
+
             HttpURLConnection connection = getHttpURLConnection(verb, method, params, jsonData);
 
             int responseCode = connection.getResponseCode();
