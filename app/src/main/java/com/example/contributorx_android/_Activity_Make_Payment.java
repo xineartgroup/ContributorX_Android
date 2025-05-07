@@ -48,18 +48,24 @@ public class _Activity_Make_Payment extends AppCompatActivity {
             handler.post(() -> {
                 Expectation expectation = response.getExpectation();
                 if (expectation != null) {
-                    Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
-                    if (contribution != null) {
-                        txtContributionName.setText(contribution.getName());
-                        txtAmount.setText(getString(R.string.amount, contribution.getAmount()));
+                    if (expectation.getContribution() == null) {
+                        APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                        if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
+                            expectation.setContribution(contributionResponse.getContribution());
+                        }
+                    }
+
+                    if (expectation.getContribution() != null) {
+                        txtContributionName.setText(expectation.getContribution().getName());
+                        txtAmount.setText(getString(R.string.amount, expectation.getContribution().getAmount()));
 
                         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-                        txtDueDate.setText(getString(R.string.due_date, contribution.getDueDate()));
+                        txtDueDate.setText(getString(R.string.due_date, expectation.getContribution().getDueDate()));
 
                         float amountPaid = expectation.getAmountPaid();
                         txtAmountPaid.setText(getString(R.string.amount_paid, amountPaid));
 
-                        double remainingBalance = contribution.getAmount() - amountPaid;
+                        double remainingBalance = expectation.getContribution().getAmount() - amountPaid;
                         txtPaymentAmount.setText("" + remainingBalance);
                     }
                 }

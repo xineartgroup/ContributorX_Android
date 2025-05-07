@@ -157,7 +157,7 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
 
         btnSaveContributor.setOnClickListener(view -> {
             if (contributor != null) {
-                _DAO_Contributor.UpdateContributor(contributor);
+                APIContributorResponse response = _DAO_Contributor.UpdateContributor(contributor);
                 List<Grouping> old_groupings = _DAO_Grouping.GetGroupingsForContributor(contributorId);
 
                 // Find items to delete (in old list but not in new list)

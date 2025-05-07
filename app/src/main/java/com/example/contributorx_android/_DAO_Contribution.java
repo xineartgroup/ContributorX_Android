@@ -1,63 +1,50 @@
 package com.example.contributorx_android;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class _DAO_Contribution {
 
-    private static int lastId = 0;
-
-    private static List<Contribution> contributions = new ArrayList<>();
-
-    public static List<Contribution> GetAllContributions() {
-
-        return contributions;
-
+    public static APIContributionsResponse GetAllContributions() {
+        String result = APIClass.SendMessage("GET", "contribution/api/all","", "", false);
+        return APIClass.GetContributionsResponse(result);
     }
 
-    public static List<Contribution> GetAllContributionsInCommunity(int communityId) {
-        List<Contribution> list = new ArrayList<>();
-        for (Contribution contribution : contributions) {
-            Group group = _DAO_Group.GetGroup(contribution.getGroupId());
-            if (group != null) {
-                if (group.getCommunityId() == communityId) {
-                    list.add(contribution);
-                }
-            }
-        }
-        return list;
+    public static APIContributionsResponse GetAllContributionsInCommunity(int communityId) {
+        String result = APIClass.SendMessage("GET", "contribution/api?communityid=" + communityId + String.format("&searchValue=%s&sortName=%s&sortOrder=%s", "*", "Id", "ASC"),"", "", false);
+        return APIClass.GetContributionsResponse(result);
     }
 
-    public static int AddContribution(Contribution contribution) {
-        contribution.setId(++lastId);
-        contributions.add(contribution);
-        return contribution.getId();
-    }
-
-    public static void UpdateContribution(Contribution contribution) {
-        for (int index = 0; index < contributions.size(); index++) {
-            if (contributions.get(index).getId() == contribution.getId()) {
-                contributions.set(index, contribution);
-                return;
-            }
+    public static APIContributionResponse AddContribution(Contribution contribution) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonData = objectMapper.writeValueAsString(contribution);
+            String result = APIClass.SendMessage("POST", "contribution/api/","", jsonData, false);
+            return APIClass.GetContributionResponse(result);
+        } catch (Exception e) {
+            android.util.Log.d("ERROR!!!", e.toString());
+            return new APIContributionResponse(e.getMessage());
         }
     }
 
-    public static void DeleteContribution(int id) {
-        for (int index = 0; index < contributions.size(); index++) {
-            if (contributions.get(index).getId() == id) {
-                contributions.remove(index);
-                return;
-            }
+    public static APIContributionResponse UpdateContribution(Contribution contribution) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonData = objectMapper.writeValueAsString(contribution);
+            String result = APIClass.SendMessage("POST", "contribution/api/update/" + contribution.getId(),"", jsonData, false);
+            return APIClass.GetContributionResponse(result);
+        } catch (Exception e) {
+            android.util.Log.d("ERROR!!!", e.toString());
+            return new APIContributionResponse(e.getMessage());
         }
     }
 
-    public static Contribution GetContribution(int id) {
-        for (int index = 0; index < contributions.size(); index++) {
-            if (contributions.get(index).getId() == id) {
-                return contributions.get(index);
-            }
-        }
-        return null;
+    public static APIContributionResponse DeleteContribution(int id) {
+        String result = APIClass.SendMessage("POST", "contribution/api/delete/" + id,"", "", false);
+        return APIClass.GetContributionResponse(result);
+    }
+
+    public static APIContributionResponse GetContribution(int id) {
+        String result = APIClass.SendMessage("GET", "contribution/api/" + id,"", "", false);
+        return APIClass.GetContributionResponse(result);
     }
 }

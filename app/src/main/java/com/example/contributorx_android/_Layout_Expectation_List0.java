@@ -75,7 +75,14 @@ public class _Layout_Expectation_List0 extends BaseAdapter {
             handler.post(() -> {
                 if (response.getIsSuccess()) {
                     Contributor contributor = response.getContributor();
-                    Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                    if (expectation.getContribution() == null) {
+                        APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                        if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
+                            expectation.setContribution(contributionResponse.getContribution());
+                        }
+                    }
+
+                    Contribution contribution = expectation.getContribution();
 
                     if (contributor != null && contribution != null) {
                         holder.tvContributor.setText(contributor.getUserName());

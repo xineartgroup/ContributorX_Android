@@ -112,12 +112,18 @@ public class _Activity_Expectation_List extends AppCompatActivity {
                     handler.post(() -> {
                         if (response.getIsSuccess()) {
                             Contributor contributor = response.getContributor();
-                            Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
 
-                            if (contributor != null && contribution != null) {
+                            if (expectation.getContribution() == null) {
+                                APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                                if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
+                                    expectation.setContribution(contributionResponse.getContribution());
+                                }
+                            }
+
+                            if (contributor != null && expectation.getContribution() != null) {
                                 // Filter by contributor name or contribution name
                                 if (contributor.getUserName().toLowerCase().contains(finalQuery) ||
-                                        contribution.getName().toLowerCase().contains(finalQuery)) {
+                                        expectation.getContribution().getName().toLowerCase().contains(finalQuery)) {
                                     result.add(expectation);
                                 }
                             }

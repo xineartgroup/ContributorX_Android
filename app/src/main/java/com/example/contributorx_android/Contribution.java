@@ -11,6 +11,7 @@ public class Contribution {
     private int groupId = 0;
     private String dateCreated = Calendar.getInstance().getTime().toString();
     private String dueDate = Calendar.getInstance().getTime().toString();
+    private Group group = null;
 
     public Contribution() {
 
@@ -76,5 +77,14 @@ public class Contribution {
 
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
+    }
+
+    @JsonProperty("Group")
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 }

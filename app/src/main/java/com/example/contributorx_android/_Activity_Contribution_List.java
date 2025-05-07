@@ -2,6 +2,8 @@ package com.example.contributorx_android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +19,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class _Activity_Contribution_List extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, View.OnClickListener {
 
@@ -49,40 +53,54 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
             btnAddContribution.setVisibility(View.GONE);
         }
 
-        List<Contribution> contributions = _DAO_Contribution.GetAllContributionsInCommunity(APIClass.LoggedOnUser.getCommunityId());
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
-        _Layout_Contribution_List iAdapter = new _Layout_Contribution_List(this, contributions);
-        lstDetail.setAdapter(iAdapter);
+        executor.execute(() -> {
+            APIContributionsResponse response = _DAO_Contribution.GetAllContributionsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
-        btnAddContribution.setOnClickListener(_Activity_Contribution_List.this);
+            handler.post(() -> {
+                if (response.getIsSuccess()) {
 
-        lstDetail.setOnItemClickListener((adapterView, view, i, l) -> {
-            if (APIClass.LoggedOnUser.getRole().equals("Administrator")) {
-                Contribution contribution = contributions.get(i);
-                if (contribution != null){
-                    selectedId = contribution.getId();
-                    PopupMenu popup = new PopupMenu(_Activity_Contribution_List.this, view);
-                    popup.setOnMenuItemClickListener(_Activity_Contribution_List.this);
-                    popup.inflate(R.menu.contributionmenu);
-                    popup.show();
+                    List<Contribution> contributions = response.getContributions();
+
+                    _Layout_Contribution_List iAdapter = new _Layout_Contribution_List(this, contributions);
+                    lstDetail.setAdapter(iAdapter);
+
+                    btnAddContribution.setOnClickListener(_Activity_Contribution_List.this);
+
+                    lstDetail.setOnItemClickListener((adapterView, view, i, l) -> {
+                        if (APIClass.LoggedOnUser.getRole().equals("Administrator")) {
+                            Contribution contribution = contributions.get(i);
+                            if (contribution != null){
+                                selectedId = contribution.getId();
+                                PopupMenu popup = new PopupMenu(_Activity_Contribution_List.this, view);
+                                popup.setOnMenuItemClickListener(_Activity_Contribution_List.this);
+                                popup.inflate(R.menu.contributionmenu);
+                                popup.show();
+                            }
+                        }
+                    });
+
+                    executor.shutdown();
+
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String query) {
+                            // Optional: handle action on submit, but not needed for filtering
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onQueryTextChange(String newText) {
+                            // Filter contributions and update adapter data
+                            iAdapter.contributions = Contributions(contributions, newText.trim());
+                            iAdapter.notifyDataSetChanged(); // Very important to refresh the view
+                            return true;
+                        }
+                    });
                 }
-            }
-        });
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Optional: handle action on submit, but not needed for filtering
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // Filter contributions and update adapter data
-                iAdapter.contributions = Contributions(contributions, newText.trim());
-                iAdapter.notifyDataSetChanged(); // Very important to refresh the view
-                return true;
-            }
+            });
         });
     }
 

@@ -71,51 +71,68 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
         if (intent.hasExtra("com.example.contributorx_android.ITEMINDEX")) {
             int id = intent.getIntExtra("com.example.contributorx_android.ITEMINDEX", -1);
             if (id >= 0) {
-                contribution = _DAO_Contribution.GetContribution(id);
 
-                if (contribution != null) {
-                    txtContributionName.setText(contribution.getName());
-                    txtAmount.setText(String.format("%s", contribution.getAmount()));
-                    lblDateStart.setText(new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(date.getTime()));
-                }
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                Handler handler = new Handler(Looper.getMainLooper());
+
+                executor.execute(() -> {
+                    APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(id);
+
+                    handler.post(() -> {
+                        if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
+                            contribution = contributionResponse.getContribution();
+
+                            if (contribution != null) {
+                                txtContributionName.setText(contribution.getName());
+                                txtAmount.setText(String.format("%s", contribution.getAmount()));
+                                lblDateStart.setText(new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(date.getTime()));
+                            }
+                        }
+                    });
+                });
+
+                executor.shutdown();
             }
         }
 
         btnSaveContribution.setOnClickListener(view -> {
             try {
-                if (contribution == null) {
-                    contribution = new Contribution();
+                ExecutorService executor = Executors.newSingleThreadExecutor();
+                Handler handler = new Handler(Looper.getMainLooper());
 
-                    contribution.setName(txtContributionName.getText().toString());
-                    contribution.setAmount(Float.parseFloat(txtAmount.getText().toString()));
-                    contribution.setDueDate(date.toString());
+                executor.execute(() -> {
+                    APIContributionResponse response = _DAO_Contribution.AddContribution(contribution);
 
-                    contribution.setId(_DAO_Contribution.AddContribution(contribution));
+                    handler.post(() -> {
+                        if (response.getIsSuccess() && response.getContribution() != null) {
 
-                    ExecutorService executor = Executors.newSingleThreadExecutor();
-                    Handler handler = new Handler(Looper.getMainLooper());
+                            if (contribution == null) {
+                                contribution = response.getContribution();
 
-                    executor.execute(() -> {
-                        APIContributorsResponse response = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getCommunityId());
+                                APIContributorsResponse contributorsResponse = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
-                        handler.post(() -> {
-                            if (response.getIsSuccess()) {
+                                handler.post(() -> {
+                                    if (contributorsResponse.getIsSuccess()) {
 
-                                List<Contributor> contributors = response.getContributors();
-                                for (int i = 0; i < contributors.size(); i++) {
-                                    Expectation expectation = new Expectation(contributors.get(i).getId(), contribution.getId(), 0.00f, 0.00f, 0, "");
-                                    APIExpectationResponse resp = _DAO_Expectation.AddExpectation(expectation);
-                                }
+                                        List<Contributor> contributors = contributorsResponse.getContributors();
+                                        for (int i = 0; i < contributors.size(); i++) {
+                                            Expectation expectation = new Expectation(contributors.get(i).getId(), contribution.getId(), 0.00f, 0.00f, 0, "");
+                                            APIExpectationResponse resp = _DAO_Expectation.AddExpectation(expectation);
+                                        }
+                                    }
+
+                                });
+                            } else {
+                                APIContributionResponse contributionResponse = _DAO_Contribution.UpdateContribution(contribution);
                             }
 
-                        });
+                            Intent startIntent = new Intent(getApplicationContext(), _Activity_Contribution_List.class);
+                            startActivity(startIntent);
+                        }
                     });
-                } else {
-                    _DAO_Contribution.UpdateContribution(contribution);
-                }
+                });
 
-                Intent startIntent = new Intent(getApplicationContext(), _Activity_Contribution_List.class);
-                startActivity(startIntent);
+                executor.shutdown();
             } catch (Exception e) {
                 Toast.makeText(this, "Error saving: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }

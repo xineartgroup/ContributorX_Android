@@ -102,8 +102,12 @@ public class _Activity_Approve_Payment extends AppCompatActivity {
                 this.paymentReceipt = expectation.getPaymentReceipt();
 
                 // Get related data
-                if (expectation.getContribution() == null)
-                    expectation.setContribution(_DAO_Contribution.GetContribution(expectation.getContributionId()));
+                if (expectation.getContribution() == null) {
+                    APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                    if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
+                        expectation.setContribution(contributionResponse.getContribution());
+                    }
+                }
 
                 if (expectation.getContribution() != null) {
                     tvContributionName.setText(expectation.getContribution().getName());
@@ -123,6 +127,8 @@ public class _Activity_Approve_Payment extends AppCompatActivity {
                 }
             });
         });
+
+        executor.shutdown();
     }
 
     private void loadReceiptImage(String receiptPath) {

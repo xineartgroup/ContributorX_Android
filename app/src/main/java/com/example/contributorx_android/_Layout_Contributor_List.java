@@ -88,9 +88,14 @@ public class _Layout_Contributor_List extends BaseAdapter {
                     for (int index = 0; index < response.getExpectations().size(); index++) {
                         Expectation expectation = response.getExpectations().get(index);
                         totalAmountPaid += expectation.getAmountPaid();
-                        Contribution contribution = _DAO_Contribution.GetContribution(expectation.getContributionId());
-                        if (contribution != null)
-                            totalAmountOwed += contribution.getAmount();
+                        if (expectation.getContribution() == null) {
+                            APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                            if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
+                                expectation.setContribution(contributionResponse.getContribution());
+                            }
+                        }
+                        if (expectation.getContribution() != null)
+                            totalAmountOwed += expectation.getContribution().getAmount();
                     }
 
                     holder.lblAmountDue.setText(context.getString(R.string.amount_display, (totalAmountOwed > totalAmountPaid) ? totalAmountOwed - totalAmountPaid : 0.00f));

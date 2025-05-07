@@ -52,11 +52,16 @@ public class MainActivity extends AppCompatActivity {
 
                         for (Expectation item : list){
                             if (item.getPaymentStatus() != 2 && item.getPaymentStatus() != 3) {
-                                Contribution contribution = _DAO_Contribution.GetContribution(item.getContributionId());
-                                if (contribution != null) {
-                                    if (contribution.getAmount() - (item.getAmountPaid() + item.getAmountToApprove()) > 0.0) {
-                                        expectations.add(item);
+                                
+                                if (item.getContribution() == null) {
+                                    APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(item.getContributionId());
+                                    if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
+                                        item.setContribution(contributionResponse.getContribution());
                                     }
+                                }
+
+                                if (item.getContribution().getAmount() - (item.getAmountPaid() + item.getAmountToApprove()) > 0.0) {
+                                    expectations.add(item);
                                 }
                             }
                         }
@@ -76,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         });
+
+        executor.shutdown();
     }
 
     @Override

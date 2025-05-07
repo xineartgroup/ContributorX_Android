@@ -14,7 +14,9 @@ public class APIContributorResponse {
     private List<Grouping> groupings = new ArrayList<>();
 
     public APIContributorResponse(){
-
+        isSuccess = false;
+        this.message = "";
+        contributor = null;
     }
 
     public APIContributorResponse(String message){

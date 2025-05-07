@@ -3,7 +3,7 @@ package com.example.contributorx_android;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class APICommunityResponse {
-    private boolean issuccess;
+    private boolean isSuccess;
     private String message;
     private Community community;
 
@@ -12,18 +12,18 @@ public class APICommunityResponse {
     }
 
     public APICommunityResponse(String message){
-        issuccess = false;
+        isSuccess = false;
         this.message = message;
         community = null;
     }
 
     @JsonProperty("issuccess")
-    public boolean getIssuccess() {
-        return issuccess;
+    public boolean getSuccess() {
+        return isSuccess;
     }
 
-    public void setIssuccess(boolean issuccess) {
-        this.issuccess = issuccess;
+    public void setSuccess(boolean success) {
+        this.isSuccess = success;
     }
 
     @JsonProperty("message")

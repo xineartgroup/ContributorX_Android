@@ -2,31 +2,34 @@ package com.example.contributorx_android;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class _DAO_Contributor {
 
-    private static int lastId = 0;
-
-    private static List<Contributor> contributors = new ArrayList<>();
-
-    public static List<Contributor> GetAllContributors() {
-        return contributors;
+    public static APIContributorsResponse GetAllContributors() {
+        String result = APIClass.SendMessage("GET", "contributor/api/all","", "", false);
+        return APIClass.GetContributorsResponse(result);
     }
 
-    public static int AddContributor(Contributor contributor) {
-        contributor.setId(++lastId);
-        contributors.add(contributor);
-        return contributor.getId();
+    public static APIContributorResponse AddContributor(Contributor contributor) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonData = objectMapper.writeValueAsString(contributor);
+            String result = APIClass.SendMessage("POST", "contributor/api/","", jsonData, false);
+            return APIClass.GetContributorResponse(result);
+        } catch (Exception e) {
+            android.util.Log.d("ERROR!!!", e.toString());
+            return new APIContributorResponse(e.getMessage());
+        }
     }
 
-    public static void UpdateContributor(Contributor contributor) {
-        for (int index = 0; index < contributors.size(); index++) {
-            if (contributors.get(index).getId() == contributor.getId()) {
-                contributors.set(index, contributor);
-                return;
-            }
+    public static APIContributorResponse UpdateContributor(Contributor contributor) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonData = objectMapper.writeValueAsString(contributor);
+            String result = APIClass.SendMessage("POST", "community/api/update/" + contributor.getId(),"", jsonData, false);
+            return APIClass.GetContributorResponse(result);
+        } catch (Exception e) {
+            android.util.Log.d("ERROR!!!", e.toString());
+            return new APIContributorResponse(e.getMessage());
         }
     }
 
