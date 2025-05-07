@@ -24,6 +24,7 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
     Contribution contribution = null;
     DatePickerDialog.OnDateSetListener mDateSetListener;
     Calendar date = Calendar.getInstance();
+    private ExecutorService executor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,9 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
             return;
         }
 
+        executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
+
         lblDateStart.setOnClickListener(view -> {
             int year = date.get(Calendar.YEAR);
             int month = date.get(Calendar.MONTH);
@@ -62,20 +66,16 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
             dlg.show();
         });
 
-        mDateSetListener = (datePicker, year, month, day) -> {
-            date.set(year, month, day);
-            String strDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(date.getTime());
-            lblDateStart.setText(strDate);
-        };
+        executor.execute(() -> {
+            mDateSetListener = (datePicker, year, month, day) -> {
+                date.set(year, month, day);
+                String strDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(date.getTime());
+                lblDateStart.setText(strDate);
+            };
 
-        if (intent.hasExtra("com.example.contributorx_android.ITEMINDEX")) {
-            int id = intent.getIntExtra("com.example.contributorx_android.ITEMINDEX", -1);
-            if (id >= 0) {
-
-                ExecutorService executor = Executors.newSingleThreadExecutor();
-                Handler handler = new Handler(Looper.getMainLooper());
-
-                executor.execute(() -> {
+            if (intent.hasExtra("com.example.contributorx_android.ITEMINDEX")) {
+                int id = intent.getIntExtra("com.example.contributorx_android.ITEMINDEX", -1);
+                if (id >= 0) {
                     APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(id);
 
                     handler.post(() -> {
@@ -89,56 +89,67 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
                             }
                         }
                     });
-                });
-
-                executor.shutdown();
+                }
             }
-        }
 
-        btnSaveContribution.setOnClickListener(view -> {
-            try {
-                ExecutorService executor = Executors.newSingleThreadExecutor();
-                Handler handler = new Handler(Looper.getMainLooper());
-
+            btnSaveContribution.setOnClickListener(view -> {
                 executor.execute(() -> {
-                    APIContributionResponse response = _DAO_Contribution.AddContribution(contribution);
+                    try {
+                        boolean isNew = (contribution == null);
+                        Contribution contributionToSave = (contribution == null) ? new Contribution() : contribution;
 
-                    handler.post(() -> {
-                        if (response.getIsSuccess() && response.getContribution() != null) {
+                        contributionToSave.setName(txtContributionName.getText().toString());
+                        contributionToSave.setAmount(Float.parseFloat(txtAmount.getText().toString()));
+                        contributionToSave.setDueDate(lblDateStart.getText().toString());
 
-                            if (contribution == null) {
-                                contribution = response.getContribution();
+                        APIContributorsResponse contributorsResponse = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
-                                APIContributorsResponse contributorsResponse = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getCommunityId());
+                        if (contributorsResponse.getIsSuccess()) {
 
-                                handler.post(() -> {
-                                    if (contributorsResponse.getIsSuccess()) {
-
-                                        List<Contributor> contributors = contributorsResponse.getContributors();
-                                        for (int i = 0; i < contributors.size(); i++) {
-                                            Expectation expectation = new Expectation(contributors.get(i).getId(), contribution.getId(), 0.00f, 0.00f, 0, "");
-                                            APIExpectationResponse resp = _DAO_Expectation.AddExpectation(expectation);
-                                        }
-                                    }
-
-                                });
-                            } else {
-                                APIContributionResponse contributionResponse = _DAO_Contribution.UpdateContribution(contribution);
+                            List<Contributor> contributors = contributorsResponse.getContributors();
+                            for (int i = 0; i < contributors.size(); i++) {
+                                Expectation expectation = new Expectation(contributors.get(i).getId(), contribution.getId(), 0.00f, 0.00f, 0, "");
+                                APIExpectationResponse resp = _DAO_Expectation.AddExpectation(expectation);
                             }
-
-                            Intent startIntent = new Intent(getApplicationContext(), _Activity_Contribution_List.class);
-                            startActivity(startIntent);
                         }
-                    });
+
+                        APIContributionResponse contributionResponse;
+                        if (isNew) {
+                            contributionResponse = _DAO_Contribution.AddContribution(contributionToSave);
+                        } else {
+                            contributionResponse = _DAO_Contribution.UpdateContribution(contributionToSave);
+                        }
+
+                        handler.post(() -> {
+                            if (contributionResponse != null && contributionResponse.getIsSuccess()) {
+                                contribution = contributionResponse.getContribution(); // Update the local contribution object
+                                Toast.makeText(this, "Contribution saved successfully", Toast.LENGTH_SHORT).show();
+                                Intent startIntent = new Intent(getApplicationContext(), _Activity_Contribution_List.class);
+                                startActivity(startIntent);
+                                finish();
+                            } else {
+                                Toast.makeText(this, "Error saving contribution", Toast.LENGTH_LONG).show();
+                                if (contributionResponse != null && contributionResponse.getMessage() != null) {
+                                    Toast.makeText(this, contributionResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                    } catch (Exception e) {
+                        handler.post(() -> Toast.makeText(this, "Error saving: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                    }
                 });
+            });
 
-                executor.shutdown();
-            } catch (Exception e) {
-                Toast.makeText(this, "Error saving: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+            btnCancel.setOnClickListener(view -> finish());
         });
+    }
 
-        btnCancel.setOnClickListener(view -> finish());
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (executor != null && !executor.isShutdown()) {
+            executor.shutdownNow(); // Or executor.shutdown()
+        }
     }
 
     @Override

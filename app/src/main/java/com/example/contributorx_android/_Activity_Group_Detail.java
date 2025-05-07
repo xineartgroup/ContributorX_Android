@@ -20,8 +20,7 @@ public class _Activity_Group_Detail extends AppCompatActivity {
     Group group;
     private TextView txtGroupName;
     private TextView txtDescription;
-    private Button btnSaveGroup;
-    private ExecutorService executor; // Declare executor as a field
+    private ExecutorService executor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +34,7 @@ public class _Activity_Group_Detail extends AppCompatActivity {
 
         txtGroupName = findViewById(R.id.txtGroupName);
         txtDescription = findViewById(R.id.txtDescription);
-        btnSaveGroup = findViewById(R.id.btnSaveGroup);
+        Button btnSaveGroup = findViewById(R.id.btnSaveGroup);
         Button btnCancel = findViewById(R.id.btnCancel);
 
         if (APIClass.LoggedOnUser == null) {
@@ -73,7 +72,7 @@ public class _Activity_Group_Detail extends AppCompatActivity {
 
         // Set OnClickListener for Save button
         btnSaveGroup.setOnClickListener(view -> {
-            executor.execute(() -> { // Perform save operation on a background thread
+            executor.execute(() -> {
                 try {
                     boolean isNew = (group == null);
                     Group groupToSave = (group == null) ? new Group() : group;
@@ -118,7 +117,7 @@ public class _Activity_Group_Detail extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (executor != null && !executor.isShutdown()) {
-            executor.shutdownNow(); // Or executor.shutdown() depending on your needs
+            executor.shutdownNow(); // Or executor.shutdown()
         }
     }
 
