@@ -13,6 +13,7 @@ public class Expense {
     private float amountPaid = 0.00f;
     private int communityId = 0;
     private String paymentReceipt = "";
+    private Community community = null;
 
     public Expense() {
 
@@ -89,4 +90,13 @@ public class Expense {
     public String getPaymentReceipt() { return paymentReceipt; }
 
     public void setPaymentReceipt(String paymentReceipt) { this.paymentReceipt = paymentReceipt; }
+
+    @JsonProperty("Community")
+    public Community getCommunity() {
+        return community;
+    }
+
+    public void setCommunity(Community community) {
+        this.community = community;
+    }
 }

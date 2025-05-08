@@ -90,7 +90,7 @@ public class _Activity_Group_Detail extends AppCompatActivity {
 
                     handler.post(() -> {
                         if (groupResponse != null && groupResponse.getIsSuccess()) {
-                            group = groupResponse.getGroup(); // Update the local group object
+                            group = groupResponse.getGroup();
                             Toast.makeText(this, "Group saved successfully", Toast.LENGTH_SHORT).show();
                             Intent startIntent = new Intent(getApplicationContext(), _Activity_Group_List.class);
                             startActivity(startIntent);

@@ -6,6 +6,7 @@ public class Grouping {
     private int id = 0;
     private int contributorId = 0;
     private int groupId = 0;
+    private Contributor contributor = null;
     private Group group = null;
 
     public Grouping() {
@@ -41,6 +42,15 @@ public class Grouping {
 
     public void setGroupId(int groupId) {
         this.groupId = groupId;
+    }
+
+    @JsonProperty("Contributor")
+    public Contributor getContributor() {
+        return contributor;
+    }
+
+    public void setContributor(Contributor contributor) {
+        this.contributor = contributor;
     }
 
     @JsonProperty("Group")
