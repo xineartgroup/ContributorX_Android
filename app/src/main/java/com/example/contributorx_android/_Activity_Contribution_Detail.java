@@ -76,7 +76,7 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
             if (intent.hasExtra("com.example.contributorx_android.ITEMINDEX")) {
                 int id = intent.getIntExtra("com.example.contributorx_android.ITEMINDEX", -1);
                 if (id >= 0) {
-                    APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(id);
+                    APIResponse contributionResponse = _DAO_Contribution.GetContribution(id);
 
                     handler.post(() -> {
                         if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
@@ -102,18 +102,18 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
                         contributionToSave.setAmount(Float.parseFloat(txtAmount.getText().toString()));
                         contributionToSave.setDueDate(lblDateStart.getText().toString());
 
-                        APIContributorsResponse contributorsResponse = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getCommunityId());
+                        APIResponse contributorsResponse = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
                         if (contributorsResponse.getIsSuccess()) {
 
                             List<Contributor> contributors = contributorsResponse.getContributors();
                             for (int i = 0; i < contributors.size(); i++) {
                                 Expectation expectation = new Expectation(contributors.get(i).getId(), contribution.getId(), 0.00f, 0.00f, 0, "");
-                                APIExpectationResponse resp = _DAO_Expectation.AddExpectation(expectation);
+                                APIResponse resp = _DAO_Expectation.AddExpectation(expectation);
                             }
                         }
 
-                        APIContributionResponse contributionResponse;
+                        APIResponse contributionResponse;
                         if (isNew) {
                             contributionResponse = _DAO_Contribution.AddContribution(contributionToSave);
                         } else {

@@ -33,7 +33,9 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
     int SELECT_PHOTO = 1;
     int contributorId = -1;
     Contributor contributor = null;
+    List<Expectation> expectations = new ArrayList<>();
     List<Grouping> groupings = new ArrayList<>();
+    List<Grouping> old_groupings = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,47 +73,31 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                 //EXISTING ITEM
                 contributorId = Objects.requireNonNull(intent.getExtras()).getInt("com.example.contributorx_android.ITEMINDEX");
 
-                APIContributorResponse contributorResponse = _DAO_Contributor.GetContributor(contributorId);
+                APIResponse contributorResponse = _DAO_Contributor.GetContributor(contributorId);
 
                 if (contributorResponse.getIsSuccess() && contributorResponse.getContributor() != null) {
                     Contributor contributor = contributorResponse.getContributor();
 
-                    APIExpectationsResponse expectationsResponse = _DAO_Expectation.GetExpectationsForContributor(contributorId);
-
-                    APIGroupsResponse groupsResponse = _DAO_Group.GetAllGroups();
-
                     handler.post(() -> {
-                        if (groupsResponse.getIsSuccess()) {
-                            ArrayList<String> items = new ArrayList<>();
-                            items.add("");
-                            for (int position = 0; position < groupsResponse.getGroups().size(); position++) {
-                                Group group = groupsResponse.getGroups().get(position);
-                                if (group != null) {
-                                    items.add(group.getName());
-                                }
-                            }
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        ArrayAdapter<String> adapter = getStringArrayAdapter(contributorResponse);
 
-                            // setImage(imgContributor, contributor.getPicture());
-                            lblUsername.setText(contributor.getUserName());
-                            lblName.setText(String.format("%s %s", contributor.getFirstname(), contributor.getLastname()));
-                            lblEmail.setText(contributor.getEmail());
-                            lblPhoneNumber.setText(contributor.getPhoneNumber());
-                            cboStatus.setSelection(contributor.isActive() ? 0 : 1);
-                            cboGroups.setAdapter(adapter);
+                        // setImage(imgContributor, contributor.getPicture());
+                        lblUsername.setText(contributor.getUserName());
+                        lblName.setText(String.format("%s %s", contributor.getFirstname(), contributor.getLastname()));
+                        lblEmail.setText(contributor.getEmail());
+                        lblPhoneNumber.setText(contributor.getPhoneNumber());
+                        cboStatus.setSelection(contributor.isActive() ? 0 : 1);
+                        cboGroups.setAdapter(adapter);
 
-                            groupings = contributorResponse.getGroupings(); // _DAO_Grouping.GetGroupingsForContributor(contributorId);
-                            _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(this, groupings);
-                            lstUserGroups.setAdapter(userGroupItemAdapter);
+                        groupings = contributorResponse.getGroupings();
+                        _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(this, groupings);
+                        lstUserGroups.setAdapter(userGroupItemAdapter);
 
-                            if (expectationsResponse != null && expectationsResponse.getIsSuccess() && expectationsResponse.getExpectations() != null) {
-                                _Layout_Expectation_List2 expectationItemAdapter = new _Layout_Expectation_List2(this, expectationsResponse.getExpectations());
-                                lstUserExpectation.setAdapter(expectationItemAdapter);
-                            } else {
-                                android.util.Log.w("Expectations Fetch", "Failed or no expectations found.");
-                            }
-                        }
+                        expectations = contributorResponse.getExpectations();
+                        _Layout_Expectation_List2 expectationItemAdapter = new _Layout_Expectation_List2(this, expectations);
+                        lstUserExpectation.setAdapter(expectationItemAdapter);
+
+                        old_groupings.addAll(groupings);
                     });
                 } else {
                     handler.post(() -> {
@@ -142,7 +128,7 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                     executor.execute(() -> {
                         if (position > 0) {
                             String selectedItem = parent.getItemAtPosition(position).toString();
-                            APIGroupResponse response = _DAO_Group.GetGroupByName(selectedItem);
+                            APIResponse response = _DAO_Group.GetGroupByName(selectedItem);
 
                             handler.post(() -> {
                                 if (response.getIsSuccess()) {
@@ -180,12 +166,14 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
             btnSaveContributor.setOnClickListener(view -> {
                 executor.execute(() -> {
                     if (contributor != null) {
-                        APIContributorResponse response = _DAO_Contributor.UpdateContributor(contributor);
-                        APIGroupingsResponse groupingsResponse = _DAO_Grouping.GetGroupingsForContributor(contributorId);
-                        handler.post(() -> {
-                            if (groupingsResponse.getIsSuccess()) {
-                                List<Grouping> old_groupings = groupingsResponse.getGroupings();
+                        android.util.Log.d("Contributor Update", "...");
 
+                        APIResponse response = _DAO_Contributor.UpdateContributor(contributor);
+
+                        android.util.Log.d("Contributor Update", response.getMessage());
+
+                        handler.post(() -> {
+                            if (response.getIsSuccess()) {
                                 // Find items to delete (in old list but not in new list)
                                 for (Grouping old_grouping : old_groupings) {
                                     boolean found = false;
@@ -196,7 +184,7 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                                         }
                                     }
                                     if (!found) {
-                                        APIGroupingResponse deleteGroupingResponse = _DAO_Grouping.DeleteGrouping(old_grouping.getId());
+                                        APIResponse deleteGroupingResponse = _DAO_Grouping.DeleteGrouping(old_grouping.getId());
                                     }
                                 }
 
@@ -210,15 +198,13 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                                         }
                                     }
                                     if (!found) {
-                                        APIGroupingResponse addGroupingResponse = _DAO_Grouping.AddGrouping(grouping);
+                                        APIResponse addGroupingResponse = _DAO_Grouping.AddGrouping(grouping);
                                     }
                                 }
                             }
                         });
                     }
                 });
-
-                executor.shutdown();
 
                 Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
                 startActivity(startIntent);
@@ -229,6 +215,23 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                 startActivity(startIntent);
             });
         });
+
+        //executor.shutdown();
+    }
+
+    @NonNull
+    private ArrayAdapter<String> getStringArrayAdapter(APIResponse contributorResponse) {
+        ArrayList<String> items = new ArrayList<>();
+        items.add("");
+        for (int position = 0; position < contributorResponse.getGroups().size(); position++) {
+            Group group = contributorResponse.getGroups().get(position);
+            if (group != null) {
+                items.add(group.getName());
+            }
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
     }
 
     @Override

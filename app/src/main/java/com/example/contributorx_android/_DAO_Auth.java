@@ -7,16 +7,16 @@ import java.io.IOException;
 
 public class _DAO_Auth {
 
-    public static APIContributorResponse Login(String username, String password) {
+    public static APIResponse Login(String username, String password) {
         User user = new User(username, password);
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(user);
             //System.out.println(jsonData);
             String result = APIClass.SendMessage("GET", "auth/api/login", "", jsonData, true);
-            return APIClass.GetContributorResponse(result);
+            return APIClass.GetResponse(result);
         } catch (IOException e) {
-            return new APIContributorResponse(e.getMessage());
+            return new APIResponse(e.getMessage());
         }
     }
 

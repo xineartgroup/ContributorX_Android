@@ -4,47 +4,47 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class _DAO_Contributor {
 
-    public static APIContributorsResponse GetAllContributors() {
+    public static APIResponse GetAllContributors() {
         String result = APIClass.SendMessage("GET", "contributor/api/all","", "", false);
-        return APIClass.GetContributorsResponse(result);
+        return APIClass.GetResponse(result);
     }
 
-    public static APIContributorResponse AddContributor(Contributor contributor) {
+    public static APIResponse AddContributor(Contributor contributor) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(contributor);
             String result = APIClass.SendMessage("POST", "contributor/api/","", jsonData, false);
-            return APIClass.GetContributorResponse(result);
+            return APIClass.GetResponse(result);
         } catch (Exception e) {
             android.util.Log.d("ERROR!!!", e.toString());
-            return new APIContributorResponse(e.getMessage());
+            return new APIResponse(e.getMessage());
         }
     }
 
-    public static APIContributorResponse UpdateContributor(Contributor contributor) {
+    public static APIResponse UpdateContributor(Contributor contributor) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(contributor);
             String result = APIClass.SendMessage("POST", "community/api/update/" + contributor.getId(),"", jsonData, false);
-            return APIClass.GetContributorResponse(result);
+            return APIClass.GetResponse(result);
         } catch (Exception e) {
             android.util.Log.d("ERROR!!!", e.toString());
-            return new APIContributorResponse(e.getMessage());
+            return new APIResponse(e.getMessage());
         }
     }
 
-    public static APIContributorResponse DeleteContributor(int id) {
+    public static APIResponse DeleteContributor(int id) {
         String result = APIClass.SendMessage("POST", "contributor/api/delete/" + id,"", "", false);
-        return APIClass.GetContributorResponse(result);
+        return APIClass.GetResponse(result);
     }
 
-    public static APIContributorResponse GetContributor(int id) {
+    public static APIResponse GetContributor(int id) {
         String result = APIClass.SendMessage("GET", "contributor/api/" + id,"", "", false);
-        return APIClass.GetContributorResponse(result);
+        return APIClass.GetResponse(result);
     }
 
-    public static APIContributorsResponse GetContributorsInCommunity(int communityId) {
+    public static APIResponse GetContributorsInCommunity(int communityId) {
         String result = APIClass.SendMessage("GET", "contributor/api?communityid=" + communityId + String.format("&searchValue=%s&sortName=%s&sortOrder=%s", "*", "Id", "ASC"),"", "", false);
-        return APIClass.GetContributorsResponse(result);
+        return APIClass.GetResponse(result);
     }
 }

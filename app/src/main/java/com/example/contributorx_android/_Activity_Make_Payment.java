@@ -43,13 +43,13 @@ public class _Activity_Make_Payment extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            APIExpectationResponse response = _DAO_Expectation.GetExpectation(expectationId);
+            APIResponse response = _DAO_Expectation.GetExpectation(expectationId);
 
             handler.post(() -> {
                 Expectation expectation = response.getExpectation();
                 if (expectation != null) {
                     if (expectation.getContribution() == null) {
-                        APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                        APIResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
                         if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
                             expectation.setContribution(contributionResponse.getContribution());
                         }
@@ -96,7 +96,7 @@ public class _Activity_Make_Payment extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            APIExpectationResponse response = _DAO_Expectation.GetExpectation(expectationId);
+            APIResponse response = _DAO_Expectation.GetExpectation(expectationId);
 
             handler.post(() -> {
                 Expectation expectation = response.getExpectation();
@@ -104,7 +104,7 @@ public class _Activity_Make_Payment extends AppCompatActivity {
                     if ("Use Payment Gateway".equals(paymentMethod) && PaymentSuccessful(expectation)) {
                         expectation.setPaymentStatus(3);
                         expectation.setAmountPaid(paymentAmount);
-                        APIExpectationResponse resp = _DAO_Expectation.UpdateExpectation(expectation);
+                        APIResponse resp = _DAO_Expectation.UpdateExpectation(expectation);
                         Toast.makeText(this, "Payment successful!!!", Toast.LENGTH_SHORT).show();
                         // Return to previous screen
                         finish();
@@ -112,7 +112,7 @@ public class _Activity_Make_Payment extends AppCompatActivity {
                     else if ("Send for Approval".equals(paymentMethod)) {
                         expectation.setPaymentStatus(1);
                         expectation.setAmountToApprove(paymentAmount);
-                        APIExpectationResponse resp = _DAO_Expectation.UpdateExpectation(expectation);
+                        APIResponse resp = _DAO_Expectation.UpdateExpectation(expectation);
                         Toast.makeText(this, "Payment sent for Approval!!!", Toast.LENGTH_SHORT).show();
                         // Return to previous screen
                         finish();

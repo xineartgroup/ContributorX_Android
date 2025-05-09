@@ -62,7 +62,7 @@ public class _Layout_Expectation_List1 extends BaseAdapter {
         Expectation expectation = position < expectations.size() && position >= 0 ? expectations.get(position) : null;
         if (expectation != null) {
             if (expectation.getContribution() == null) {
-                APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                APIResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
                 if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
                     expectation.setContribution(contributionResponse.getContribution());
                 }

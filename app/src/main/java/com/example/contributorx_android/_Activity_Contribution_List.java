@@ -57,7 +57,7 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            APIContributionsResponse response = _DAO_Contribution.GetAllContributionsInCommunity(APIClass.LoggedOnUser.getCommunityId());
+            APIResponse response = _DAO_Contribution.GetAllContributionsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
             handler.post(() -> {
                 if (response.getIsSuccess()) {

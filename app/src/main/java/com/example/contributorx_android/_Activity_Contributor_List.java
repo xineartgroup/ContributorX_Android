@@ -61,7 +61,7 @@ public class _Activity_Contributor_List extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            APIContributorsResponse response = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getCommunityId());
+            APIResponse response = _DAO_Contributor.GetContributorsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
             handler.post(() -> {
                 if (response.getIsSuccess()) {

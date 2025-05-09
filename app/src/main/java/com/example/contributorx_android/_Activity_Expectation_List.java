@@ -48,7 +48,7 @@ public class _Activity_Expectation_List extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            APIExpectationsResponse response = _DAO_Expectation.GetUnclearedExpectationsInCommunity(APIClass.LoggedOnUser.getCommunityId());
+            APIResponse response = _DAO_Expectation.GetUnclearedExpectationsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
             handler.post(() -> {
                 if (response.getIsSuccess()) {
@@ -107,14 +107,14 @@ public class _Activity_Expectation_List extends AppCompatActivity {
 
                 String finalQuery = query;
                 executor.execute(() -> {
-                    APIContributorResponse response = _DAO_Contributor.GetContributor(expectation.getContributorId());
+                    APIResponse response = _DAO_Contributor.GetContributor(expectation.getContributorId());
 
                     handler.post(() -> {
                         if (response.getIsSuccess()) {
                             Contributor contributor = response.getContributor();
 
                             if (expectation.getContribution() == null) {
-                                APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                                APIResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
                                 if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
                                     expectation.setContribution(contributionResponse.getContribution());
                                 }

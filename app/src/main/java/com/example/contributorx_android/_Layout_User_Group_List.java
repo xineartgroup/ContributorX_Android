@@ -68,7 +68,7 @@ public class _Layout_User_Group_List extends BaseAdapter {
         executor.execute(() -> {
             Grouping grouping = position < groupings.size() && position >= 0 ? groupings.get(position) : null;
             if (grouping != null) {
-                APIGroupResponse response = _DAO_Group.GetGroup(grouping.getGroupId());
+                APIResponse response = _DAO_Group.GetGroup(grouping.getGroupId());
 
                 handler.post(() -> {
                     if (response.getIsSuccess()) {

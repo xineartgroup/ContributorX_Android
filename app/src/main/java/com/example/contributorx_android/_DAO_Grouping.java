@@ -4,47 +4,47 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class _DAO_Grouping {
 
-    public static APIGroupingsResponse GetAllGrouping() {
+    public static APIResponse GetAllGrouping() {
         String result = APIClass.SendMessage("GET", "group/api/all","", "", false);
-        return APIClass.GetGroupingsResponse(result);
+        return APIClass.GetResponse(result);
     }
 
-    public static APIGroupingResponse DeleteGrouping(int id) {
+    public static APIResponse DeleteGrouping(int id) {
         String result = APIClass.SendMessage("POST", "grouping/api/delete/" + id,"", "", false);
-        return APIClass.GetGroupingResponse(result);
+        return APIClass.GetResponse(result);
     }
 
-    public static APIGroupingResponse GetGrouping(int id) {
+    public static APIResponse GetGrouping(int id) {
         String result = APIClass.SendMessage("GET", "grouping/api/" + id,"", "", false);
-        return APIClass.GetGroupingResponse(result);
+        return APIClass.GetResponse(result);
     }
 
-    public static APIGroupingResponse AddGrouping(Grouping grouping) {
+    public static APIResponse AddGrouping(Grouping grouping) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(grouping);
             String result = APIClass.SendMessage("POST", "grouping/api/","", jsonData, false);
-            return APIClass.GetGroupingResponse(result);
+            return APIClass.GetResponse(result);
         } catch (Exception e) {
             android.util.Log.d("ERROR!!!", e.toString());
-            return new APIGroupingResponse(e.getMessage());
+            return new APIResponse(e.getMessage());
         }
     }
 
-    public static APIGroupingResponse UpdateGrouping(Grouping grouping) {
+    public static APIResponse UpdateGrouping(Grouping grouping) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(grouping);
             String result = APIClass.SendMessage("POST", "grouping/api/update/" + grouping.getId(),"", jsonData, false);
-            return APIClass.GetGroupingResponse(result);
+            return APIClass.GetResponse(result);
         } catch (Exception e) {
             android.util.Log.d("ERROR!!!", e.toString());
-            return new APIGroupingResponse(e.getMessage());
+            return new APIResponse(e.getMessage());
         }
     }
 
-    public static APIGroupingsResponse GetGroupingsForContributor(int contributorId) {
+    public static APIResponse GetGroupingsForContributor(int contributorId) {
         String result = APIClass.SendMessage("GET", "grouping/api/bycontributor/" + contributorId,"", "", false);
-        return APIClass.GetGroupingsResponse(result);
+        return APIClass.GetResponse(result);
     }
 }

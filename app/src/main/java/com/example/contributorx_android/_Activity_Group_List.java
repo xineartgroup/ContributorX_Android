@@ -65,7 +65,7 @@ public class _Activity_Group_List extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            APIGroupsResponse response = _DAO_Group.GetAllGroupsInCommunity(APIClass.LoggedOnUser.getCommunityId());
+            APIResponse response = _DAO_Group.GetAllGroupsInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
             handler.post(() -> {
                 if (response.getIsSuccess()) {

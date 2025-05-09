@@ -51,7 +51,7 @@ public class _Activity_Expense_Detail extends AppCompatActivity {
             int id = intent.getIntExtra("com.example.contributorx_android.ITEMINDEX", -1);
             if (id >= 0) {
                 executor.execute(() -> {
-                    APIExpenseResponse expenseResponse = _DAO_Expense.GetExpense(id);
+                    APIResponse expenseResponse = _DAO_Expense.GetExpense(id);
 
                     handler.post(() -> {
                         if (expenseResponse != null && expenseResponse.getIsSuccess()) {
@@ -81,7 +81,7 @@ public class _Activity_Expense_Detail extends AppCompatActivity {
                     expenseToSave.setAmountPaid(Float.parseFloat(txtAmount.getText().toString().trim()));
                     expenseToSave.setCommunityId(APIClass.LoggedOnUser.getCommunityId());
 
-                    APIExpenseResponse expenseResponse;
+                    APIResponse expenseResponse;
                     if (isNew) {
                         expenseResponse = _DAO_Expense.AddExpense(expenseToSave);
                     } else {

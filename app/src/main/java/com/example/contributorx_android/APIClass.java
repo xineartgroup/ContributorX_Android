@@ -21,7 +21,9 @@ public class APIClass {
 
     public static String SendMessage(String verb, String method, String params, String jsonData, boolean isLogin) {
         try {
-            android.util.Log.d("API jsonData!!!", jsonData);
+            if (jsonData != null && !jsonData.isEmpty()) {
+                android.util.Log.d("API jsonData!!!", jsonData);
+            }
 
             HttpURLConnection connection = getHttpURLConnection(verb, method, params, jsonData);
 
@@ -89,129 +91,12 @@ public class APIClass {
         return connection;
     }
 
-    public static APICommunityResponse GetCommunityResponse(String jsonResponse) {
+    public static APIResponse GetResponse(String jsonResponse) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            return objectMapper.readValue(jsonResponse, APICommunityResponse.class);
+            return objectMapper.readValue(jsonResponse, APIResponse.class);
         } catch (IOException e) {
-            return new APICommunityResponse(e.getMessage());
-        }
-    }
-
-    public static APICommunitiesResponse GetCommunitiesResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APICommunitiesResponse.class);
-        } catch (IOException e) {
-            return new APICommunitiesResponse(e.getMessage());
-        }
-    }
-
-    public static APIContributionResponse GetContributionResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APIContributionResponse.class);
-        } catch (IOException e) {
-            return new APIContributionResponse(e.getMessage());
-        }
-    }
-
-    public static APIContributionsResponse GetContributionsResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APIContributionsResponse.class);
-        } catch (IOException e) {
-            return new APIContributionsResponse(e.getMessage());
-        }
-    }
-
-    public static APIContributorResponse GetContributorResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APIContributorResponse.class);
-        } catch (IOException e) {
-            return new APIContributorResponse(e.getMessage());
-        }
-    }
-
-    public static APIContributorsResponse GetContributorsResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APIContributorsResponse.class);
-        } catch (IOException e) {
-            return new APIContributorsResponse(e.getMessage());
-        }
-    }
-
-    public static APIExpectationResponse GetExpectationResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APIExpectationResponse.class);
-        } catch (IOException e) {
-            return new APIExpectationResponse(e.getMessage());
-        }
-    }
-
-    public static APIExpectationsResponse GetExpectationsResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APIExpectationsResponse.class);
-        } catch (IOException e) {
-            return new APIExpectationsResponse(e.getMessage());
-        }
-    }
-
-    public static APIExpenseResponse GetExpenseResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APIExpenseResponse.class);
-        } catch (IOException e) {
-            return new APIExpenseResponse(e.getMessage());
-        }
-    }
-
-    public static APIExpensesResponse GetExpensesResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APIExpensesResponse.class);
-        } catch (IOException e) {
-            return new APIExpensesResponse(e.getMessage());
-        }
-    }
-
-    public static APIGroupingResponse GetGroupingResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APIGroupingResponse.class);
-        } catch (IOException e) {
-            return new APIGroupingResponse(e.getMessage());
-        }
-    }
-
-    public static APIGroupingsResponse GetGroupingsResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APIGroupingsResponse.class);
-        } catch (IOException e) {
-            return new APIGroupingsResponse(e.getMessage());
-        }
-    }
-
-    public static APIGroupResponse GetGroupResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APIGroupResponse.class);
-        } catch (IOException e) {
-            return new APIGroupResponse(e.getMessage());
-        }
-    }
-
-    public static APIGroupsResponse GetGroupsResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APIGroupsResponse.class);
-        } catch (IOException e) {
-            return new APIGroupsResponse(e.getMessage());
+            return new APIResponse(e.getMessage());
         }
     }
 

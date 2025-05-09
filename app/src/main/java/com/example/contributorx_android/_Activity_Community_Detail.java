@@ -46,10 +46,10 @@ public class _Activity_Community_Detail extends AppCompatActivity {
         if (APIClass.LoggedOnUser.getCommunityId() >= 0) {
 
             executor.execute(() -> {
-                APICommunityResponse response = _DAO_Community.GetCommunity(APIClass.LoggedOnUser.getCommunityId());
+                APIResponse response = _DAO_Community.GetCommunity(APIClass.LoggedOnUser.getCommunityId());
 
                 handler.post(() -> {
-                    if (response.getSuccess()) {
+                    if (response.getIsSuccess()) {
                         if (response.getCommunity() != null) {
                             community = response.getCommunity();
                             txtCommunityName.setText(community.getName());
@@ -69,10 +69,10 @@ public class _Activity_Community_Detail extends AppCompatActivity {
                         community.setName(txtCommunityName.getText().toString());
                         community.setDescription(txtDescription.getText().toString());
 
-                        APICommunityResponse response = _DAO_Community.AddCommunity(community);
+                        APIResponse response = _DAO_Community.AddCommunity(community);
 
                         handler.post(() -> {
-                            if (response.getSuccess()) {
+                            if (response.getIsSuccess()) {
                                 if (response.getCommunity() != null) {
                                     community = response.getCommunity();
                                 }
@@ -84,10 +84,10 @@ public class _Activity_Community_Detail extends AppCompatActivity {
                         community.setName(txtCommunityName.getText().toString());
                         community.setDescription(txtDescription.getText().toString());
 
-                        APICommunityResponse response = _DAO_Community.UpdateCommunity(community);
+                        APIResponse response = _DAO_Community.UpdateCommunity(community);
 
                         handler.post(() -> {
-                            if (response.getSuccess()) {
+                            if (response.getIsSuccess()) {
                                 if (response.getCommunity() != null) {
                                     community = response.getCommunity();
                                 }

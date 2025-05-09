@@ -70,13 +70,13 @@ public class _Layout_Expectation_List0 extends BaseAdapter {
         executor.execute(() -> {
             Expectation expectation = expectations.get(position);
 
-            APIContributorResponse response = _DAO_Contributor.GetContributor(expectation.getContributorId());
+            APIResponse response = _DAO_Contributor.GetContributor(expectation.getContributorId());
 
             handler.post(() -> {
                 if (response.getIsSuccess()) {
                     Contributor contributor = response.getContributor();
                     if (expectation.getContribution() == null) {
-                        APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                        APIResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
                         if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
                             expectation.setContribution(contributionResponse.getContribution());
                         }
@@ -132,14 +132,14 @@ public class _Layout_Expectation_List0 extends BaseAdapter {
             Handler handler = new Handler(Looper.getMainLooper());
 
             executor.execute(() -> {
-                APIExpectationResponse response = _DAO_Expectation.GetExpectation(expectationId);
+                APIResponse response = _DAO_Expectation.GetExpectation(expectationId);
 
                 handler.post(() -> {
                     Expectation expectation = response.getExpectation();
                     if (expectation != null) {
                         expectation.setPaymentStatus(3);
                         expectation.setAmountToApprove(0.00f);
-                        APIExpectationResponse resp = _DAO_Expectation.UpdateExpectation(expectation);
+                        APIResponse resp = _DAO_Expectation.UpdateExpectation(expectation);
                         notifyDataSetChanged();
                     }
                 });

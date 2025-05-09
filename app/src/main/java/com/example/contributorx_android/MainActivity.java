@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            APIExpectationsResponse response = _DAO_Expectation.GetExpectationsForContributor(APIClass.LoggedOnUser.getId());
+            APIResponse response = _DAO_Expectation.GetExpectationsForContributor(APIClass.LoggedOnUser.getId());
 
             handler.post(() -> {
                 if (response.getIsSuccess()) {
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
                             if (item.getPaymentStatus() != 2 && item.getPaymentStatus() != 3) {
                                 
                                 if (item.getContribution() == null) {
-                                    APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(item.getContributionId());
+                                    APIResponse contributionResponse = _DAO_Contribution.GetContribution(item.getContributionId());
                                     if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
                                         item.setContribution(contributionResponse.getContribution());
                                     }

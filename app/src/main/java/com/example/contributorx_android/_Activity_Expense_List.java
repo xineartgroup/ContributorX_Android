@@ -65,7 +65,7 @@ public class _Activity_Expense_List extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            APIExpensesResponse response = _DAO_Expense.GetAllExpensesInCommunity(APIClass.LoggedOnUser.getCommunityId());
+            APIResponse response = _DAO_Expense.GetAllExpensesInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
             handler.post(() -> {
                 if (response.getIsSuccess()) {

@@ -79,7 +79,7 @@ public class _Layout_Contributor_List extends BaseAdapter {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            APIExpectationsResponse response = _DAO_Expectation.GetExpectationsForContributor(contributor.getId());
+            APIResponse response = _DAO_Expectation.GetExpectationsForContributor(contributor.getId());
 
             handler.post(() -> {
                 if (response.getIsSuccess() && response.getExpectations() != null) {
@@ -89,7 +89,7 @@ public class _Layout_Contributor_List extends BaseAdapter {
                         Expectation expectation = response.getExpectations().get(index);
                         totalAmountPaid += expectation.getAmountPaid();
                         if (expectation.getContribution() == null) {
-                            APIContributionResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                            APIResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
                             if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
                                 expectation.setContribution(contributionResponse.getContribution());
                             }

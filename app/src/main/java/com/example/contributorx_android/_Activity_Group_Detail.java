@@ -53,7 +53,7 @@ public class _Activity_Group_Detail extends AppCompatActivity {
             int id = intent.getIntExtra("com.example.contributorx_android.ITEMINDEX", -1);
             if (id >= 0) {
                 executor.execute(() -> {
-                    APIGroupResponse response = _DAO_Group.GetGroup(id);
+                    APIResponse response = _DAO_Group.GetGroup(id);
 
                     handler.post(() -> {
                         if (response != null && response.getIsSuccess()) {
@@ -81,7 +81,7 @@ public class _Activity_Group_Detail extends AppCompatActivity {
                     groupToSave.setDescription(txtDescription.getText().toString());
                     groupToSave.setCommunityId(APIClass.LoggedOnUser.getCommunityId());
 
-                    APIGroupResponse groupResponse;
+                    APIResponse groupResponse;
                     if (isNew) {
                         groupResponse = _DAO_Group.AddGroup(groupToSave);
                     } else {

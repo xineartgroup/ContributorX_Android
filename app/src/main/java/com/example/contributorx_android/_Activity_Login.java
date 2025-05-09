@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -33,7 +32,7 @@ public class _Activity_Login extends AppCompatActivity {
             Handler handler = new Handler(Looper.getMainLooper());
 
             executor.execute(() -> {
-                APIContributorResponse response = _DAO_Auth.Login(txtUsername.getText().toString(), txtPassword.getText().toString());
+                APIResponse response = _DAO_Auth.Login(txtUsername.getText().toString(), txtPassword.getText().toString());
 
                 handler.post(() -> {
                     if (response != null && response.getIsSuccess() && response.getContributor() != null) {
