@@ -66,11 +66,11 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
 
-        if (intent.hasExtra("com.example.contributorx_android.ITEMINDEX")){
-            //EXISTING ITEM
-            contributorId = Objects.requireNonNull(intent.getExtras()).getInt("com.example.contributorx_android.ITEMINDEX");
+        executor.execute(() -> {
+            if (intent.hasExtra("com.example.contributorx_android.ITEMINDEX")){
+                //EXISTING ITEM
+                contributorId = Objects.requireNonNull(intent.getExtras()).getInt("com.example.contributorx_android.ITEMINDEX");
 
-            executor.execute(() -> {
                 APIContributorResponse contributorResponse = _DAO_Contributor.GetContributor(contributorId);
 
                 if (contributorResponse.getIsSuccess() && contributorResponse.getContributor() != null) {
@@ -118,122 +118,116 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                         android.util.Log.e("Contributor Response", contributorResponse.getMessage());
                     });
                 }
+            }
+
+            cboStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (contributor != null) {
+                        contributor.setActive(position == 0);
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    // This method is called when the selection disappears from the spinner
+                    // This can happen for example when the adapter becomes empty
+                }
             });
 
-            executor.shutdown();
-        }
+            cboGroups.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        cboStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (contributor != null) {
-                    contributor.setActive(position == 0);
-                }
-            }
+                    executor.execute(() -> {
+                        if (position > 0) {
+                            String selectedItem = parent.getItemAtPosition(position).toString();
+                            APIGroupResponse response = _DAO_Group.GetGroupByName(selectedItem);
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // This method is called when the selection disappears from the spinner
-                // This can happen for example when the adapter becomes empty
-            }
-        });
-
-        cboGroups.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                ExecutorService executor = Executors.newSingleThreadExecutor();
-                Handler handler = new Handler(Looper.getMainLooper());
-
-                executor.execute(() -> {
-                    String selectedItem = parent.getItemAtPosition(position).toString();
-                    APIGroupResponse response = _DAO_Group.GetGroupByName(selectedItem);
-
-                    handler.post(() -> {
-                        if (response.getIsSuccess()) {
-                            Group group = response.getGroup();
-                            if (group != null) {
-                                boolean found = false;
-                                for (Grouping grouping : groupings){
-                                    if (grouping.getGroupId() == group.getId()){
-                                        found = true;
-                                        break;
+                            handler.post(() -> {
+                                if (response.getIsSuccess()) {
+                                    Group group = response.getGroup();
+                                    if (group != null) {
+                                        boolean found = false;
+                                        for (Grouping grouping : groupings) {
+                                            if (grouping.getGroupId() == group.getId()) {
+                                                found = true;
+                                                break;
+                                            }
+                                        }
+                                        if (found) {
+                                            Toast.makeText(getApplicationContext(), "Contributor already belongs to the selected group", Toast.LENGTH_LONG).show();
+                                        } else {
+                                            groupings.add(new Grouping(contributorId, group.getId()));
+                                            _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(getApplicationContext(), groupings);
+                                            lstUserGroups.setAdapter(userGroupItemAdapter);
+                                            cboGroups.setSelection(0);
+                                        }
                                     }
                                 }
-                                if (found) {
-                                    Toast.makeText(getApplicationContext(), "Contributor already belongs to the selected group", Toast.LENGTH_LONG).show();
-                                }
-                                else{
-                                    groupings.add(new Grouping(contributorId, group.getId()));
-                                    _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(getApplicationContext(), groupings);
-                                    lstUserGroups.setAdapter(userGroupItemAdapter);
-                                    cboGroups.setSelection(0);
-                                }
-                            }
+                            });
                         }
                     });
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    // This method is called when the selection disappears from the spinner
+                    // This can happen for example when the adapter becomes empty
+                }
+            });
+
+            btnSaveContributor.setOnClickListener(view -> {
+                executor.execute(() -> {
+                    if (contributor != null) {
+                        APIContributorResponse response = _DAO_Contributor.UpdateContributor(contributor);
+                        APIGroupingsResponse groupingsResponse = _DAO_Grouping.GetGroupingsForContributor(contributorId);
+                        handler.post(() -> {
+                            if (groupingsResponse.getIsSuccess()) {
+                                List<Grouping> old_groupings = groupingsResponse.getGroupings();
+
+                                // Find items to delete (in old list but not in new list)
+                                for (Grouping old_grouping : old_groupings) {
+                                    boolean found = false;
+                                    for (Grouping grouping : groupings) {
+                                        if (old_grouping.getGroupId() == grouping.getGroupId()) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!found) {
+                                        APIGroupingResponse deleteGroupingResponse = _DAO_Grouping.DeleteGrouping(old_grouping.getId());
+                                    }
+                                }
+
+                                // Add new items and update existing ones
+                                for (Grouping grouping : groupings) {
+                                    boolean found = false;
+                                    for (Grouping old_grouping : old_groupings) {
+                                        if (grouping.getId() == old_grouping.getId()) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!found) {
+                                        APIGroupingResponse addGroupingResponse = _DAO_Grouping.AddGrouping(grouping);
+                                    }
+                                }
+                            }
+                        });
+                    }
                 });
 
                 executor.shutdown();
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // This method is called when the selection disappears from the spinner
-                // This can happen for example when the adapter becomes empty
-            }
-        });
-
-        btnSaveContributor.setOnClickListener(view -> {
-            executor.execute(() -> {
-                if (contributor != null) {
-                    APIContributorResponse response = _DAO_Contributor.UpdateContributor(contributor);
-                    APIGroupingsResponse groupingsResponse = _DAO_Grouping.GetGroupingsForContributor(contributorId);
-                    handler.post(() -> {
-                        if (groupingsResponse.getIsSuccess()) {
-                            List<Grouping> old_groupings = groupingsResponse.getGroupings();
-
-                            // Find items to delete (in old list but not in new list)
-                            for (Grouping old_grouping : old_groupings) {
-                                boolean found = false;
-                                for (Grouping grouping : groupings) {
-                                    if (old_grouping.getGroupId() == grouping.getGroupId()) {
-                                        found = true;
-                                        break;
-                                    }
-                                }
-                                if (!found) {
-                                    APIGroupingResponse deleteGroupingResponse = _DAO_Grouping.DeleteGrouping(old_grouping.getId());
-                                }
-                            }
-
-                            // Add new items and update existing ones
-                            for (Grouping grouping : groupings) {
-                                boolean found = false;
-                                for (Grouping old_grouping : old_groupings) {
-                                    if (grouping.getId() == old_grouping.getId()) {
-                                        found = true;
-                                        break;
-                                    }
-                                }
-                                if (!found) {
-                                    APIGroupingResponse addGroupingResponse = _DAO_Grouping.AddGrouping(grouping);
-                                }
-                            }
-                        }
-                    });
-                }
+                Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
+                startActivity(startIntent);
             });
 
-            executor.shutdown();
-
-            Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
-            startActivity(startIntent);
-        });
-
-        btnCancel.setOnClickListener(view -> {
-            Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
-            startActivity(startIntent);
+            btnCancel.setOnClickListener(view -> {
+                Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
+                startActivity(startIntent);
+            });
         });
     }
 

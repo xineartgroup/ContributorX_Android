@@ -98,7 +98,7 @@ public class _Activity_Group_Detail extends AppCompatActivity {
                         } else {
                             Toast.makeText(this, "Error saving group", Toast.LENGTH_LONG).show();
                             if (groupResponse != null && groupResponse.getMessage() != null) {
-                                Toast.makeText(this, groupResponse.getMessage(), Toast.LENGTH_LONG).show();
+                                android.util.Log.d("Error saving group", groupResponse.getMessage());
                             }
                         }
                     });
