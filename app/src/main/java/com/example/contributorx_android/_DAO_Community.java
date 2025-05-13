@@ -42,4 +42,9 @@ public class _DAO_Community {
         String result = APIClass.SendMessage("GET", "community/api/" + id,"", "", false);
         return APIClass.GetResponse(result);
     }
+
+    public static APIResponse GetCommunityByName(String name) {
+        String result = APIClass.SendMessage("GET", "community/api/getbyname/" + name,"", "", false);
+        return APIClass.GetResponse(result);
+    }
 }

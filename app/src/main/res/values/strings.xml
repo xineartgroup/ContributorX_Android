@@ -4,6 +4,9 @@
     <string name="user_home">Home</string>
     <string name="user_name">User Name</string>
     <string name="user_password">Password</string>
+    <string name="already_registered_text">Already have an account?</string>
+    <string name="not_registered_text">No account?</string>
+    <string name="register_text">Register</string>
     <string name="login_text">Login</string>
     <string name="logout_text">Logout</string>
     <string name="flat_name">Flat</string>
@@ -34,6 +37,7 @@
     <string name="list_groups">Groups</string>
     <string name="list_expectations">Expectations</string>
     <string name="list_expenses">Expenses</string>
+    <string name="item_role">Role</string>
     <string name="item_community">Community</string>
     <string name="item_save">Save</string>
     <string name="item_cancel">Cancel</string>
@@ -50,6 +54,12 @@
     <string-array name="payment_method">
         <item>Send for Approval</item>
         <item>Use Payment Gateway</item>
+    </string-array>
+    <string-array name="roles_array">
+        <item>--Choose Role--</item>
+        <item>Administrator</item>
+        <item>Contributor</item>
+        <item>Observer</item>
     </string-array>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -85,4 +95,5 @@
     <string name="cancel">"Cancel"</string>
     <string name="approve_reject">"Approve/Reject "</string>
     <string name="write_off">"Write-off "</string>
+    <string name="upload_picture">"Upload Picture"</string>
 </resources>

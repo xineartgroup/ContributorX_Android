@@ -42,14 +42,14 @@ public class APIClass {
                     SetSessionCookie(connection);
                 }
 
-                android.util.Log.d("API SUCCESS!!!", response.toString());
+                android.util.Log.d("API Response!!!", response.toString());
                 return response.toString();
             } else {
-                android.util.Log.e("API FAILURE!!!", "GET request failed");
+                android.util.Log.e("API Failure!!!", "GET request failed");
                 return "GET request failed";
             }
         } catch (Exception e) {
-            android.util.Log.e("API ERROR!!!", e.toString());
+            android.util.Log.e("API Error!!!", e.toString());
             return e.toString();
         }
     }

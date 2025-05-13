@@ -133,8 +133,8 @@ public class Contributor {
         return role;
     }
 
-    public void setAdmin(String role) {
-        role = role;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @JsonProperty("IsActive")

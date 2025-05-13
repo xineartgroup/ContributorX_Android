@@ -31,7 +31,6 @@ import java.util.concurrent.Executors;
 
 public class _Activity_Contributor_Detail extends AppCompatActivity {
     int SELECT_PHOTO = 1;
-    int contributorId = -1;
     Contributor contributor = null;
     List<Expectation> expectations = new ArrayList<>();
     List<Grouping> groupings = new ArrayList<>();
@@ -71,12 +70,12 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
         executor.execute(() -> {
             if (intent.hasExtra("com.example.contributorx_android.ITEMINDEX")){
                 //EXISTING ITEM
-                contributorId = Objects.requireNonNull(intent.getExtras()).getInt("com.example.contributorx_android.ITEMINDEX");
+                int contributorId = Objects.requireNonNull(intent.getExtras()).getInt("com.example.contributorx_android.ITEMINDEX");
 
                 APIResponse contributorResponse = _DAO_Contributor.GetContributor(contributorId);
 
                 if (contributorResponse.getIsSuccess() && contributorResponse.getContributor() != null) {
-                    Contributor contributor = contributorResponse.getContributor();
+                    contributor = contributorResponse.getContributor();
 
                     handler.post(() -> {
                         ArrayAdapter<String> adapter = getStringArrayAdapter(contributorResponse);
@@ -126,7 +125,7 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                     executor.execute(() -> {
-                        if (position > 0) {
+                        if (position > 0 && contributor != null) {
                             String selectedItem = parent.getItemAtPosition(position).toString();
                             APIResponse response = _DAO_Group.GetGroupByName(selectedItem);
 
@@ -144,7 +143,7 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                                         if (found) {
                                             Toast.makeText(getApplicationContext(), "Contributor already belongs to the selected group", Toast.LENGTH_LONG).show();
                                         } else {
-                                            groupings.add(new Grouping(contributorId, group.getId()));
+                                            groupings.add(new Grouping(contributor.getId(), group.getId()));
                                             _Layout_User_Group_List userGroupItemAdapter = new _Layout_User_Group_List(getApplicationContext(), groupings);
                                             lstUserGroups.setAdapter(userGroupItemAdapter);
                                             cboGroups.setSelection(0);
@@ -166,48 +165,83 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
             btnSaveContributor.setOnClickListener(view -> {
                 executor.execute(() -> {
                     if (contributor != null) {
-                        android.util.Log.d("Contributor Update", "...");
+                        StringBuilder groupsText = new StringBuilder();
 
-                        APIResponse response = _DAO_Contributor.UpdateContributor(contributor);
+                        for (Grouping grouping : groupings){
+                            if (!groupsText.isEmpty())
+                                groupsText.append(",");
+                            groupsText.append(grouping.getGroup().getName());
+                        }
 
-                        android.util.Log.d("Contributor Update", response.getMessage());
+                        GenericObj1 obj = new GenericObj1();
+                        obj.setId(contributor.getId());
+                        obj.setActive(contributor.isActive());
+                        obj.setGroups(groupsText.toString());
 
-                        handler.post(() -> {
-                            if (response.getIsSuccess()) {
-                                // Find items to delete (in old list but not in new list)
-                                for (Grouping old_grouping : old_groupings) {
-                                    boolean found = false;
-                                    for (Grouping grouping : groupings) {
-                                        if (old_grouping.getGroupId() == grouping.getGroupId()) {
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!found) {
-                                        APIResponse deleteGroupingResponse = _DAO_Grouping.DeleteGrouping(old_grouping.getId());
+                        APIResponse response = _DAO_Contributor.UpdateContributor1(obj);
+
+                        if (response != null && response.getIsSuccess()) {
+                            handler.post(() -> {
+                                Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
+                                startActivity(startIntent);
+                            });
+                        } else {
+                            handler.post(() -> {
+                                Toast.makeText(this, "Error updating contributor", Toast.LENGTH_SHORT).show();
+                                if (response != null && response.getMessage() != null) {
+                                    android.util.Log.d("Error updating contributor", response.getMessage());
+                                }
+                            });
+                        }
+
+                        /*APIResponse response = _DAO_Contributor.UpdateContributor(contributor);
+
+                        if (response != null && response.getIsSuccess()) {
+                            // Find items to delete (in old list but not in new list)
+                            for (Grouping old_grouping : old_groupings) {
+                                boolean found = false;
+                                for (Grouping grouping : groupings) {
+                                    if (old_grouping.getGroupId() == grouping.getGroupId()) {
+                                        found = true;
+                                        break;
                                     }
                                 }
-
-                                // Add new items and update existing ones
-                                for (Grouping grouping : groupings) {
-                                    boolean found = false;
-                                    for (Grouping old_grouping : old_groupings) {
-                                        if (grouping.getId() == old_grouping.getId()) {
-                                            found = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!found) {
-                                        APIResponse addGroupingResponse = _DAO_Grouping.AddGrouping(grouping);
-                                    }
+                                if (!found) {
+                                    APIResponse deleteGroupingResponse = _DAO_Grouping.DeleteGrouping(old_grouping.getId());
                                 }
                             }
-                        });
+
+                            // Add new items and update existing ones
+                            for (Grouping grouping : groupings) {
+                                boolean found = false;
+                                for (Grouping old_grouping : old_groupings) {
+                                    if (grouping.getId() == old_grouping.getId()) {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                if (!found) {
+                                    APIResponse addGroupingResponse = _DAO_Grouping.AddGrouping(grouping);
+                                    android.util.Log.d("New Grouping", addGroupingResponse.getMessage());
+                                }
+                            }
+
+                            handler.post(() -> {
+                                Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
+                                startActivity(startIntent);
+                            });
+                        } else {
+                            handler.post(() -> {
+                                Toast.makeText(this, "Error updating contributor", Toast.LENGTH_SHORT).show();
+                                if (response != null && response.getMessage() != null) {
+                                    android.util.Log.d("Error updating contributor", response.getMessage());
+                                }
+                            });
+                        }*/
+                    } else {
+                        handler.post(() -> Toast.makeText(this, "Contributor object is null", Toast.LENGTH_SHORT).show());
                     }
                 });
-
-                Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
-                startActivity(startIntent);
             });
 
             btnCancel.setOnClickListener(view -> {

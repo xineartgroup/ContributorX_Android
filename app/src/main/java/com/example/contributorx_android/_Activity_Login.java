@@ -21,33 +21,44 @@ public class _Activity_Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        EditText txtUsername = findViewById(R.id.txtUsername);
+        EditText txtPassword = findViewById(R.id.txtPassword);
         Button btnLogin = findViewById(R.id.btnLogin);
+        Button btnRegister = findViewById(R.id.btnRegister);
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Handler handler = new Handler(Looper.getMainLooper());
 
         btnLogin.setOnClickListener(view -> {
-
-            EditText txtUsername = findViewById(R.id.txtUsername);
-            EditText txtPassword = findViewById(R.id.txtPassword);
-
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            Handler handler = new Handler(Looper.getMainLooper());
-
             executor.execute(() -> {
+
                 APIResponse response = _DAO_Auth.Login(txtUsername.getText().toString(), txtPassword.getText().toString());
 
                 handler.post(() -> {
-                    if (response != null && response.getIsSuccess() && response.getContributor() != null) {
-                        APIClass.LoggedOnUser = response.getContributor();
-                        Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        startIntent.putExtra("MAIN_INFO_LOGINUSERNAME", txtUsername.getText().toString());
-                        startActivity(startIntent);
-                        Toast.makeText(_Activity_Login.this, "Logged in " + APIClass.LoggedOnUser.getUserName(), Toast.LENGTH_LONG).show();
+                    if (response != null) {
+                        if (response.getIsSuccess() && response.getContributor() != null) {
+                            APIClass.LoggedOnUser = response.getContributor();
+                            Intent startIntent = new Intent(getApplicationContext(), MainActivity.class);
+                            startIntent.putExtra("MAIN_INFO_LOGINUSERNAME", txtUsername.getText().toString());
+                            startActivity(startIntent);
+                            Toast.makeText(_Activity_Login.this, "Logged in " + APIClass.LoggedOnUser.getUserName(), Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            APIClass.LoggedOnUser = null;
+                            Toast.makeText(_Activity_Login.this, response.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
                     else {
                         APIClass.LoggedOnUser = null;
-                        Toast.makeText(_Activity_Login.this, "Invalid username/password", Toast.LENGTH_LONG).show();
+                        Toast.makeText(_Activity_Login.this, "Login Failed!!!", Toast.LENGTH_LONG).show();
                     }
                 });
             });
+        });
+
+        btnRegister.setOnClickListener(view -> {
+            Intent startIntent = new Intent(getApplicationContext(), _Activity_Register.class);
+            startActivity(startIntent);
         });
     }
 

@@ -25,7 +25,7 @@ public class _DAO_Contributor {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(contributor);
-            String result = APIClass.SendMessage("POST", "community/api/update/" + contributor.getId(),"", jsonData, false);
+            String result = APIClass.SendMessage("POST", "contributor/api/update/" + contributor.getId(),"", jsonData, false);
             return APIClass.GetResponse(result);
         } catch (Exception e) {
             android.util.Log.d("ERROR!!!", e.toString());
@@ -46,5 +46,17 @@ public class _DAO_Contributor {
     public static APIResponse GetContributorsInCommunity(int communityId) {
         String result = APIClass.SendMessage("GET", "contributor/api?communityid=" + communityId + String.format("&searchValue=%s&sortName=%s&sortOrder=%s", "*", "Id", "ASC"),"", "", false);
         return APIClass.GetResponse(result);
+    }
+
+    public static APIResponse UpdateContributor1(GenericObj1 obj1) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonData = objectMapper.writeValueAsString(obj1);
+            String result = APIClass.SendMessage("POST", "contributor/api/update1","", jsonData, false);
+            return APIClass.GetResponse(result);
+        } catch (Exception e) {
+            android.util.Log.d("ERROR!!!", e.toString());
+            return new APIResponse(e.getMessage());
+        }
     }
 }
