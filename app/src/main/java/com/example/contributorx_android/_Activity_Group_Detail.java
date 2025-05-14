@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -123,8 +124,12 @@ public class _Activity_Group_Detail extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.mainmenu, menu);
+        if (APIClass.LoggedOnUser != null && Objects.equals(APIClass.LoggedOnUser.getRole(), "Administrator")) {
+            getMenuInflater().inflate(R.menu.admin_menu, menu);
+        }
+        else {
+            getMenuInflater().inflate(R.menu.user_menu, menu);
+        }
         return true;
     }
 

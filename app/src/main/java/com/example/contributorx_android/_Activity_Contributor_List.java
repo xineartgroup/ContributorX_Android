@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -149,8 +150,12 @@ public class _Activity_Contributor_List extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.mainmenu, menu);
+        if (APIClass.LoggedOnUser != null && Objects.equals(APIClass.LoggedOnUser.getRole(), "Administrator")) {
+            getMenuInflater().inflate(R.menu.admin_menu, menu);
+        }
+        else {
+            getMenuInflater().inflate(R.menu.user_menu, menu);
+        }
         return true;
     }
 

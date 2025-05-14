@@ -13,7 +13,7 @@ public class _DAO_Auth {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(user);
-            String result = APIClass.SendMessage("POST", "auth/api/login", "", jsonData, true);
+            String result = APIClass.SendMessage("POST", "auth/api/login", jsonData, true);
             return APIClass.GetResponse(result);
         } catch (IOException e) {
             return new APIResponse(e.getMessage());
@@ -40,7 +40,7 @@ public class _DAO_Auth {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(user);
-            String result = APIClass.SendMessage("POST", "auth/api/register", "", jsonData, true);
+            String result = APIClass.SendMessage("POST", "auth/api/register", jsonData, true);
             return APIClass.GetResponse(result);
         } catch (IOException e) {
             return new APIResponse(e.getMessage());

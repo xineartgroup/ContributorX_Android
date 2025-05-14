@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -76,7 +77,7 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
                                 selectedId = contribution.getId();
                                 PopupMenu popup = new PopupMenu(_Activity_Contribution_List.this, view);
                                 popup.setOnMenuItemClickListener(_Activity_Contribution_List.this);
-                                popup.inflate(R.menu.contributionmenu);
+                                popup.inflate(R.menu.edit_menu);
                                 popup.show();
                             }
                         }
@@ -146,8 +147,12 @@ public class _Activity_Contribution_List extends AppCompatActivity implements Po
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.mainmenu, menu);
+        if (APIClass.LoggedOnUser != null && Objects.equals(APIClass.LoggedOnUser.getRole(), "Administrator")) {
+            getMenuInflater().inflate(R.menu.admin_menu, menu);
+        }
+        else {
+            getMenuInflater().inflate(R.menu.user_menu, menu);
+        }
         return true;
     }
 

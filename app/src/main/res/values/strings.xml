@@ -44,6 +44,9 @@
     <string name="item_status">Status</string>
     <string name="item_delete">Delete</string>
     <string name="item_remove">Remove</string>
+    <string name="item_update_profile">Update Profile</string>
+    <string name="item_change_password">Update Profile</string>
+    <string name="item_payment_report">Payment Report</string>
     <string name="menu_add">Add</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_delete">Delete</string>

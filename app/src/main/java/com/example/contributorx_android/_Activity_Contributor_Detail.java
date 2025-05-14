@@ -193,51 +193,6 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
                                 }
                             });
                         }
-
-                        /*APIResponse response = _DAO_Contributor.UpdateContributor(contributor);
-
-                        if (response != null && response.getIsSuccess()) {
-                            // Find items to delete (in old list but not in new list)
-                            for (Grouping old_grouping : old_groupings) {
-                                boolean found = false;
-                                for (Grouping grouping : groupings) {
-                                    if (old_grouping.getGroupId() == grouping.getGroupId()) {
-                                        found = true;
-                                        break;
-                                    }
-                                }
-                                if (!found) {
-                                    APIResponse deleteGroupingResponse = _DAO_Grouping.DeleteGrouping(old_grouping.getId());
-                                }
-                            }
-
-                            // Add new items and update existing ones
-                            for (Grouping grouping : groupings) {
-                                boolean found = false;
-                                for (Grouping old_grouping : old_groupings) {
-                                    if (grouping.getId() == old_grouping.getId()) {
-                                        found = true;
-                                        break;
-                                    }
-                                }
-                                if (!found) {
-                                    APIResponse addGroupingResponse = _DAO_Grouping.AddGrouping(grouping);
-                                    android.util.Log.d("New Grouping", addGroupingResponse.getMessage());
-                                }
-                            }
-
-                            handler.post(() -> {
-                                Intent startIntent = new Intent(getApplicationContext(), _Activity_Contributor_List.class);
-                                startActivity(startIntent);
-                            });
-                        } else {
-                            handler.post(() -> {
-                                Toast.makeText(this, "Error updating contributor", Toast.LENGTH_SHORT).show();
-                                if (response != null && response.getMessage() != null) {
-                                    android.util.Log.d("Error updating contributor", response.getMessage());
-                                }
-                            });
-                        }*/
                     } else {
                         handler.post(() -> Toast.makeText(this, "Contributor object is null", Toast.LENGTH_SHORT).show());
                     }
@@ -286,8 +241,12 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.mainmenu, menu);
+        if (APIClass.LoggedOnUser != null && Objects.equals(APIClass.LoggedOnUser.getRole(), "Administrator")) {
+            getMenuInflater().inflate(R.menu.admin_menu, menu);
+        }
+        else {
+            getMenuInflater().inflate(R.menu.user_menu, menu);
+        }
         return true;
     }
 

@@ -77,13 +77,19 @@ public class _Activity_Login extends AppCompatActivity {
             return new Intent(context, _Activity_Expense_List.class);
         } else if (id == R.id.itmGroups) {
             return new Intent(context, _Activity_Group_List.class);
+        } else if (id == R.id.itmUpdateProfile) {
+            return new Intent(context, _Activity_Group_List.class);
+        } else if (id == R.id.itmChangePassword) {
+            return new Intent(context, _Activity_Group_List.class);
+        } else if (id == R.id.itmPaymentReport) {
+            return new Intent(context, _Activity_Group_List.class);
         } else if (id == R.id.itmLogout) {
             APIClass.LoggedOnUser = null;
             return new Intent(context, _Activity_Login.class);
-        }/*  else if (id == R.id.itmReport) {
+        }  else if (id == R.id.itmReport) {
             Toast.makeText(context, "Reporting...", Toast.LENGTH_LONG).show();
             return null;
-        }*/
+        }
 
         return null;
     }
