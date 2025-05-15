@@ -78,9 +78,9 @@ public class _Activity_Login extends AppCompatActivity {
         } else if (id == R.id.itmGroups) {
             return new Intent(context, _Activity_Group_List.class);
         } else if (id == R.id.itmUpdateProfile) {
-            return new Intent(context, _Activity_Group_List.class);
+            return new Intent(context, _Activity_Update_Profile.class);
         } else if (id == R.id.itmChangePassword) {
-            return new Intent(context, _Activity_Group_List.class);
+            return new Intent(context, _Activity_Change_Password.class);
         } else if (id == R.id.itmPaymentReport) {
             return new Intent(context, _Activity_Group_List.class);
         } else if (id == R.id.itmLogout) {

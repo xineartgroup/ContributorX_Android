@@ -4,6 +4,9 @@
     <string name="user_home">Home</string>
     <string name="user_name">User Name</string>
     <string name="user_password">Password</string>
+    <string name="old_password">Old Password</string>
+    <string name="new_password">New Password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="already_registered_text">Already have an account?</string>
     <string name="not_registered_text">No account?</string>
     <string name="register_text">Register</string>
@@ -44,8 +47,10 @@
     <string name="item_status">Status</string>
     <string name="item_delete">Delete</string>
     <string name="item_remove">Remove</string>
+    <string name="item_update">Update</string>
+    <string name="item_change">Change</string>
     <string name="item_update_profile">Update Profile</string>
-    <string name="item_change_password">Update Profile</string>
+    <string name="item_change_password">Change Password</string>
     <string name="item_payment_report">Payment Report</string>
     <string name="menu_add">Add</string>
     <string name="menu_edit">Edit</string>
