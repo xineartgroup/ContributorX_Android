@@ -71,9 +71,8 @@ public class _Activity_Update_Profile extends AppCompatActivity {
                 handler.post(() -> {
                     if (response != null) {
                         if (response.getIsSuccess()) {
-                            Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
-                            startActivity(startIntent);
                             Toast.makeText(_Activity_Update_Profile.this, "Update was Successful!!!", Toast.LENGTH_LONG).show();
+                            finish();
                         }
                         else {
                             Toast.makeText(_Activity_Update_Profile.this, response.getMessage(), Toast.LENGTH_LONG).show();

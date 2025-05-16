@@ -6,6 +6,9 @@ public class GenericObj1 {
     private int id = 0;
     private boolean active = true;
     private String groups = "";
+    private String passwordOld = "";
+    private String PasswordNew = "";
+    private String PasswordConfirm = "";
 
     @JsonProperty("id")
     public int getId() {
@@ -32,5 +35,32 @@ public class GenericObj1 {
 
     public void setGroups(String groups) {
         this.groups = groups;
+    }
+
+    @JsonProperty("PasswordOld")
+    public String getPasswordOld() {
+        return passwordOld;
+    }
+
+    public void setPasswordOld(String passwordOld) {
+        this.passwordOld = passwordOld;
+    }
+
+    @JsonProperty("PasswordNew")
+    public String getPasswordNew() {
+        return PasswordNew;
+    }
+
+    public void setPasswordNew(String passwordNew) {
+        PasswordNew = passwordNew;
+    }
+
+    @JsonProperty("PasswordConfirm")
+    public String getPasswordConfirm() {
+        return PasswordConfirm;
+    }
+
+    public void setPasswordConfirm(String passwordConfirm) {
+        PasswordConfirm = passwordConfirm;
     }
 }

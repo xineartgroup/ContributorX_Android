@@ -3,23 +3,13 @@ package com.example.contributorx_android;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import com.example.contributorx_android.databinding.ActivityChangePasswordBinding;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,33 +26,42 @@ public class _Activity_Change_Password extends AppCompatActivity {
         EditText editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
         Button buttonRegister = findViewById(R.id.buttonRegister);
 
+        if (APIClass.LoggedOnUser == null){
+            Toast.makeText(this, "Please log in first", Toast.LENGTH_LONG).show();
+            Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
+            startActivity(startIntent);
+            finish();
+            return;
+        }
+
+        Contributor contributor = APIClass.LoggedOnUser;
+
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Handler handler = new Handler(Looper.getMainLooper());
 
         buttonRegister.setOnClickListener(view -> {
+            GenericObj1 obj = new GenericObj1();
+            obj.setId(contributor.getId());
+            obj.setPasswordOld(editTextOldPassword.getText().toString());
+            obj.setPasswordNew(editTextNewPassword.getText().toString());
+            obj.setPasswordConfirm(editTextConfirmPassword.getText().toString());
             executor.execute(() -> {
-                /*APIResponse response = _DAO_Auth.Register(editTextUsername.getText().toString(), editTextPassword.getText().toString(),
-                        editTextFirstName.getText().toString(), editTextLastName.getText().toString(),
-                        editTextEmail.getText().toString(), role,
-                        editTextPhoneNumber.getText().toString(), communityId,
-                        "", true
-                );
+                APIResponse response = _DAO_Contributor.ChangePassword(obj);
 
                 handler.post(() -> {
                     if (response != null) {
                         if (response.getIsSuccess()) {
-                            Intent startIntent = new Intent(getApplicationContext(), _Activity_Login.class);
-                            startActivity(startIntent);
-                            Toast.makeText(_Activity_Register.this, "Registration was Successful!!!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(_Activity_Change_Password.this, "Password Changed Successfully!!!", Toast.LENGTH_LONG).show();
+                            finish();
                         }
                         else {
-                            Toast.makeText(_Activity_Register.this, response.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(_Activity_Change_Password.this, response.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                     else {
-                        Toast.makeText(_Activity_Register.this, "Registration failed!!!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(_Activity_Change_Password.this, "Password Change failed!!!", Toast.LENGTH_LONG).show();
                     }
-                });*/
+                });
             });
         });
     }

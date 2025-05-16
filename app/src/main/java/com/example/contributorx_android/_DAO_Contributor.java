@@ -59,4 +59,16 @@ public class _DAO_Contributor {
             return new APIResponse(e.getMessage());
         }
     }
+
+    public static APIResponse ChangePassword(GenericObj1 obj1) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String jsonData = objectMapper.writeValueAsString(obj1);
+            String result = APIClass.SendMessage("POST", "contributor/api/changepassword/" + obj1.getId(), jsonData, false);
+            return APIClass.GetResponse(result);
+        } catch (Exception e) {
+            android.util.Log.d("ERROR!!!", e.toString());
+            return new APIResponse(e.getMessage());
+        }
+    }
 }
