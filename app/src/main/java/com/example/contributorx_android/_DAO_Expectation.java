@@ -5,14 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class _DAO_Expectation {
 
     public static APIResponse GetAllExpectations() {
-        return APIClass.SendMessage("GET", "expectations/api/all","", false);
+        return APIClass.SendMessage("GET", "expectations/api/all","", false, 0);
     }
 
     public static APIResponse AddExpectation(Expectation expectation) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(expectation);
-            return APIClass.SendMessage("POST", "expectations/api/", jsonData, false);
+            return APIClass.SendMessage("POST", "expectations/api/", jsonData, false, 0);
         } catch (Exception e) {
             return new APIResponse(e.getMessage());
         }
@@ -22,25 +22,29 @@ public class _DAO_Expectation {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(expectation);
-            return APIClass.SendMessage("POST", "expectations/api/update/" + expectation.getId(), jsonData, false);
+            return APIClass.SendMessage("POST", "expectations/api/update/" + expectation.getId(), jsonData, false, 0);
         } catch (Exception e) {
             return new APIResponse(e.getMessage());
         }
     }
 
     public static APIResponse DeleteExpectation(int id) {
-        return APIClass.SendMessage("POST", "expectations/api/delete/" + id,"", false);
+        return APIClass.SendMessage("POST", "expectations/api/delete/" + id,"", false, 0);
     }
 
     public static APIResponse GetExpectation(int id) {
-        return APIClass.SendMessage("GET", "expectations/api/" + id,"", false);
+        return APIClass.SendMessage("GET", "expectations/api/" + id,"", false, 0);
     }
 
     public static APIResponse GetExpectationsForContributor(int contributorId) {
-        return APIClass.SendMessage("GET", "expectations/api/getbycontributor/" + contributorId + "/*","", false);
+        return APIClass.SendMessage("GET", "expectations/api/getbycontributor/" + contributorId + "/*","", false, 0);
     }
 
-    public static APIResponse GetUnclearedExpectationsInCommunity(int communityId) {
-        return APIClass.SendMessage("GET", "expectations/api?communityid=" + communityId + String.format("&searchValue=%s&sortName=%s&sortOrder=%s", "*", "Id", "ASC"),"", false);
+    public static APIResponse GetExpectationsInCommunity(int communityId) {
+        return APIClass.SendMessage("GET", "expectations/api?communityid=" + communityId + String.format("&searchValue=%s&sortName=%s&sortOrder=%s", "*", "Id", "ASC"),"", false, 0);
+    }
+
+    public static APIResponse GetUnclearedInCommunity(int communityId) {
+        return APIClass.SendMessage("GET", "expectations/api/uncleared/" + communityId,"", false, 0);
     }
 }

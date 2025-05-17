@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -48,7 +47,7 @@ public class _Activity_Expectation_List extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            APIResponse response = _DAO_Expectation.GetUnclearedExpectationsInCommunity(APIClass.LoggedOnUser.getCommunityId());
+            APIResponse response = _DAO_Expectation.GetUnclearedInCommunity(APIClass.LoggedOnUser.getCommunityId());
 
             handler.post(() -> {
                 if (response.getIsSuccess()) {
@@ -107,25 +106,26 @@ public class _Activity_Expectation_List extends AppCompatActivity {
 
                 String finalQuery = query;
                 executor.execute(() -> {
-                    APIResponse response = _DAO_Contributor.GetContributor(expectation.getContributorId());
-
                     handler.post(() -> {
-                        if (response.getIsSuccess()) {
-                            Contributor contributor = response.getContributor();
-
-                            if (expectation.getContribution() == null) {
-                                APIResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
-                                if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
-                                    expectation.setContribution(contributionResponse.getContribution());
-                                }
+                        if (expectation.getContributor() == null) {
+                            APIResponse contributorResponse = _DAO_Contributor.GetContributor(expectation.getContributorId());
+                            if (contributorResponse.getIsSuccess()) {
+                                expectation.setContributor(contributorResponse.getContributor());
                             }
+                        }
 
-                            if (contributor != null && expectation.getContribution() != null) {
-                                // Filter by contributor name or contribution name
-                                if (contributor.getUserName().toLowerCase().contains(finalQuery) ||
-                                        expectation.getContribution().getName().toLowerCase().contains(finalQuery)) {
-                                    result.add(expectation);
-                                }
+                        if (expectation.getContribution() == null) {
+                            APIResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                            if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
+                                expectation.setContribution(contributionResponse.getContribution());
+                            }
+                        }
+
+                        if (expectation.getContributor() != null && expectation.getContribution() != null) {
+                            // Filter by contributor name or contribution name
+                            if (expectation.getContributor().getUserName().toLowerCase().contains(finalQuery) ||
+                                    expectation.getContribution().getName().toLowerCase().contains(finalQuery)) {
+                                result.add(expectation);
                             }
                         }
                     });

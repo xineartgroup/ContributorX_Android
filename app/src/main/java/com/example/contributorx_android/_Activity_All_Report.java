@@ -44,7 +44,7 @@ public class _Activity_All_Report extends AppCompatActivity {
         Handler handler = new Handler(Looper.getMainLooper());
 
         executor.execute(() -> {
-            APIResponse response = _DAO_Expectation.GetUnclearedExpectationsInCommunity(APIClass.LoggedOnUser.getId());
+            APIResponse response = _DAO_Expectation.GetExpectationsInCommunity(APIClass.LoggedOnUser.getId());
 
             handler.post(() -> {
                 if (response.getIsSuccess()) {

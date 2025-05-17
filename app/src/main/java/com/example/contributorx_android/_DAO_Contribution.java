@@ -5,18 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class _DAO_Contribution {
 
     public static APIResponse GetAllContributions() {
-        return APIClass.SendMessage("GET", "contributions/api/all","", false);
+        return APIClass.SendMessage("GET", "contributions/api/all","", false, 0);
     }
 
     public static APIResponse GetAllContributionsInCommunity(int communityId) {
-        return APIClass.SendMessage("GET", "contributions/api?communityid=" + communityId + String.format("&searchValue=%s&sortName=%s&sortOrder=%s", "*", "Id", "ASC"),"", false);
+        return APIClass.SendMessage("GET", "contributions/api?communityid=" + communityId + String.format("&searchValue=%s&sortName=%s&sortOrder=%s", "*", "Id", "ASC"),"", false, 0);
     }
 
     public static APIResponse AddContribution(Contribution contribution) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(contribution);
-            return APIClass.SendMessage("POST", "contributions/api/", jsonData, false);
+            return APIClass.SendMessage("POST", "contributions/api/", jsonData, false, 0);
         } catch (Exception e) {
             android.util.Log.d("ERROR!!!", e.toString());
             return new APIResponse(e.getMessage());
@@ -27,7 +27,7 @@ public class _DAO_Contribution {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(contribution);
-            return APIClass.SendMessage("POST", "contributions/api/update/" + contribution.getId(), jsonData, false);
+            return APIClass.SendMessage("POST", "contributions/api/update/" + contribution.getId(), jsonData, false, 0);
         } catch (Exception e) {
             android.util.Log.d("ERROR!!!", e.toString());
             return new APIResponse(e.getMessage());
@@ -35,10 +35,10 @@ public class _DAO_Contribution {
     }
 
     public static APIResponse DeleteContribution(int id) {
-        return APIClass.SendMessage("POST", "contributions/api/delete/" + id,"", false);
+        return APIClass.SendMessage("POST", "contributions/api/delete/" + id,"", false, 0);
     }
 
     public static APIResponse GetContribution(int id) {
-        return APIClass.SendMessage("GET", "contributions/api/" + id,"", false);
+        return APIClass.SendMessage("GET", "contributions/api/" + id,"", false, 0);
     }
 }

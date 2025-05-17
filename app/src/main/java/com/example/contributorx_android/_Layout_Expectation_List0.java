@@ -70,38 +70,41 @@ public class _Layout_Expectation_List0 extends BaseAdapter {
         executor.execute(() -> {
             Expectation expectation = expectations.get(position);
 
-            APIResponse response = _DAO_Contributor.GetContributor(expectation.getContributorId());
-
             handler.post(() -> {
-                if (response.getIsSuccess()) {
-                    Contributor contributor = response.getContributor();
-                    if (expectation.getContribution() == null) {
-                        APIResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
-                        if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
-                            expectation.setContribution(contributionResponse.getContribution());
-                        }
+                if (expectation.getContributor() == null) {
+                    APIResponse contributorResponse = _DAO_Contributor.GetContributor(expectation.getContributorId());
+                    if (contributorResponse.getIsSuccess()) {
+                        expectation.setContributor(contributorResponse.getContributor());
                     }
+                }
 
-                    Contribution contribution = expectation.getContribution();
+                if (expectation.getContribution() == null) {
+                    APIResponse contributionResponse = _DAO_Contribution.GetContribution(expectation.getContributionId());
+                    if (contributionResponse.getIsSuccess() && contributionResponse.getContribution() != null) {
+                        expectation.setContribution(contributionResponse.getContribution());
+                    }
+                }
 
-                    if (contributor != null && contribution != null) {
-                        holder.tvContributor.setText(contributor.getUserName());
-                        holder.tvBillPledge.setText(contribution.getName());
-                        holder.tvAmountOwed.setText(currencyFormatter.format(contribution.getAmount() - expectation.getAmountPaid()));
-                        if (expectation.getPaymentStatus() == 2 || expectation.getPaymentStatus() == 3){
-                            holder.tvAmountToApprove.setVisibility(View.GONE); // Or use View.INVISIBLE if you want to preserve the layout space
-                        }
-                        else {
-                            holder.tvAmountToApprove.setVisibility(View.VISIBLE);
-                            if (expectation.getAmountToApprove() > 0.00f) {
-                                holder.tvAmountToApprove.setText(String.format("%s%s", context.getString(R.string.approve_reject),
-                                        currencyFormatter.format(expectation.getAmountToApprove())));
-                                holder.tvAmountToApprove.setOnClickListener(v -> handlePayButtonClick(expectation.getId(), "approve"));
-                            } else {
-                                holder.tvAmountToApprove.setText(String.format("%s%s", context.getString(R.string.write_off),
-                                        currencyFormatter.format(contribution.getAmount() - expectation.getAmountPaid())));
-                                holder.tvAmountToApprove.setOnClickListener(v -> handlePayButtonClick(expectation.getId(), "write-off"));
-                            }
+                Contributor contributor = expectation.getContributor();
+                Contribution contribution = expectation.getContribution();
+
+                if (contributor != null && contribution != null) {
+                    holder.tvContributor.setText(contributor.getUserName());
+                    holder.tvBillPledge.setText(contribution.getName());
+                    holder.tvAmountOwed.setText(currencyFormatter.format(contribution.getAmount() - expectation.getAmountPaid()));
+                    if (expectation.getPaymentStatus() == 2 || expectation.getPaymentStatus() == 3){
+                        holder.tvAmountToApprove.setVisibility(View.GONE); // Or use View.INVISIBLE if you want to preserve the layout space
+                    }
+                    else {
+                        holder.tvAmountToApprove.setVisibility(View.VISIBLE);
+                        if (expectation.getAmountToApprove() > 0.00f) {
+                            holder.tvAmountToApprove.setText(String.format("%s%s", context.getString(R.string.approve_reject),
+                                    currencyFormatter.format(expectation.getAmountToApprove())));
+                            holder.tvAmountToApprove.setOnClickListener(v -> handlePayButtonClick(expectation.getId(), "approve"));
+                        } else {
+                            holder.tvAmountToApprove.setText(String.format("%s%s", context.getString(R.string.write_off),
+                                    currencyFormatter.format(contribution.getAmount() - expectation.getAmountPaid())));
+                            holder.tvAmountToApprove.setOnClickListener(v -> handlePayButtonClick(expectation.getId(), "write-off"));
                         }
                     }
                 }
