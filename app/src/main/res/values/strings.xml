@@ -2,6 +2,7 @@
     <string name="app_name">ContributorX</string>
     <string name="search">Search</string>
     <string name="user_home">Home</string>
+    <string name="admin_text">Admin</string>
     <string name="user_name">User Name</string>
     <string name="user_password">Password</string>
     <string name="old_password">Old Password</string>
@@ -19,6 +20,8 @@
     <string name="email">E-mail</string>
     <string name="phone_number">Phone Number</string>
     <string name="amount_due">Amount Due</string>
+    <string name="amount_paid_text">Amount Paid</string>
+    <string name="amount_owed_text">Amount Owed</string>
     <string name="expense_name">Name</string>
     <string name="expense_description">Description</string>
     <string name="expense_amount">Amount</string>

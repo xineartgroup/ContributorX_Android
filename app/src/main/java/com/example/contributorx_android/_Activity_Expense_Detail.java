@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
@@ -33,7 +32,7 @@ public class _Activity_Expense_Detail extends AppCompatActivity {
 
         TextView txtExpenseName = findViewById(R.id.txtExpenseName);
         TextView txtDescription = findViewById(R.id.txtDescription);
-        TextView txtAmount = findViewById(R.id.txtAmount);
+        TextView txtAmount = findViewById(R.id.lblAmountOwed);
         Button btnSaveExpense = findViewById(R.id.btnSaveExpense);
         Button btnCancel = findViewById(R.id.btnCancel);
 

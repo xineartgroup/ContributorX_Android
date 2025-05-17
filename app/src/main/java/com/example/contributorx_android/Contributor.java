@@ -173,6 +173,10 @@ public class Contributor {
         this.groups = groups;
     }
 
+    public String getFullNames() {
+        return this.firstname + " " + this.lastname;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

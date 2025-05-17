@@ -1,6 +1,5 @@
 package com.example.contributorx_android;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -54,7 +53,7 @@ public class _Layout_User_Group_List extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.layout_user_group_list, parent, false);
 
             holder = new ViewHolder();
-            holder.lblName = convertView.findViewById(R.id.lblName);
+            holder.lblName = convertView.findViewById(R.id.lblBillName);
             holder.btnRemove = convertView.findViewById(R.id.btnRemove);
 
             convertView.setTag(holder);

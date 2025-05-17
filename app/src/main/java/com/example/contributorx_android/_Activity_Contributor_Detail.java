@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -48,7 +47,7 @@ public class _Activity_Contributor_Detail extends AppCompatActivity {
 
         ImageView imgContributor = findViewById(R.id.imgContributor);
         TextView lblUsername = findViewById(R.id.lblUsername);
-        TextView lblName = findViewById(R.id.lblName);
+        TextView lblName = findViewById(R.id.lblBillName);
         TextView lblEmail = findViewById(R.id.lblEmail);
         TextView lblPhoneNumber = findViewById(R.id.lblPhoneNumber);
         Spinner cboStatus = findViewById(R.id.cboStatus);

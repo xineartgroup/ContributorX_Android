@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
@@ -38,7 +37,7 @@ public class _Activity_Contribution_Detail extends AppCompatActivity {
         Intent intent = getIntent();
 
         TextView txtContributionName = findViewById(R.id.txtContributionName);
-        TextView txtAmount = findViewById(R.id.txtAmount);
+        TextView txtAmount = findViewById(R.id.lblAmountOwed);
         TextView lblDateStart = findViewById(R.id.lblDateStart);
         Button btnSaveContribution = findViewById(R.id.btnSaveContribution);
         Button btnCancel = findViewById(R.id.btnCancel);

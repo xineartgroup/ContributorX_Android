@@ -49,8 +49,8 @@ public class _Layout_Expectation_List2 extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.layout_expectation_list2, parent, false);
 
             holder = new ViewHolder();
-            holder.txtAmount = convertView.findViewById(R.id.txtAmount);
-            holder.txtName = convertView.findViewById(R.id.lblName);
+            holder.txtAmount = convertView.findViewById(R.id.lblAmountOwed);
+            holder.txtName = convertView.findViewById(R.id.lblBillName);
 
             convertView.setTag(holder);
         } else {

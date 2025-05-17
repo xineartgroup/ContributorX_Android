@@ -50,8 +50,8 @@ public class _Layout_Expectation_List1 extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.layout_expectation_list1, parent, false);
 
             holder = new ViewHolder();
-            holder.txtAmount = convertView.findViewById(R.id.txtAmount);
-            holder.txtName = convertView.findViewById(R.id.lblName);
+            holder.txtAmount = convertView.findViewById(R.id.lblAmountOwed);
+            holder.txtName = convertView.findViewById(R.id.lblBillName);
             holder.btnPay = convertView.findViewById(R.id.btnPay);
 
             convertView.setTag(holder);

@@ -30,9 +30,9 @@ public class _Activity_Make_Payment extends AppCompatActivity {
         setContentView(R.layout.activity_make_payment);
 
         TextView txtContributionName = findViewById(R.id.txtContributionName);
-        TextView txtAmount = findViewById(R.id.txtAmount);
+        TextView txtAmount = findViewById(R.id.lblAmountOwed);
         TextView txtDueDate = findViewById(R.id.txtDueDate);
-        TextView txtAmountPaid = findViewById(R.id.txtAmountPaid);
+        TextView txtAmountPaid = findViewById(R.id.lblAmountPaid);
         txtPaymentAmount = findViewById(R.id.txtPaymentAmount);
         edtPaymentMethod = findViewById(R.id.edtPaymentMethod);
 
