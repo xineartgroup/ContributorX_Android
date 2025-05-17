@@ -5,21 +5,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class _DAO_Group {
 
     public static APIResponse GetAllGroups() {
-        String result = APIClass.SendMessage("GET", "groups/api/all","", false);
-        return APIClass.GetResponse(result);
+        return APIClass.SendMessage("GET", "groups/api/all","", false);
     }
 
     public static APIResponse GetAllGroupsInCommunity(int communityId) {
-        String result = APIClass.SendMessage("GET", "groups/api?communityid=" + communityId + String.format("&searchValue=%s&sortName=%s&sortOrder=%s", "*", "Id", "ASC"),"", false);
-        return APIClass.GetResponse(result);
+        return APIClass.SendMessage("GET", "groups/api?communityid=" + communityId + String.format("&searchValue=%s&sortName=%s&sortOrder=%s", "*", "Id", "ASC"),"", false);
     }
 
     public static APIResponse AddGroup(Group group) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(group);
-            String result = APIClass.SendMessage("POST", "groups/api/", jsonData, false);
-            return APIClass.GetResponse(result);
+            return APIClass.SendMessage("POST", "groups/api/", jsonData, false);
         } catch (Exception e) {
             android.util.Log.d("ERROR!!!", e.toString());
             return new APIResponse(e.getMessage());
@@ -30,8 +27,7 @@ public class _DAO_Group {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(group);
-            String result = APIClass.SendMessage("POST", "groups/api/update/" + group.getId(), jsonData, false);
-            return APIClass.GetResponse(result);
+            return APIClass.SendMessage("POST", "groups/api/update/" + group.getId(), jsonData, false);
         } catch (Exception e) {
             android.util.Log.d("ERROR!!!", e.toString());
             return new APIResponse(e.getMessage());
@@ -39,17 +35,14 @@ public class _DAO_Group {
     }
 
     public static APIResponse DeleteGroup(int id) {
-        String result = APIClass.SendMessage("POST", "groups/api/delete/" + id,"", false);
-        return APIClass.GetResponse(result);
+        return APIClass.SendMessage("POST", "groups/api/delete/" + id,"", false);
     }
 
     public static APIResponse GetGroup(int id) {
-        String result = APIClass.SendMessage("GET", "groups/api/" + id,"", false);
-        return APIClass.GetResponse(result);
+        return APIClass.SendMessage("GET", "groups/api/" + id,"", false);
     }
 
     public static APIResponse GetGroupByName(String name) {
-        String result = APIClass.SendMessage("GET", "groups/api/getbyname/" + name,"", false);
-        return APIClass.GetResponse(result);
+        return APIClass.SendMessage("GET", "groups/api/getbyname/" + name,"", false);
     }
 }

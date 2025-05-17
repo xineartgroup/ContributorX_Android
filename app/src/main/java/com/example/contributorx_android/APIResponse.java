@@ -26,13 +26,25 @@ public class APIResponse {
     public APIResponse(){
         isSuccess = false;
         this.message = "";
+        community = null;
+        contribution = null;
         contributor = null;
+        expectation = null;
+        expense = null;
+        group = null;
+        grouping = null;
     }
 
     public APIResponse(String message){
         isSuccess = false;
         this.message = message;
+        community = null;
+        contribution = null;
         contributor = null;
+        expectation = null;
+        expense = null;
+        group = null;
+        grouping = null;
     }
 
     @JsonProperty("issuccess")

@@ -5,16 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class _DAO_Community {
 
     public static APIResponse GetAllCommunities() {
-        String result = APIClass.SendMessage("GET", "communities/api/all","", false);
-        return APIClass.GetResponse(result);
+        return APIClass.SendMessage("GET", "communities/api/all","", false);
     }
 
     public static APIResponse AddCommunity(Community community) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(community);
-            String result = APIClass.SendMessage("POST", "communities/api/", jsonData, false);
-            return APIClass.GetResponse(result);
+            return APIClass.SendMessage("POST", "communities/api/", jsonData, false);
         } catch (Exception e) {
             android.util.Log.d("ERROR!!!", e.toString());
             return new APIResponse(e.getMessage());
@@ -25,8 +23,7 @@ public class _DAO_Community {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             String jsonData = objectMapper.writeValueAsString(community);
-            String result = APIClass.SendMessage("POST", "communities/api/update/" + community.getId(), jsonData, false);
-            return APIClass.GetResponse(result);
+            return APIClass.SendMessage("POST", "communities/api/update/" + community.getId(), jsonData, false);
         } catch (Exception e) {
             android.util.Log.d("ERROR!!!", e.toString());
             return new APIResponse(e.getMessage());
@@ -34,17 +31,14 @@ public class _DAO_Community {
     }
 
     public static APIResponse DeleteCommunity(int id) {
-        String result = APIClass.SendMessage("POST", "communities/api/delete/" + id,"", false);
-        return APIClass.GetResponse(result);
+        return APIClass.SendMessage("POST", "communities/api/delete/" + id,"", false);
     }
 
     public static APIResponse GetCommunity(int id) {
-        String result = APIClass.SendMessage("GET", "communities/api/" + id,"", false);
-        return APIClass.GetResponse(result);
+        return APIClass.SendMessage("GET", "communities/api/" + id,"", false);
     }
 
     public static APIResponse GetCommunityByName(String name) {
-        String result = APIClass.SendMessage("GET", "communities/api/getbyname/" + name,"", false);
-        return APIClass.GetResponse(result);
+        return APIClass.SendMessage("GET", "communities/api/getbyname/" + name,"", false);
     }
 }

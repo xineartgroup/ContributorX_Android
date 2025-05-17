@@ -19,13 +19,15 @@ public class APIClass {
 
     public static Contributor LoggedOnUser = null;
 
-    public static String SendMessage(String verb, String url, String jsonData, boolean isLogin) {
+    public static APIResponse SendMessage(String verb, String url, String jsonData, boolean isLogin) {
         try {
             if (jsonData != null && !jsonData.isEmpty()) {
                 android.util.Log.d("API jsonData!!!", jsonData);
             }
 
             HttpURLConnection connection = getHttpURLConnection(verb, url, jsonData);
+
+            ObjectMapper objectMapper = new ObjectMapper();
 
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -43,41 +45,45 @@ public class APIClass {
                 }
 
                 android.util.Log.d("API Response!!!", response.toString());
-                return response.toString();
+                try{
+                    return objectMapper.readValue(response.toString(), APIResponse.class);
+                } catch (IOException e) {
+                    return new APIResponse(e.getMessage());
+                }
             } else if (responseCode == HttpURLConnection.HTTP_BAD_REQUEST) {
                 android.util.Log.e("API Failure!!!", verb + " bad request");
-                return verb + " bad request";
+                return new APIResponse(verb + " bad request");
             } else if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 android.util.Log.e("API Failure!!!", verb + " unauthorized");
-                return verb + " unauthorized";
+                return new APIResponse(verb + " unauthorized");
             } else if (responseCode == HttpURLConnection.HTTP_FORBIDDEN) {
                 android.util.Log.e("API Failure!!!", verb + " forbidden");
-                return verb + " forbidden";
+                return new APIResponse(verb + " forbidden");
             } else if (responseCode == HttpURLConnection.HTTP_NOT_FOUND) {
                 android.util.Log.e("API Failure!!!", verb + " request Not found");
-                return verb + " request Not found";
+                return new APIResponse(verb + " request Not found");
             } else if (responseCode == HttpURLConnection.HTTP_CONFLICT) {
                 android.util.Log.e("API Failure!!!", verb + " conflict");
-                return verb + " conflict";
+                return new APIResponse(verb + " conflict");
             } else if (responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR) {
                 android.util.Log.e("API Failure!!!", verb + " internal server error");
-                return verb + " internal server error";
+                return new APIResponse(verb + " internal server error");
             } else if (responseCode == HttpURLConnection.HTTP_BAD_GATEWAY) {
                 android.util.Log.e("API Failure!!!", verb + " bad gateway");
-                return verb + " bad gateway";
+                return new APIResponse(verb + " bad gateway");
             } else if (responseCode == HttpURLConnection.HTTP_UNAVAILABLE) {
                 android.util.Log.e("API Failure!!!", verb + " service unavailable");
-                return verb + " service unavailable";
+                return new APIResponse(verb + " service unavailable");
             } else if (responseCode == HttpURLConnection.HTTP_GATEWAY_TIMEOUT) {
                 android.util.Log.e("API Failure!!!", verb + " gateway timeout");
-                return verb + " gateway timeout";
+                return new APIResponse(verb + " gateway timeout");
             } else {
                 android.util.Log.e("API Failure!!!", verb + " request failed with code: " + responseCode);
-                return verb + " request failed with code: " + responseCode;
+                return new APIResponse(verb + " request failed with code: " + responseCode);
             }
         } catch (Exception e) {
             android.util.Log.e("API Error!!!", e.toString());
-            return e.toString();
+            return new APIResponse(e.toString());
         }
     }
 
@@ -116,15 +122,6 @@ public class APIClass {
         }
 
         return connection;
-    }
-
-    public static APIResponse GetResponse(String jsonResponse) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            return objectMapper.readValue(jsonResponse, APIResponse.class);
-        } catch (IOException e) {
-            return new APIResponse(e.getMessage());
-        }
     }
 
     public static void LoadURL() {
